@@ -38,12 +38,33 @@ class PermissionTableSeeder extends Seeder
             'role-delete',
             'role-view',
 
+            // permission-menu Management
+            'permission-menu',
+            'permission-create',
+            'permission-edit',
+            'permission-delete',
+            'permission-view',
+
             // Product Management
             'product-menu',
             'product-create',
             'product-edit',
             'product-delete',
             'product-view',
+
+            // Category Management
+            'category-menu',
+            'category-create',
+            'category-edit',
+            'category-delete',
+            'category-view',
+
+            // menu Management
+            'menu-menu',
+            'menu-create',
+            'menu-edit',
+            'menu-delete',
+            'menu-view',
 
             // Orders & Dashboard
             'order-manage',

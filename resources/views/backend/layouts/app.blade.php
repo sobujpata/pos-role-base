@@ -30,7 +30,7 @@
 	<!--Datatable -->
 	<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/r-3.0.3/datatables.min.css" rel="stylesheet">
 	<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/r-3.0.3/datatables.min.js"></script>
-	<title>Role and permission</title>
+	<title>Admin Dashboard - @yield('title')</title>
 	 @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -242,7 +242,7 @@
 	<!-- Bootstrap JS -->
 	<script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 	<!--plugins-->
-	<script src="{{ asset('assets/js/jquery.min.js')}}"></script>
+	{{-- <script src="{{ asset('assets/js/jquery.min.js')}}"></script> --}}
 	<script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
 	<script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
 	<script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script>

@@ -1,6 +1,7 @@
 @extends('backend.layouts.app')
+@section('title', 'Products Pages')
 @section('content')
-    <div class="page-wrapper">
+    <div class="page-wrapper app-container">
         <div class="page-content">
             <!-- start-content -->
 
@@ -33,24 +34,28 @@
                         <div id="example_wrapper" class="dataTables_wrapper dt-bootstrap5">
                             <table id="myTable" class="display table table-striped">
                                 <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Name</th>
-                                        <th>Description</th>
-                                        <th>Price</th>
-                                        <th>Quantity</th>
-                                        <th>Action</th>
+                                    <tr class="table-dark text-center align-middle">
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Name</th>
+                                        <th class="text-center">Description</th>
+                                        <th class="text-center">Price</th>
+                                        <th class="text-center">Discount</th>
+                                        <th class="text-center">Discount Price</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($products as $key=>$product)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $product ->name }}</td>
-                                        <td>{{ $product ->description }}</td>
+                                        <td>{{ $product ->title }}</td>
+                                        <td>{{ $product ->short_des }}</td>
                                         <td>{{ $product ->price }}</td>
-                                        <td>{{ $product ->quantity }}</td>
-                                        <td class="d-flex gap-2">
+                                        <td>{{ $product ->discount }}</td>
+                                        <td>{{ $product ->discount_price }}</td>
+                                        <td>{{ $product ->stock }}</td>
+                                        <td class="d-flex gap-2 align-middle">
                                             @can('product-edit')
                                             <a href="{{route('products.edit', $product->id)}}" class="btn btn-primary btn-small">edit</a>
                                             @endcan

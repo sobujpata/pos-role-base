@@ -1,4 +1,5 @@
 @extends('backend.layouts.app')
+@section('title', 'Product Create')
 @section('content')
     <div class="page-wrapper">
         <div class="page-content">

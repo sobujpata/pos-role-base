@@ -1,7 +1,14 @@
-import './bootstrap';
+// import './bootstrap';
 
-import Alpine from 'alpinejs';
+// import Alpine from 'alpinejs';
 
-window.Alpine = Alpine;
+// window.Alpine = Alpine;
 
-Alpine.start();
+// Alpine.start();
+import 'jquery';
+import 'summernote/dist/summernote-lite';
+import 'summernote/dist/summernote-lite.css';
+
+// Optional: Set up Summernote globally if needed
+import $ from 'jquery';
+window.$ = window.jQuery = $;

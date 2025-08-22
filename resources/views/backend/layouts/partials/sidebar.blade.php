@@ -19,6 +19,46 @@
 					</a>
 
 				</li>
+				@can('category-menu')
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-category"></i></div>
+						<div class="menu-title">Main Category</div>
+					</a>
+					<ul>
+						@can('category-view')
+						<li>
+							<a href="{{ route('categories.index') }}"><i class='bx bx-radio-circle'></i>All category</a>
+						</li>
+						@endcan
+						@can('category-create')
+						<li>
+							<a href="{{ route('categories.create') }}"><i class='bx bx-radio-circle'></i>Create category</a>
+						</li>
+						@endcan
+					</ul>
+				</li>
+				@endcan
+				@can('category-menu')
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-category"></i></div>
+						<div class="menu-title">Category</div>
+					</a>
+					<ul>
+						@can('category-view')
+						<li>
+							<a href="{{ route('categories.index') }}"><i class='bx bx-radio-circle'></i>All category</a>
+						</li>
+						@endcan
+						@can('category-create')
+						<li>
+							<a href="{{ route('categories.create') }}"><i class='bx bx-radio-circle'></i>Create category</a>
+						</li>
+						@endcan
+					</ul>
+				</li>
+				@endcan
 				@can('product-menu')
 				<li>
 					<a href="javascript:;" class="has-arrow">
@@ -104,52 +144,28 @@
 					</ul>
 				</li>
 				@endcan
-				<li class="menu-label">Forms & Tables</li>
+				@can('menu-menu')
 				<li>
 					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class='bx bx-message-square-edit'></i>
+						<div class="parent-icon"><i class="bx bx-user-circle"></i>
 						</div>
-						<div class="menu-title">Forms</div>
+						<div class="menu-title">Menus</div>
 					</a>
 					<ul>
-						<li> <a href="form-elements.html"><i class='bx bx-radio-circle'></i>Form Elements</a>
+						@can('menu-view')
+						<li>
+							<a href="{{ route('menus.index') }}"><i class='bx bx-radio-circle'></i>All Menus</a>
 						</li>
-						<li> <a href="form-input-group.html"><i class='bx bx-radio-circle'></i>Input Groups</a>
+						@endcan
+						@can('menu-create')
+						<li>
+							<a href="{{ route('menus.create') }}"><i class='bx bx-radio-circle'></i>Create Menu</a>
 						</li>
-						<li> <a href="form-radios-and-checkboxes.html"><i class='bx bx-radio-circle'></i>Radios &
-								Checkboxes</a>
-						</li>
-						<li> <a href="form-layouts.html"><i class='bx bx-radio-circle'></i>Forms Layouts</a>
-						</li>
-						<li> <a href="form-validations.html"><i class='bx bx-radio-circle'></i>Form Validation</a>
-						</li>
-						<li> <a href="form-wizard.html"><i class='bx bx-radio-circle'></i>Form Wizard</a>
-						</li>
-						<li> <a href="form-text-editor.html"><i class='bx bx-radio-circle'></i>Text Editor</a>
-						</li>
-						<li> <a href="form-file-upload.html"><i class='bx bx-radio-circle'></i>File Upload</a>
-						</li>
-						<li> <a href="form-date-time-pickes.html"><i class='bx bx-radio-circle'></i>Date Pickers</a>
-						</li>
-						<li> <a href="form-select2.html"><i class='bx bx-radio-circle'></i>Select2</a>
-						</li>
-						<li> <a href="form-repeater.html"><i class='bx bx-radio-circle'></i>Form Repeater</a>
-						</li>
+						@endcan
 					</ul>
 				</li>
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-grid-alt"></i>
-						</div>
-						<div class="menu-title">Tables</div>
-					</a>
-					<ul>
-						<li> <a href="table-basic-table.html"><i class='bx bx-radio-circle'></i>Basic Table</a>
-						</li>
-						<li> <a href="table-datatable.html"><i class='bx bx-radio-circle'></i>Data Table</a>
-						</li>
-					</ul>
-				</li>
+				@endcan
+				
 
 			</ul>
 			<!--end navigation-->

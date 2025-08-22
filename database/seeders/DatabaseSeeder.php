@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         PermissionTableSeeder::class,
         RoleTableSeeder::class,
         UserSeeder::class,
+        MenuSeeder::class,
         ]);
     }
 }
