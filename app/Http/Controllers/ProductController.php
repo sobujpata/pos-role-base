@@ -32,35 +32,59 @@ class ProductController extends Controller
     }
 
     public function filter(Request $request)
-    {
-        $query = Product::query()->with('category', 'brand');
+{
+    $query = Product::query()->with('category', 'brand');
 
-        if ($request->brands) {
-            $query->whereIn('brand_id', explode(',', $request->brands));
-        }
-        if ($request->category) {
-            $query->where('category_id', $request->category);
-        }
-
-        if ($request->min_price && $request->max_price) {
-            $query->whereBetween('price', [$request->min_price, $request->max_price]);
-        }
-        if ($request->size) {
-            $query->whereHas('productDetail', function ($q) use ($request) {
-                $q->where('size', 'LIKE', '%' . $request->size);
-            });
-        }
-
-        if ($request->color) {
-            $query->whereHas('productDetail', function ($q) use ($request) {
-                $q->where('color', 'LIKE', '%' . $request->color . '%');
-            });
-        }
-
-        $products = $query->paginate(12);
-
-        return view('home_page_1.partials.product-list', compact('products'))->render();
+    // Brand filter
+    if ($request->filled('brands')) {
+        // comma-separated ids
+        $brandIds = explode(',', $request->brands);
+        $query->whereIn('brand_id', $brandIds);
     }
+
+    // Category filter
+    if ($request->filled('category')) {
+        $query->where('category_id', $request->category);
+    }
+
+    // Price filter (0-inclusive)
+    if ($request->filled('min_price') && $request->filled('max_price')) {
+        $query->whereBetween('price', [(int)$request->min_price, (int)$request->max_price]);
+    }
+
+    // Size filter
+    if ($request->filled('size')) {
+        $query->whereHas('productDetail', function ($q) use ($request) {
+            $q->where('size', 'LIKE', '%' . $request->size . '%');
+        });
+    }
+
+    // Color filter
+    if ($request->filled('color')) {
+        $query->whereHas('productDetail', function ($q) use ($request) {
+            $q->where('color', 'LIKE', '%' . $request->color . '%');
+        });
+    }
+    // --- Sorting Logic ---
+    if ($request->sort == 'popular') {
+        $query->where('remark', 'popular');
+    } elseif ($request->sort == 'date') {
+        $query->orderBy('created_at', 'desc');
+    } elseif ($request->sort == 'price') {
+        $query->orderBy('discount_price', 'asc');
+    } elseif ($request->sort == 'price-desc') {
+        $query->orderBy('discount_price', 'desc');
+    } else {
+        $query->latest(); // default
+    }
+
+    $perPage = $request->perPage ?? 9; // default 9
+    $products = $query->paginate($perPage);
+
+    // Return rendered HTML
+    return view('home_page_1.partials.product-list', compact('products'))->render();
+}
+
     public function show($slug)
     {
                                                          // Example slug: samsung-galaxy-s24-15  (15 is the product id)

@@ -1,12 +1,12 @@
 @extends('layouts.app1')
 @section('content')
     <!-- START SECTION BREADCRUMB -->
-    <div class="breadcrumb_section bg_gray page-title-mini">
-        <div class="container"><!-- STRART CONTAINER -->
+    <div class="breadcrumb_section bg_gray page-title-mini" style="padding: 40px 0">
+        <div class="container" ><!-- STRART CONTAINER -->
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="page-title">
-                        <h1>Product Detail</h1>
+                        <h1 class="fs-1">Product Detail</h1>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -25,7 +25,7 @@
     <div class="main_content">
 
         <!-- START SECTION SHOP -->
-        <div class="section">
+        <div class="section" style="padding: 45px 0">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
@@ -118,7 +118,7 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="pr_detail">
                             <div class="product_description">
-                                <h4 class="product_title"><a href="#">{{ $product->title }}</a></h4>
+                                <h4 class="product_title fs-4"><a href="#">{{ $product->title }}</a></h4>
                                 <div class="product_price">
                                     <span class="price">{{ $product->discount_price }}</span>
                                     <del>{{ $product->price }}</del>

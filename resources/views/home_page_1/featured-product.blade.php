@@ -4,7 +4,7 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="heading_s1 text-center">
-                    <h2>Featured Products</h2>
+                    <h2 class="fs-2">Featured Products</h2>
                 </div>
             </div>
         </div>

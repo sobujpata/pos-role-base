@@ -1,20 +1,13 @@
 @extends('layouts.app1')
 @section('title', 'Products view')
 @section('content')
-    <style>
-        .categoryFilter.active {
-            font-weight: bold;
-            color: #ff0000;
-            /* বা আপনার চাইতে থাকা color */
-        }
-    </style>
     <!-- START SECTION BREADCRUMB -->
-    <div class="breadcrumb_section bg_gray page-title-mini" style="padding: 40px 0;">
+    <div class="breadcrumb_section bg_gray page-title-mini">
         <div class="container"><!-- STRART CONTAINER -->
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="page-title">
-                        <h1><span id="categoryName">All</span> Products</h1>
+                        <h1>Products</h1>
                     </div>
                 </div>
                 <div class="col-md-6">
@@ -32,7 +25,7 @@
     <div class="main_content">
         {{-- @dd($products) --}}
         <!-- START SECTION SHOP -->
-        <div class="section" style="padding: 50px 0;">
+        <div class="section">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-9">
@@ -40,20 +33,15 @@
                             <div class="col-12">
                                 <div class="product_header">
                                     <div class="product_header_left">
-                                        <!-- Sorting -->
                                         <div class="custom_select">
-                                            <select class="form-control form-control-sm" id="sortSelect">
+                                            <select class="form-control form-control-sm">
                                                 <option value="order">Default sorting</option>
-                                                <option value="popular">Sort by popularity</option>
+                                                <option value="popularity">Sort by popularity</option>
                                                 <option value="date">Sort by newness</option>
                                                 <option value="price">Sort by price: low to high</option>
                                                 <option value="price-desc">Sort by price: high to low</option>
                                             </select>
                                         </div>
-
-                                        <!-- Hidden input for sorting -->
-                                        <input type="hidden" id="sortInput" value="order">
-
                                     </div>
                                     <div class="product_header_right">
                                         <div class="products_view">
@@ -62,27 +50,34 @@
                                             <a href="javascript:;" class="shorting_icon list"><i
                                                     class="ti-layout-list-thumb"></i></a>
                                         </div>
-                                        <!-- Showing Per Page -->
                                         <div class="custom_select">
-                                            <select class="form-control form-control-sm" id="perPageSelect">
+                                            <select class="form-control form-control-sm">
+                                                <option value="">Showing</option>
                                                 <option value="9">9</option>
                                                 <option value="12">12</option>
                                                 <option value="18">18</option>
                                             </select>
                                         </div>
-
-                                        <!-- Hidden input for perPage -->
-                                        <input type="hidden" id="perPageInput" value="9">
-
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <span id="productList">
-                            <div class="row shop_container">
-                                @include('home_page_1.partials.product-list')
+                        <div class="row shop_container" id="productList">
+                            @include('home_page_1.partials.product-list')
+                        </div>
+                        <div class="row">
+
+                            <div class="col-12">
+                                {{ $products->links() }}
+                                {{-- <ul class="pagination mt-3 justify-content-center pagination_style1">
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#"><i
+                                                class="linearicons-arrow-right"></i></a></li>
+                                </ul> --}}
                             </div>
-                        </span>
+                        </div>
                     </div>
                     <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
                         <div class="sidebar">
@@ -91,7 +86,6 @@
 
                                 <!-- CATEGORY -->
                                 <div class="widget">
-                                    <h4 class="widget_title">Filters</h4>
                                     <h5 class="widget_title">Categories</h5>
                                     <ul class="widget_categories">
                                         @foreach ($categories as $category)
@@ -122,6 +116,49 @@
                                         </div>
                                     </div>
                                 </div>
+                                {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.css" /> --}}
+                                {{-- <div id="price_filter"></div>
+                                <div id="flt_price"></div>
+                                <input type="hidden" id="price_first">
+                                <input type="hidden" id="price_second"> --}}
+
+                                {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script>
+                                <script>
+                                    let priceSlider = document.getElementById('price_filter');
+
+                                    noUiSlider.create(priceSlider, {
+                                        start: [0, 94000],
+                                        connect: true,
+                                        step: 10,
+                                        range: {
+                                            'min': 0,
+                                            'max': 94000
+                                        }
+                                    });
+
+                                    // Update event (always works)
+                                    priceSlider.noUiSlider.on('update', function(values) {
+                                        let first_price = Math.round(values[0]);
+                                        let second_price = Math.round(values[1]);
+
+                                        document.getElementById('price_first').value = first_price;
+                                        document.getElementById('price_second').value = second_price;
+                                        document.getElementById('flt_price').textContent = `$${first_price} - $${second_price}`;
+
+                                        console.log("Update:", first_price, second_price);
+                                    });
+
+                                    // Set event (fires when user releases slider)
+                                    priceSlider.noUiSlider.on('set', function(values) {
+                                        console.log("SET fired:", values);
+                                    });
+
+                                    // End event (fires at end of drag)
+                                    priceSlider.noUiSlider.on('end', function(values) {
+                                        console.log("END fired:", values);
+                                    });
+                                </script> --}}
+
 
                                 <!-- BRAND -->
                                 <div class="widget">
@@ -189,158 +226,161 @@
     </div>
 @endsection
 @push('scripts')
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.0/nouislider.min.js"></script> --}}
     <script>
-    
-        $(document).ready(function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            // console.log(urlParams); // পুরো URL parameter object
-            const categoryId = urlParams.get("categoryId"); // navbar থেকে আসা category id
-            // console.log(categoryId); // categoryId দেখাবে
+        document.addEventListener('DOMContentLoaded', function() {
 
-            if (categoryId) {
-                // Hidden input এ set
-                $('#categoryInput').val(categoryId);
+            let filterForm = document.getElementById('filterForm');
+            let productList = document.getElementById('productList');
 
-                // Category heading update
-                let selectedCategory = document.querySelector(`.categoryFilter[data-id='${categoryId}']`);
-                if(selectedCategory) {
-                    let categoryName = selectedCategory.querySelector('.categories_name').textContent;
-                    $('#categoryName').text(categoryName);
-                    selectedCategory.classList.add('active');
-                }
+            // RUN AJAX FILTER
+            function runFilter() {
+                let formData = new FormData(filterForm);
+                let params = new URLSearchParams(formData).toString();
+                console.log("Filter params:", params);
+
+                axios.get('{{ route('products.filter') }}?' + params)
+                    .then(function(response) {
+                        productList.innerHTML = response.data;
+                    })
+                    .catch(function(error) {
+                        console.error(error);
+                    });
             }
 
-            // প্রথমবার load এ products fetch করো
-            fetchProducts(1);
+            // --- CATEGORY ---
+            document.querySelectorAll('.categoryFilter').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.getElementById('categoryInput').value = this.dataset.id;
 
-            // --- Category Filter ---
-            $('.categoryFilter').on('click', function() {
-                // Remove active from all categories
-                $('.categoryFilter').removeClass('active');
+                    // Active styling
+                    document.querySelectorAll('.categoryFilter').forEach(c => c.classList.remove(
+                        'active'));
+                    this.classList.add('active');
 
-                // Get Category Name and set to heading
-                let categoryName = $(this).find('.categories_name').text();
-                $('#categoryName').text(categoryName);
-
-                // Add active class
-                $(this).addClass('active');
-
-                // Set hidden input
-                var catId = $(this).data('id');
-                $('#categoryInput').val(catId);
-
-                // Trigger AJAX
-                fetchProducts(1);
-            });
-
-            // --- Initialize jQuery UI Slider ---
-            var $slider = $('#price_filter');
-            var minVal = parseInt($slider.data('min-value'));
-            var maxVal = parseInt($slider.data('max-value'));
-            var minRange = parseInt($slider.data('min'));
-            var maxRange = parseInt($slider.data('max'));
-            var currency = $slider.data('price-sign');
-
-            $slider.slider({
-                range: true,
-                min: minRange,
-                max: maxRange,
-                values: [minVal, maxVal],
-                slide: function(event, ui) {
-                    $("#flt_price").html(currency + ui.values[0] + " - " + currency + ui.values[1]);
-                    $("#price_first").val(ui.values[0]);
-                    $("#price_second").val(ui.values[1]);
-                },
-                change: function(event, ui) {
-                    fetchProducts(1);
-                }
-            });
-
-            // Initial Price Show
-            $("#flt_price").html(currency + $slider.slider("values", 0) + " - " + currency + $slider.slider(
-                "values", 1));
-            $("#price_first").val($slider.slider("values", 0));
-            $("#price_second").val($slider.slider("values", 1));
-
-            // --- Brand Filter ---
-            $(document).on('change', '.brandFilter', function() {
-                fetchProducts(1);
-            });
-
-            // --- Size Filter ---
-            $('.sizeFilter').on('click', function() {
-                $('.sizeFilter').removeClass('active');
-                $(this).addClass('active');
-                $('#sizeInput').val($(this).data('size'));
-                fetchProducts(1);
-            });
-
-            // --- Color Filter ---
-            $('.colorFilter').on('click', function() {
-                $('.colorFilter').removeClass('active');
-                $(this).addClass('active');
-                $('#colorInput').val($(this).data('color'));
-                fetchProducts(1);
-            });
-
-            // --- Pagination click ---
-            $(document).on('click', '.pagination a', function(e) {
-                e.preventDefault();
-                var page = $(this).attr('href').split('page=')[1];
-                fetchProducts(page);
-            });
-
-            // --- Per Page Filter ---
-            $('#perPageSelect').on('change', function() {
-                var perPage = $(this).val();
-                $('#perPageInput').val(perPage);
-                fetchProducts(1); // আবার প্রথম পেজ থেকে ডেটা দেখাবে
-            });
-
-            // --- Sorting Change Event ---
-            $('#sortSelect').on('change', function() {
-                var sortBy = $(this).val();
-                $('#sortInput').val(sortBy);
-                fetchProducts(1); // আবার প্রথম পেজ থেকে ডেটা লোড হবে
-            });
-
-            // --- AJAX Filter Function Update ---
-            function fetchProducts(page = 1) {
-                var data = {
-                    _token: '{{ csrf_token() }}',
-                    category: $('#categoryInput').val(),
-                    brands: $('.brandFilter:checked').map(function() {
-                        return $(this).val();
-                    }).get().join(','),
-                    size: $('#sizeInput').val(),
-                    color: $('#colorInput').val(),
-                    min_price: $('#price_first').val(),
-                    max_price: $('#price_second').val(),
-                    perPage: $('#perPageInput').val(),
-                    sort: $('#sortInput').val(), // 🔥 নতুন sorting parameter
-                    page: page
-                };
-
-                $.ajax({
-                    url: '{{ route('products.filter') }}',
-                    method: 'GET',
-                    data: data,
-                    beforeSend: function() {
-                        $("#productList").html('<p>Loading...</p>');
-                    },
-                    success: function(res) {
-                        $("#productList").html(res);
-                    },
-                    error: function(err) {
-                        console.error(err);
-                    }
+                    runFilter();
                 });
-            }
+            });
+
+            $("#price_filter").each(function() {
+                var $filter_selector = $(this);
+                var a = $filter_selector.data("min-value");
+                var b = $filter_selector.data("max-value");
+                var c = $filter_selector.data("price-sign");
+
+                $filter_selector.slider({
+                    range: true,
+                    min: $filter_selector.data("min"),
+                    max: $filter_selector.data("max"),
+                    values: [a, b],
+
+                    // drag করার সময় value update
+                    slide: function(event, ui) {
+                        $("#flt_price").html(
+                            c + ui.values[0] + " - " + c + ui.values[1]
+                        );
+                        $("#price_first").val(ui.values[0]);
+                        $("#price_second").val(ui.values[1]);
+                    },
+
+                    // mouse release / value change হলে trigger হবে
+                    change: function(event, ui) {
+                        let min = ui.values[0];
+                        let max = ui.values[1];
+                        console.log("Changed:", min, max);
+
+                        // এখানে আপনার filter function কল হবে
+                        // runFilter(min, max);
+                        runFilter();
+                    },
+                });
+
+                // প্রথমবার load হলে দেখানো
+                $("#flt_price").html(
+                    c +
+                    $filter_selector.slider("values", 0) +
+                    " - " +
+                    c +
+                    $filter_selector.slider("values", 1)
+                );
+            });
+
+            // --- PRICE SLIDER ---
+            // let priceSlider = document.getElementById('price_filter');
+            // if (priceSlider) {
+            //     let minPrice = parseInt(priceSlider.dataset.min);
+            //     let maxPrice = parseInt(priceSlider.dataset.max);
+            //     let startMin = parseInt(priceSlider.dataset.minValue);
+            //     let startMax = parseInt(priceSlider.dataset.maxValue);
+            //     noUiSlider.create(priceSlider, {
+            //         start: [startMin, startMax],
+            //         connect: true,
+            //         step: 10,
+            //         range: {
+            //             'min': minPrice,
+            //             'max': maxPrice
+            //         }
+            //     });
+
+            //     priceSlider.noUiSlider.on('update', function(values) {
+            //         let first_price = Math.round(values[0]);
+            //         let second_price = Math.round(values[1]);
+            //         console.log(first_price, second_price);
+            //         document.getElementById('price_first').value = first_price;
+            //         document.getElementById('price_second').value = second_price;
+
+            //         document.getElementById('flt_price').textContent = `$${first_price} - $${second_price}`;
+            //     });
+
+            //     // 👇 change এর জায়গায় set ব্যবহার করুন
+            //     priceSlider.noUiSlider.on('end', function(values) {
+            //         let min = Math.round(values[0]);
+            //         let max = Math.round(values[1]);
+
+            //         console.log("Selected range (set event):", min, max);
+
+            //         runFilter(min, max);
+            //     });
+
+
+
+            // }
+
+            // --- BRAND ---
+            document.querySelectorAll('.brandFilter').forEach(el => {
+                el.addEventListener('change', function() {
+                    runFilter(); // brand filter triggers AJAX automatically
+                });
+            });
+
+            // --- SIZE ---
+            document.querySelectorAll('.sizeFilter').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.getElementById('sizeInput').value = this.dataset.size;
+
+                    document.querySelectorAll('.sizeFilter').forEach(s => s.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+
+                    runFilter();
+                });
+            });
+
+            // --- COLOR ---
+            document.querySelectorAll('.colorFilter').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.getElementById('colorInput').value = this.dataset.color;
+                    console.log(this.dataset.color);
+                    document.querySelectorAll('.colorFilter').forEach(c => c.classList.remove(
+                        'active'));
+                    this.classList.add('active');
+
+                    runFilter();
+                });
+            });
 
         });
     </script>
-@endpush
-@push('scripts')
     <script>
         // Use delegation to bind event after DOM is ready
         $(document).on('click', '.addToCartBtnAll', function(e) {

@@ -19,9 +19,9 @@
             	<div class="single_banner">
                 	<img src="${item['image']}" alt="shop_banner_img1"/>
                     <div class="single_banner_info">
-                        <h5 class="single_bn_title1">${item['title']}</h5>
-                        <h3 class="single_bn_title">${item['short_des']}</h3>
-                        <a href="#" class="single_bn_link">Shop Now</a>
+                        <h5 class="single_bn_title1 fs-5">${item['title']}</h5>
+                        <h3 class="single_bn_title fs-3">${item['short_des']}</h3>
+                        <a href="{{ url('/products-view') }}" class="single_bn_link">Shop Now</a>
                     </div>
                 </div>
             </div>`

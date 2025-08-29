@@ -2,7 +2,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="heading_s1 text-center">
-                <h2>Exclusive Products</h2>
+                <h2 class="fs-2">Exclusive Products</h2>
             </div>
         </div>
     </div>
@@ -88,6 +88,7 @@
         res.data['data'].forEach((item) => {
             let productSlug = slugify(item.title) + '-' + item.id;
             let productUrl = `/details/${productSlug}`;
+            
             let EachItem = `
         <div class="col-lg-3 col-md-4 col-6">
             <div class="product">

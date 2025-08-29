@@ -7,9 +7,9 @@
                 <div class="trand_banner_text text-center text-md-start">
                     <div class="heading_s1 mb-3">
                         <span class="sub_heading" id="singleBannerTitle"></span>
-                        <h2 id="singleBannerShortDes"></h2>
+                        <h2 class="fs-2" id="singleBannerShortDes"></h2>
                     </div>
-                    <h5 class="mb-4" id="signleBannerDiscount"></h5>
+                    <h5 class="mb-4 fs-5" id="signleBannerDiscount"></h5>
                     <a href="{{url('/products-view')}}" class="btn btn-fill-out rounded-0">Shop Now</a>
                 </div>
                 <div class="medium_divider clearfix"></div>

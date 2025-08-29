@@ -225,8 +225,10 @@
                             </ul>
                             <div class="cart_footer">
                                 <p class="cart_total">
-                                    <strong>Subtotal:</strong> 
-                                    <span class="cart_price"> <span class="price_symbole">Tk </span></span><span id="subtotalHeader">{{ $subtotal }}</span></p>
+                                    <strong>Subtotal:</strong>
+                                    <span class="cart_price"> <span class="price_symbole">Tk </span></span><span
+                                        id="subtotalHeader">{{ $subtotal }}</span>
+                                </p>
                                 <p class="cart_buttons"><a href="{{ url('/cart') }}"
                                         class="btn btn-fill-line rounded-0 view-cart">View Cart</a>
                                     <a href="#" class="btn btn-fill-out rounded-0 checkout">Checkout</a>
@@ -255,7 +257,11 @@
                     if (data.subCategories[mainCategory.id]) {
                         data.subCategories[mainCategory.id].forEach(subCategory => {
                             subCategoriesHtml += `
-                               <li><a class="dropdown-item nav-link nav_item" href="/product-category/${subCategory.categoryName}">${subCategory.categoryName}</a></li>
+                               <li>
+<a class="dropdown-item nav-link nav_item" data-id="${subCategory.id}" href="/products-view?categoryId=${encodeURIComponent(subCategory.id)}&category=${encodeURIComponent(subCategory.categoryName)}">
+                ${subCategory.categoryName}
+             </a>
+                                </li>
                                `;
                         });
                     }
@@ -302,12 +308,12 @@
 
     function fixImageUrl(url) {
         if (!url.startsWith('http') && !url.startsWith('/')) {
-            return '/' + url;  // add leading slash if missing
+            return '/' + url; // add leading slash if missing
         }
         return url;
     }
 
-// Usage
+    // Usage
 
-// let html = `<img src="${imgSrc}" alt="${banner.title}">`;
+    // let html = `<img src="${imgSrc}" alt="${banner.title}">`;
 </script>

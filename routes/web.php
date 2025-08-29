@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\PolicyController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\InvoiceController;
@@ -60,10 +61,15 @@ Route::get('/single-banner-view', [SingleBannerController::class, 'singleBannerV
 //single banner
 Route::get('/featured-products', [ProductController::class, 'featuredProducts']);
 
+//client show
+Route::get('client-show', [ClientController::class, 'ClientShow']);
+
 //products
 Route::get('/products-view', [ProductController::class, 'ProductIndex'])->name('product.productIndex');
 
 // AJAX route for filtered products only
+// Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
+// web.php
 Route::get('/products/filter', [ProductController::class, 'filter'])->name('products.filter');
 
 // Route::get('/details/{slug}', [ProductController::class, 'productDetailsPages']);
@@ -123,11 +129,11 @@ Route::middleware('auth')->group(function () {
     })->name('dashboard');
     //Product Route
     Route::get('/products-list', [ProductController::class, 'index'])->name('products.index')->middleware('permission:product-menu|product-view');
-    Route::get('/products-list/create', [ProductController::class, 'create'])->name('products.create')->middleware('permission:product-create');
-    Route::post('/products-list', [ProductController::class, 'store'])->name('products.store')->middleware('permission:product-create');
-    Route::get('/products-list/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('permission:product-edit');
-    Route::put('/products-list/{id}', [ProductController::class, 'update'])->name('products.update')->middleware('permission:product-edit');
-    Route::delete('/products-list/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:product-delete');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware('permission:product-create');
+    Route::post('/products', [ProductController::class, 'store'])->name('products.store')->middleware('permission:product-create');
+    Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('permission:product-edit');
+    Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware('permission:product-edit');
+    Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:product-delete');
     //category Route
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('permission:category-menu|category-view');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create')->middleware('permission:category-create');
