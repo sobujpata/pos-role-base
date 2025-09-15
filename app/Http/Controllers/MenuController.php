@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Menu;
+use App\Models\Subscribe;
+use App\Models\Subscriber;
 use Illuminate\Http\Request;
 
 class MenuController extends Controller
@@ -66,5 +68,24 @@ class MenuController extends Controller
     {
         $menu->delete();
         return redirect()->route('menus.index')->with('success', 'Menu deleted successfully.');
+    }
+
+    public function popupShow()
+    {
+        $popup = Subscribe::first();
+
+        return response()->json($popup);
+    }
+
+    public function subscribe(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|unique:subscribers,email',
+        ]);
+
+        // Store the email in the database
+        Subscriber::create($request->only('email'));
+
+        return response()->json(['message' => 'Subscribed successfully!']);
     }
 }

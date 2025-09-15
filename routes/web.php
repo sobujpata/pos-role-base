@@ -44,6 +44,8 @@ Route::get('/category-main-nav', [CategoryController::class, 'CategoryMainNav'])
 Route::get('/menu-banners-for-products', [CategoryController::class, 'MenuBannersForProducts']);
 
 Route::get('/menus', [MenuController::class, 'index']);
+Route::get('/popup-show', [MenuController::class, 'popupShow']);
+Route::post('/subscribe', [MenuController::class, 'subscribe']);
 // Brand List
 Route::get('/BrandList', [BrandController::class, 'BrandList']);
 // Category List

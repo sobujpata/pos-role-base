@@ -8,22 +8,24 @@
                 </button>
                 <div class="row g-0">
                     <div class="col-sm-5">
-                    	<div class="background_bg h-100" data-img-src="{{asset('images/popup_img.jpg')}}"></div>
+                    	<div class="background_bg h-100">
+                            <img src="" alt="" id="showImage">
+                        </div>
                     </div>
                     <div class="col-sm-7">
                         <div class="popup_content">
                             <div class="popup-text">
                                 <div class="heading_s1">
-                                    <h4>Subscribe and Get 25% Discount!</h4>
+                                    <h4 id="title_popup" class="fs-4"></h4>
                                 </div>
-                                <p>Subscribe to the newsletter to receive updates about new products.</p>
+                                <p id="short_des_popup"></p>
                             </div>
-                            <form method="post">
+                            <form id="subscribe_form">
                             	<div class="form-group mb-3">
-                                	<input name="email" required type="email" class="form-control rounded-0" placeholder="Enter Your Email">
+                                	<input name="email" required type="email" class="form-control rounded-0" placeholder="Enter Your Email" autocomplete>
                                 </div>
                                 <div class="form-group mb-3">
-                                	<button class="btn btn-fill-line btn-block text-uppercase rounded-0" title="Subscribe" type="submit">Subscribe</button>
+                                	<button type="submit" class="btn btn-fill-line btn-block text-uppercase rounded-0" title="Subscribe">Subscribe</button>
                                 </div>
                             </form>
                             <div class="chek-form">
@@ -40,3 +42,69 @@
     </div>
 </div>
 <!-- End Screen Load Popup Section --> 
+@push('scripts')
+<script>
+    (async () => {
+        try {
+            let res = await axios.get('/popup-show');
+            // console.log(res.data);
+            if (res.status == 200) {
+                if (res.data != '') {
+                    document.getElementById('showImage').src = res.data.image;
+                    document.getElementById('title_popup').innerHTML = res.data.title;
+                    document.getElementById('short_des_popup').innerHTML = res.data.short_des;
+                    // $('#onload-popup').modal('show');
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    })()
+
+        document.getElementById('subscribe_form').addEventListener('submit', async function(e){
+            e.preventDefault();
+            let email = document.getElementsByName('email')[0].value;
+            // alert(email);
+            try {
+                let res = await axios.post('/subscribe', {email: email});
+                console.log(res);
+                if(res.status == 200){
+                    document.getElementsByName('email')[0].value = '';
+                    //close or hide modal
+                    $('#onload-popup').modal('hide');
+                    //sweet alert
+                    Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "Subscribed Successfully",
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                } else {
+                    // alert('You are already subscribed');
+                    document.getElementsByName('email')[0].value = '';
+                    $('#onload-popup').modal('hide');
+                    //sweet alert
+                    Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "You are already subscribed",
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                }
+            } catch (error) {
+                console.log(error.response.data.message);
+                $('#onload-popup').modal('hide');
+                    //sweet alert
+                    Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "You are already subscribed",
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+            }
+        });
+    </script>
+@endpush

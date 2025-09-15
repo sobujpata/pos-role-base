@@ -97,7 +97,12 @@ class ProductController extends Controller
 
         $rating_count = $product_reviews->count();
 
-        return view('home_page_1.details-page', compact('product', 'product_reviews', 'rating_count'));
+        $category_id = $product->category_id;
+
+        // dd($category_id);
+        $related_products = Product::where('category_id', $category_id)->get();
+
+        return view('home_page_1.details-page', compact('product', 'product_reviews', 'rating_count', 'related_products'));
         // dd($product);
     }
 

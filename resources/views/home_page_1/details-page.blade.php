@@ -394,11 +394,12 @@
                         </div>
                         <div class="releted_product_slider carousel_slider owl-carousel owl-theme" data-margin="20"
                             data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "1199":{"items": "4"}}'>
+                            @foreach ($related_products as $item)
                             <div class="item">
                                 <div class="product">
                                     <div class="product_img">
-                                        <a href="shop-product-detail.html">
-                                            <img src="{{ asset('/images/product_img1.jpg') }}" alt="product_img1">
+                                        <a href="#">
+                                            <img src="{{ asset($item->image) }}" alt="product_img1">
                                         </a>
                                         <div class="product_action_box">
                                             <ul class="list_none pr_action_btn">
@@ -413,24 +414,22 @@
                                         </div>
                                     </div>
                                     <div class="product_info">
-                                        <h6 class="product_title"><a href="shop-product-detail.html">Blue Dress For
-                                                Woman</a></h6>
+                                        <h6 class="product_title"><a href="#">{{ $item->title }}</a></h6>
                                         <div class="product_price">
-                                            <span class="price">$45.00</span>
-                                            <del>$55.25</del>
+                                            <span class="price">${{ $item->discount_price }}</span>
+                                            <del>${{$item->price}}</del>
                                             <div class="on_sale">
-                                                <span>35% Off</span>
+                                                <span>{{ $item->discount }}</span>
                                             </div>
                                         </div>
                                         <div class="rating_wrap">
                                             <div class="rating">
                                                 <div class="product_rate" style="width:80%"></div>
                                             </div>
-                                            <span class="rating_num">(21)</span>
+                                            <span class="rating_num">({{ $item->star }})</span>
                                         </div>
                                         <div class="pr_desc">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                                blandit massa enim. Nullam id varius nunc id varius nunc.</p>
+                                            <p>{{$item->short_des}}</p>
                                         </div>
                                         <div class="pr_switch_wrap">
                                             <div class="product_color_switch">
@@ -442,7 +441,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="item">
+                            @endforeach
+                            {{-- <div class="item">
                                 <div class="product">
                                     <div class="product_img">
                                         <a href="shop-product-detail.html">
@@ -632,7 +632,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
