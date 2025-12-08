@@ -53,13 +53,13 @@
                                         </td>
                                         <td class="d-flex gap-2">
                                             @can('role-edit')
-                                            <a href="{{ route('role.edit', $role->id) }}" class="btn btn-primary btn-small">edit</a>
+                                            <a href="{{ route('role.edit', $role->id) }}" class="btn btn-primary p-1"><i class="bx bx-pen"></i></a>
                                             @endcan
                                             @can('role-delete')
                                             <form action="{{ route('role.destroy', $role->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-small">delete</button>
+                                                <button type="submit" class="btn btn-danger p-1"><i class="bx bx-trash"></i></button>
                                             </form>
                                             @endcan
                                         </td>

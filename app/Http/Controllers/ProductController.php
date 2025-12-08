@@ -1,21 +1,26 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Helper\ResponseHelper;
+use App\Models\Tag;
+use App\Models\Size;
 use App\Models\Brand;
-use App\Models\Category;
-use App\Models\CustomerProfile;
+use App\Models\Color;
 use App\Models\Product;
+use App\Models\Category;
 use App\Models\ProductCart;
+use App\Models\ProductWish;
+use Illuminate\Http\Request;
+use App\Models\ImportProduct;
 use App\Models\ProductDetail;
 use App\Models\ProductReview;
 use App\Models\ProductSlider;
-use App\Models\ProductWish;
+use App\Helper\ResponseHelper;
+// use Intervention\Image\Image;
+use App\Models\CustomerProfile;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-// use Intervention\Image\Image;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
@@ -32,58 +37,58 @@ class ProductController extends Controller
     }
 
     public function filter(Request $request)
-{
-    $query = Product::query()->with('category', 'brand');
+    {
+        $query = Product::query()->with('category', 'brand');
 
-    // Brand filter
-    if ($request->filled('brands')) {
-        // comma-separated ids
-        $brandIds = explode(',', $request->brands);
-        $query->whereIn('brand_id', $brandIds);
+        // Brand filter
+        if ($request->filled('brands')) {
+            // comma-separated ids
+            $brandIds = explode(',', $request->brands);
+            $query->whereIn('brand_id', $brandIds);
+        }
+
+        // Category filter
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->category);
+        }
+
+        // Price filter (0-inclusive)
+        if ($request->filled('min_price') && $request->filled('max_price')) {
+            $query->whereBetween('price', [(int) $request->min_price, (int) $request->max_price]);
+        }
+
+        // Size filter
+        if ($request->filled('size')) {
+            $query->whereHas('productDetail', function ($q) use ($request) {
+                $q->where('size', 'LIKE', '%' . $request->size . '%');
+            });
+        }
+
+        // Color filter
+        if ($request->filled('color')) {
+            $query->whereHas('productDetail', function ($q) use ($request) {
+                $q->where('color', 'LIKE', '%' . $request->color . '%');
+            });
+        }
+        // --- Sorting Logic ---
+        if ($request->sort == 'popular') {
+            $query->where('remark', 'popular');
+        } elseif ($request->sort == 'date') {
+            $query->orderBy('created_at', 'desc');
+        } elseif ($request->sort == 'price') {
+            $query->orderBy('discount_price', 'asc');
+        } elseif ($request->sort == 'price-desc') {
+            $query->orderBy('discount_price', 'desc');
+        } else {
+            $query->latest(); // default
+        }
+
+        $perPage  = $request->perPage ?? 9; // default 9
+        $products = $query->paginate($perPage);
+
+        // Return rendered HTML
+        return view('home_page_1.partials.product-list', compact('products'))->render();
     }
-
-    // Category filter
-    if ($request->filled('category')) {
-        $query->where('category_id', $request->category);
-    }
-
-    // Price filter (0-inclusive)
-    if ($request->filled('min_price') && $request->filled('max_price')) {
-        $query->whereBetween('price', [(int)$request->min_price, (int)$request->max_price]);
-    }
-
-    // Size filter
-    if ($request->filled('size')) {
-        $query->whereHas('productDetail', function ($q) use ($request) {
-            $q->where('size', 'LIKE', '%' . $request->size . '%');
-        });
-    }
-
-    // Color filter
-    if ($request->filled('color')) {
-        $query->whereHas('productDetail', function ($q) use ($request) {
-            $q->where('color', 'LIKE', '%' . $request->color . '%');
-        });
-    }
-    // --- Sorting Logic ---
-    if ($request->sort == 'popular') {
-        $query->where('remark', 'popular');
-    } elseif ($request->sort == 'date') {
-        $query->orderBy('created_at', 'desc');
-    } elseif ($request->sort == 'price') {
-        $query->orderBy('discount_price', 'asc');
-    } elseif ($request->sort == 'price-desc') {
-        $query->orderBy('discount_price', 'desc');
-    } else {
-        $query->latest(); // default
-    }
-
-    $perPage = $request->perPage ?? 9; // default 9
-    $products = $query->paginate($perPage);
-
-    // Return rendered HTML
-    return view('home_page_1.partials.product-list', compact('products'))->render();
-}
 
     public function show($slug)
     {
@@ -121,7 +126,13 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('backend.pages.products.create');
+        $categories = Category::all();
+        $brands     = Brand::all();
+        $remarks = Product::remark;
+        $colors = Color::all();
+        $sizes = Size::all();
+        $tags = Tag::all();
+        return view('backend.pages.products.create', compact('categories', 'brands', 'remarks', 'colors', 'sizes', 'tags'));
     }
 
     /**
@@ -129,43 +140,148 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-
-        $request->validate([
-            'name'        => 'required|string',
-            'description' => 'required|string',
-            'price'       => 'required|string',
-            'quantity'    => 'required',
-        ]);
         // dd($request->all());
-        $product = Product::create([
-            'name'        => $request->input('name'),
-            'description' => $request->input('description'),
-            'price'       => $request->input('price'),
-            'quantity'    => $request->input('quantity'),
+        $validatedData = $request->validate([
+            'title'            => 'required|string|max:255',
+            'short_des'        => 'required|string|max:255',
+            'buy_price'        => 'required|numeric',
+            'price'            => 'required|numeric',
+            'discount'         => 'required|numeric',
+            'discount_price'   => 'required|numeric',
+            'stock'            => 'required|integer',
+            'star'             => 'required|integer|min:1|max:5',
+            'remark'           => 'required|string|max:255',
+            'category_id'      => 'required|integer',
+            'brand_id'         => 'required|integer',
+            'capacity'         => 'required|string|max:255',
+            'water_resistance' => 'required|string|max:255',
+            'material'         => 'required|string|max:255',
+            'des'              => 'required|string',
+            'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
         ]);
-        flash()->success('Product created successfully!');
-        return redirect()->route('products.index');
+        $sku = strtoupper(uniqid());
+
+        $colors = $request->colors; // array
+        $colorString = implode(',', $colors);
+        $tags = $request->tags; // array
+        $tagString = implode(',', $tags);
+        $sizes = $request->sizes; // array
+        $sizeString = implode(',', $sizes);
+
+
+        $imageUrls = [];
+        $sizes     = [
+            'normal' => [540, 600],
+            'zoom'   => [810, 900],
+        ];
+
+        foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+            if ($request->hasFile($imgField)) {
+                $file      = $request->file($imgField);
+                $extension = $file->getClientOriginalExtension();
+                $timestamp = time();
+
+                foreach ($sizes as $prefix => [$w, $h]) {
+                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . uniqid() . '.' . $extension;
+                    $path     = storage_path('app/public/products/' . $fileName);
+
+                    // Ensure directory exists
+                    if (! file_exists(dirname($path))) {
+                        mkdir(dirname($path), 0777, true);
+                    }
+
+                    $image = Image::make($file->getRealPath());
+                    $image->resize($w, $h)->save($path);
+
+                    $imageUrls[$imgField][$prefix] = "storage/products/{$fileName}";
+                }
+            }
+        }
+
+        // dd($imageUrls);
+        try {
+            DB::beginTransaction();
+
+            $product = Product::create([
+                'title'            => $validatedData['title'],
+                'short_des'        => $validatedData['short_des'],
+                'buy_price'        => $validatedData['buy_price'],
+                'price'            => $validatedData['price'],
+                'discount'         => $validatedData['discount'],
+                'discount_price'   => $validatedData['discount_price'],
+                'stock'            => $validatedData['stock'],
+                'remark'           => $validatedData['remark'],
+                'star'             => $validatedData['star'],
+                'capacity'         => $validatedData['capacity'],
+                'water_resistance' => $validatedData['water_resistance'],
+                'material'         => $validatedData['material'],
+                'sku'              => $sku,
+                'tags'             => $tagString,
+                'category_id'      => $validatedData['category_id'],
+                'brand_id'         => $validatedData['brand_id'],
+                'image'            => $imageUrls['img1']['normal'] ?? null,
+            ]);
+            // dd($product);
+            $productDetailsData = [
+                'color' => $colorString,
+                'size'  => $sizeString,
+                'des'   => $validatedData['des'],
+            ];
+
+            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+                if (! empty($imageUrls[$imgField]['normal'])) {
+                    $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
+                }
+            }
+            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+                if (! empty($imageUrls[$imgField]['zoom'])) {
+                    $productDetailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
+                }
+            }
+
+            ProductDetail::create(array_merge(
+                ['product_id' => $product->id],
+                $productDetailsData
+            ));
+
+            DB::commit();
+            return redirect()->route('products.index')->with('success', 'Product created successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Product create failed: ' . $e->getMessage());
+            return redirect()->route('products.index')->with('error', 'Product create failed: ' . $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    // public function show(string $id)
-    // {
-    //     //
-    // }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         $product    = Product::with('productDetail', 'category', 'brand')->find($id);
         $categories = Category::all();
         $brands     = Brand::all();
-
-        // dd($product);
-        return view('backend.pages.products.update', compact('product', 'categories', 'brands'));
+        $remarks = Product::remark;
+        $colors = Color::all();
+        $sizes = Size::all();
+        $tags = Tag::all();
+        $savedColors = explode(',', $product->productDetail->color ?? '');
+        $savedSizes = explode(',', $product->productDetail->size ?? '');
+        $savedTags = explode(',', $product->tags ?? '');
+        $remarks = Product::remark;
+        // dd($savedTags);
+        return view('backend.pages.products.update', compact(
+            'product',
+             'categories',
+              'brands',
+              'colors',
+               'sizes', 
+               'tags',
+                'savedColors',
+                'savedSizes',
+                'savedTags',
+                'remarks'
+            ));
     }
 
     /**
@@ -175,112 +291,127 @@ class ProductController extends Controller
     public function update(Request $request, string $id)
     {
         // dd($request->all());
-         $validatedData = $request->validate([
-        'title'            => 'required|string|max:255',
-        'short_des'        => 'required|string|max:255',
-        'price'            => 'required|string|max:255',
-        'discount'         => 'required|string|max:255',
-        'discount_price'   => 'required|string|max:255',
-        'stock'            => 'required|string|max:255',
-        'star'             => 'required|string|max:255',
-        'remark'           => 'required|string|max:255',
-        'category_id'      => 'required|string|max:255',
-        'brand_id'         => 'required|string|max:255',
-        'sku'              => 'required|string|max:255',
-        'tags'             => 'required|string|max:255',
-        'capacity'         => 'required|string|max:255',
-        'water_resistance' => 'required|string|max:255',
-        'material'         => 'required|string|max:255',
-        'color'            => 'required|string|max:255',
-        'size'             => 'required|string|max:255',
-        'des'              => 'required|string',
-        'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-        'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-        'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-        'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-    ]);
-
-    $imageUrls = [];
-    $sizes = [
-        'normal' => [540, 600],
-        'zoom'   => [810, 900],
-    ];
-
-    // Handle multiple image uploads
-    foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
-        if ($request->hasFile($imgField)) {
-            $file = $request->file($imgField);
-            $originalName = $file->getClientOriginalName();
-            $timestamp = time();
-
-            foreach ($sizes as $prefix => [$w, $h]) {
-                $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . $originalName;
-                $path = public_path('products' . DIRECTORY_SEPARATOR . $fileName);
-
-                $image = Image::make($file->getRealPath());
-                $image->resize($w, $h)->save($path);
-
-                $imageUrls[$imgField][$prefix] = "products/{$fileName}";
-            }
-        }
-    }
-
-    // Fetch existing product
-    $product = Product::find($id);
-    if (!$product) {
-        return redirect()->route('products.index')->with('error', 'Product not found.');
-    }
-
-    try {
-        DB::beginTransaction();
-
-        // Update product
-        $product->update([
-            'title'            => $validatedData['title'],
-            'short_des'        => $validatedData['short_des'],
-            'price'            => $validatedData['price'],
-            'discount'         => $validatedData['discount'],
-            'discount_price'   => $validatedData['discount_price'],
-            'stock'            => $validatedData['stock'],
-            'remark'           => $validatedData['remark'],
-            'star'             => $validatedData['star'],
-            'capacity'         => $validatedData['capacity'],
-            'water_resistance' => $validatedData['water_resistance'],
-            'material'         => $validatedData['material'],
-            'sku'              => $validatedData['sku'],
-            'tags'             => $validatedData['tags'],
-            'category_id'      => $validatedData['category_id'],
-            'brand_id'         => $validatedData['brand_id'],
-            'image'            => $imageUrls['img1']['normal'] ?? $product->image,
+        $validatedData = $request->validate([
+            'title'            => 'required|string|max:255',
+            'short_des'        => 'required|string|max:255',
+            'buy_price'            => 'required|string|max:255',
+            'price'            => 'required|string|max:255',
+            'discount'         => 'required|string|max:255',
+            'discount_price'   => 'required|string|max:255',
+            'stock'            => 'required|string|max:255',
+            'star'             => 'required|string|max:255',
+            'remark'           => 'required|string|max:255',
+            'category_id'      => 'required|string|max:255',
+            'brand_id'         => 'required|string|max:255',
+            'capacity'         => 'required|string|max:255',
+            'water_resistance' => 'required|string|max:255',
+            'material'         => 'required|string|max:255',
+            'des'              => 'required|string',
+            'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        // Prepare product details data
-        $productDetailsData = [
-            'color' => $validatedData['color'],
-            'size'  => $validatedData['size'],
-            'des'   => $validatedData['des'],
+        $colors = $request->colors; // array
+        $colorString = implode(',', $colors);
+        $tags = $request->tags; // array
+        $tagString = implode(',', $tags);
+        $sizes = $request->sizes; // array
+        $sizeString = implode(',', $sizes);
+
+        $imageUrls = [];
+        $sizes     = [
+            'normal' => [540, 600],
+            'zoom'   => [810, 900],
         ];
 
-        foreach (['img1','img2','img3','img4'] as $imgField) {
-            if (!empty($imageUrls[$imgField]['normal'])) {
-                $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
+        // Handle multiple image uploads
+        foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+            if ($request->hasFile($imgField)) {
+                $file         = $request->file($imgField);
+                $originalName = $file->getClientOriginalName();
+                $timestamp    = time();
+
+                foreach ($sizes as $prefix => [$w, $h]) {
+                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . $originalName;
+                    $path     = public_path('products' . DIRECTORY_SEPARATOR . $fileName);
+
+                    $image = Image::make($file->getRealPath());
+                    $image->resize($w, $h)->save($path);
+
+                    $imageUrls[$imgField][$prefix] = "products/{$fileName}";
+                }
             }
         }
+        // dd($imageUrls);
+        // Fetch existing product
+        $product = Product::find($id);
+        if (! $product) {
+            return redirect()->route('products.index')->with('error', 'Product not found.');
+        }
 
-        // Update or create product details
-        $product->productDetail()->updateOrCreate(
-            ['product_id' => $product->id],
-            $productDetailsData
-        );
+        if(!$product->sku){
+            $product->sku = strtoupper(uniqid());
+            $product->save();
+        }
 
-        DB::commit();
+        try {
+            DB::beginTransaction();
 
-        return redirect()->route('products.index')->with('success', 'Product updated successfully!');
-    } catch (\Exception $e) {
-        DB::rollBack();
-        Log::error('Product update failed: ' . $e->getMessage());
-        return redirect()->route('products.index')->with('error', 'Product update failed: ' . $e->getMessage());
-    }
+            // Update product
+            $product->update([
+                'title'            => $validatedData['title'],
+                'short_des'        => $validatedData['short_des'],
+                'buy_price'        => $validatedData['buy_price'],
+                'price'            => $validatedData['price'],
+                'discount'         => $validatedData['discount'],
+                'discount_price'   => $validatedData['discount_price'],
+                'stock'            => $validatedData['stock'],
+                'remark'           => $validatedData['remark'],
+                'star'             => $validatedData['star'],
+                'capacity'         => $validatedData['capacity'],
+                'water_resistance' => $validatedData['water_resistance'],
+                'material'         => $validatedData['material'],
+                'tags'             => $tagString,
+                'category_id'      => $validatedData['category_id'],
+                'brand_id'         => $validatedData['brand_id'],
+                'image'            => $imageUrls['img1']['normal'] ?? $product->image,
+            ]);
+
+            // Prepare product details data
+            $productDetailsData = [
+                'color' => $colorString,
+                'size'  => $sizeString,
+                'des'   => $validatedData['des'],
+            ];
+
+            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+                if (! empty($imageUrls[$imgField]['normal'])) {
+                    $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
+                }
+            }
+            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+                if (! empty($imageUrls[$imgField]['zoom'])) {
+                    $productDetailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
+                }
+            }
+
+            
+            // Update or create product details
+            $product->productDetail()->updateOrCreate(
+                ['product_id' => $product->id],
+                $productDetailsData
+            );
+
+            DB::commit();
+
+            return redirect()->route('products.index')->with('success', 'Product updated successfully!');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error('Product update failed: ' . $e->getMessage());
+            return redirect()->route('products.index')->with('error', 'Product update failed: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -443,5 +574,65 @@ class ProductController extends Controller
         $user_id = $request->header('id');
         $data    = ProductCart::where('user_id', '=', $user_id)->where('product_id', '=', $request->product_id)->delete();
         return ResponseHelper::Out('success', $data, 200);
+    }
+
+    public function ImportProductPage()
+    {
+        return view('backend.pages.products.import-product-page');
+    }
+
+    public function ImportProductAll()
+    {
+        $importProducts = ImportProduct::with('product')->orderBy('created_at','desc')->get();
+        //orderBy('created_at','desc')->get();
+
+
+        return response()->json([
+            'data' => $importProducts,
+        ]);
+    }
+
+    public function ImportProductList($id)
+    {
+        $product = Product::find($id);
+        return response()->json(['data' => $product], 200);
+    }
+
+    public function ImportProduct(Request $request)
+    {
+        $user_id = Auth::user()->id;
+
+        // Validation for import product creation
+        $validatedData = $request->validate([
+            'product_id'    => 'required|integer',
+            'import_price'  => 'required|numeric',
+            'sale_price'    => 'required|numeric',
+            'quantity'      => 'required|integer',
+        ]);
+
+        try {
+            // Save the import product to the database
+            $importProduct = ImportProduct::create([
+                'user_id'      => $user_id,
+                'product_id'   => $request->input('product_id'),
+                'import_price' => $request->input('import_price'),
+                'sale_price'   => $request->input('sale_price'),
+                'quantity'     => $request->input('quantity'),
+            ]);
+
+            // Update the product's buy_qty and prices
+            $product = Product::find($request->input('product_id'));
+            $product->stock += $request->input('quantity');
+            $product->buy_price = $request->input('import_price');
+            $product->price = $request->input('sale_price');
+            $product->save();
+
+            // Return a success response
+            return response()->json(['message' => 'Product imported successfully', 'import_product' => $importProduct], 201);
+
+        } catch (\Exception $e) {
+            // Return error response in case of failure
+            return response()->json(['message' => 'Product import failed', 'error' => $e->getMessage()], 500);
+        }
     }
 }

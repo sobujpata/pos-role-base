@@ -15,13 +15,6 @@
 @include('home_page_1.client')
 @include('home_page_1.service')
 
-
-
-
-
-
-
-
 </div>
 <!-- END MAIN CONTENT -->
 
@@ -33,8 +26,8 @@
             // await Category();
             await Hero();
             await ShopBanner();
+            // $(".preloader").delay(10).fadeOut(100).addClass('loaded');
             // await TopCategory();
-            $(".preloader").delay(10).fadeOut(100).addClass('loaded');
             await Popular();
             await New();
             await Top();

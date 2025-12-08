@@ -18,11 +18,11 @@
                     </nav>
                 </div>
                 @can('product-create')
-                <div class="ms-auto">
-                    <div class="btn-group">
-                        <a href="{{ route('products.create') }}" class="btn btn-primary">Create Product</a>
+                    <div class="ms-auto">
+                        <div class="btn-group">
+                            <a href="{{ route('products.create') }}" class="btn btn-primary">Create Product</a>
+                        </div>
                     </div>
-                </div>
                 @endcan
             </div>
             <!--end breadcrumb-->
@@ -36,38 +36,48 @@
                                 <thead>
                                     <tr class="table-dark text-center align-middle">
                                         <th class="text-center">No</th>
-                                        <th class="text-center">Name</th>
-                                        <th class="text-center">Description</th>
+                                        <th class="text-center">Image</th>
+                                        <th class="text-center">Name & SKU</th>
+                                        <th class="text-center">Buy Price</th>
                                         <th class="text-center">Price</th>
                                         <th class="text-center">Discount</th>
                                         <th class="text-center">Discount Price</th>
-                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Stock</th>
                                         <th class="text-center">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($products as $key=>$product)
-                                    <tr>
-                                        <td>{{ $key + 1 }}</td>
-                                        <td>{{ $product ->title }}</td>
-                                        <td>{{ $product ->short_des }}</td>
-                                        <td>{{ $product ->price }}</td>
-                                        <td>{{ $product ->discount }}</td>
-                                        <td>{{ $product ->discount_price }}</td>
-                                        <td>{{ $product ->stock }}</td>
-                                        <td class="d-flex gap-2 align-middle">
-                                            @can('product-edit')
-                                            <a href="{{route('products.edit', $product->id)}}" class="btn btn-primary btn-small">edit</a>
-                                            @endcan
-                                            @can('product-delete')
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="post">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-small">delete</button>
-                                            </form>
-                                            @endcan
-                                        </td>
-                                    </tr>
+                                    @foreach ($products as $key => $product)
+                                        <tr>
+                                            <td>{{ $key + 1 }}</td>
+                                            <td>
+                                                <img src="{{asset($product->image)}}" alt="{{ $product->title }}" style="width: 80px;">
+                                                
+                                            </td>
+                                            <td>{{ $product->title }} <br><span style="color:red;"> {{$product->sku}}</span></td>
+                                            <td>{{ $product->buy_price }}</td>
+                                            <td>{{ $product->price }}</td>
+                                            <td>{{ $product->discount }}</td>
+                                            <td>{{ $product->discount_price }}</td>
+                                            <td>{{ $product->stock }}</td>
+                                            <td>
+                                                <span class="d-flex gap-2 align-middle">
+                                                    @can('product-edit')
+                                                        <a href="{{ route('products.edit', $product->id) }}"
+                                                            class="btn btn-primary p-1"><i class='bx bx-pen'></i></a>
+                                                    @endcan
+                                                    @can('product-delete')
+                                                        <form action="{{ route('products.destroy', $product->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('delete')
+                                                            <button type="submit" class="btn btn-danger p-1"><i
+                                                                    class="bx bx-trash "></i></button>
+                                                        </form>
+                                                    @endcan
+                                                </span>
+                                            </td>
+                                        </tr>
                                     @endforeach
                                 </tbody>
                             </table>

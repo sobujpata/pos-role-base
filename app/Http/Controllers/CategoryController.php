@@ -1,13 +1,13 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Category;
-use Illuminate\Support\Str;
-use App\Models\MainCategory;
-use Illuminate\Http\Request;
 use App\Helper\ResponseHelper;
+use App\Models\Category;
+use App\Models\MainCategory;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -44,10 +44,10 @@ class CategoryController extends Controller
         ]);
         // dd($request->all());
         // Create a new Category instance
-        $category               = new Category();
-        $category->categoryName = $request->categoryName;
+        $category                   = new Category();
+        $category->categoryName     = $request->categoryName;
         $category->main_category_id = $request->mainCategory; // Set the main category ID
-        // Check if an image was uploaded
+                                                              // Check if an image was uploaded
         if ($request->hasFile('categoryImg')) {
             $filename              = Str::slug($request->categoryName) . '.' . $request->file('categoryImg')->getClientOriginalExtension();
             $path                  = $request->file('categoryImg')->storeAs('categories', $filename, 'public');
@@ -64,7 +64,7 @@ class CategoryController extends Controller
     public function edit(Request $request, $id)
     {
 
-        $category = Category::find($id);
+        $category       = Category::find($id);
         $mainCategories = MainCategory::all();
         // dd($category);
         return view('backend.pages.categories.edit', compact('category', 'mainCategories'));
@@ -78,8 +78,8 @@ class CategoryController extends Controller
             'mainCategory' => 'required|exists:main_categories,id', // Ensure main category exists
         ]);
 
-        $category = Category::find($id);
-        $category->categoryName = $request->categoryName;
+        $category                   = Category::find($id);
+        $category->categoryName     = $request->categoryName;
         $category->main_category_id = $request->mainCategory; // Update the main category ID
 
         if ($request->hasFile('categoryImg')) {
@@ -138,5 +138,85 @@ class CategoryController extends Controller
         return response()->json($menuBanners);
     }
 
+    public function MainIndex()
+    {
+        $categories = MainCategory::all();
+
+        return view('backend.pages.main-categories.index', compact('categories'));
+    }
+    public function MainCreate()
+    {
+        // Fetch all main categories for the dropdown
+        return view('backend.pages.main-categories.create');
+    }
+    public function MAinStore(Request $request)
+    {
+        // Validate form data
+        $request->validate([
+            'categoryName' => 'required|string|max:255',
+            'categoryImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+        
+        if ($request->hasFile('categoryImg')) {
+            $filename              = Str::slug($request->categoryName) . '.' . $request->file('categoryImg')->getClientOriginalExtension();
+            $path                  = $request->file('categoryImg')->storeAs('categories', $filename, 'public');
+           
+        }
+        
+        MainCategory::create([
+            'categoryName' => $request->categoryName,
+            'categoryImg'  => $path,
+        ]);
+
+        // Redirect with success message
+        return redirect()->route('MainCategories.index')->with('success', 'Main category created successfully.');
+    }
+    public function MainEdit(Request $request, $id)
+    {
+
+        $category = MainCategory::find($id);
+
+        return view('backend.pages.main-categories.edit', compact('category'));
+    }
+
+    public function MainUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'categoryName' => 'required|string|max:255',
+            'categoryImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:4048',
+        ]);
+
+        $category               = MainCategory::find($id);
+        $category->categoryName = $request->categoryName;
+        if ($request->hasFile('categoryImg')) {
+            // Optionally delete old image
+            if ($category->categoryImg && Storage::disk('public')->exists($category->categoryImg)) {
+                Storage::disk('public')->delete($category->categoryImg);
+            }
+
+            // Store new image
+            $filename              = Str::slug($request->categoryName) . '.' . $request->file('categoryImg')->getClientOriginalExtension();
+            $path                  = $request->file('categoryImg')->storeAs('categories', $filename, 'public');
+            $category->categoryImg = $path;
+        }
+
+        $category->save();
+
+        return redirect()->route('MainCategories.index')->with('success', 'Main Category updated successfully.');
+    }
+
+    public function MainDestroy(Request $request, MainCategory $category)
+    {
+        // dd($category);
+        // Optionally delete the image file
+        if ($category->categoryImg && Storage::disk('public')->exists($category->categoryImg)) {
+            Storage::disk('public')->delete($category->categoryImg);
+        }
+
+        // Delete the category
+        $category->delete();
+
+        return redirect()->route('MainCategories.index')->with('success', 'Main Category deleted successfully.');
+    }
 
 }

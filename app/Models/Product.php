@@ -10,33 +10,46 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  */
 class Product extends Model
 {
-    protected $fillable = [
-        'title',
-        'short_des',
-        'price',
-        'discount',
-        'discount_price',
-        'image',
-        'stock',
-        'star',
-        'remark',
-        'category_id',
-        'brand_id',
-        'sku',
-        'tags',
-        'water_resistance',
-        'capacity',
-        'material',
+    const remark = [
+        'popular','new','top','special','trending','regular','featured'
     ];
-    public function brand(): BelongsTo
-    {
-        return $this->belongsTo(Brand::class);
-    }
-    public function category(): BelongsTo
+    protected $fillable = [
+        'sku', 'title', 'short_des', 'description', 'price', 'buy_price',
+        'discount', 'discount_price', 'image', 'stock', 'min_stock', 'unit',
+        'star', 'remark', 'is_active', 'category_id', 'brand_id'
+    ];
+
+    protected $casts = [
+        'price' => 'decimal:2',
+        'buy_price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
+        'stock' => 'integer',
+        'min_stock' => 'integer',
+        'is_active' => 'boolean',
+        'star' => 'float'
+    ];
+
+    // Relationships
+    public function category()
     {
         return $this->belongsTo(Category::class);
     }
 
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function scopeInStock($query)
+    {
+        return $query->where('stock', '>', 0);
+    }
     public function productDetail(){
         return $this->hasOne(ProductDetail::class);
     }

@@ -39,7 +39,8 @@
                                     </ul>
                                 </div>
                             @endif
-                            <form action="{{ route('products.update', $product->id) }}" method="post"  enctype="multipart/form-data">
+                            <form action="{{ route('products.update', $product->id) }}" method="post"
+                                enctype="multipart/form-data">
                                 @csrf
                                 @method('put')
                                 <div class="row">
@@ -50,7 +51,7 @@
                                                 value="{{ $product->title }}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-6 mb-3">
+                                    <div class="col-sm-5 mb-3">
                                         <div class="form-group">
                                             <label for="short_des" class="col-form-label">Short Description</label>
                                             <input type="text" class="form-control" id="short_des" name="short_des"
@@ -59,7 +60,14 @@
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
-                                            <label for="price" class="col-form-label">Price</label>
+                                            <label for="buy_price" class="col-form-label">Buy Price</label>
+                                            <input type="text" class="form-control" id="buy_price" name="buy_price"
+                                                value="{{ $product->buy_price }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-2 mb-3">
+                                        <div class="form-group">
+                                            <label for="price" class="col-form-label">Sales Price</label>
                                             <input type="text" class="form-control" id="price" name="price"
                                                 value="{{ $product->price }}">
                                         </div>
@@ -67,7 +75,7 @@
                                     <div class="col-sm-1 mb-3">
                                         <div class="form-group">
                                             <label for="discount" class="col-form-label">Dis (%)</label>
-                                            <input type="text" class="form-control" id="discount" name="discount"
+                                            <input type="text" class="form-control" id="percent" name="discount"
                                                 value="{{ $product->discount }}">
                                         </div>
                                     </div>
@@ -75,7 +83,7 @@
                                         <div class="form-group">
                                             <label for="discount_price" class="col-form-label">Discount Price</label>
                                             <input type="text" class="form-control" id="discount_price"
-                                                name="discount_price" value="{{ $product->discount_price }}">
+                                                name="discount_price" value="{{ $product->discount_price }}" readonly>
                                         </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
@@ -85,7 +93,7 @@
                                                 value="{{ $product->stock }}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-1 mb-3">
                                         <div class="form-group">
                                             <label for="star" class="col-form-label">Star</label>
                                             <input type="text" class="form-control" id="star" name="star"
@@ -95,8 +103,15 @@
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="remark" class="col-form-label">Remarks</label>
-                                            <input type="text" class="form-control" id="remark" name="remark"
-                                                value="{{ $product->remark }}">
+                                            <select name="remark" id="" class="form-control form-select">
+                                                <option value="" disable selected>Select Remarks</option>
+                                                @foreach ($remarks as $remark)
+                                                    <option value="{{ $remark }}"
+                                                        @if ($product->remark == $remark) selected @endif>
+                                                        {{ ucfirst($remark) }}</option>
+                                                @endforeach
+                                            </select>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
@@ -129,51 +144,84 @@
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="color" class="col-form-label">Colors</label>
-                                            <input type="text" class="form-control" id="color" name="color"
-                                                value="{{ $product->productDetail->color ?? null }}{{ old('color') }}">
+
+                                            <select name="colors[]" id="color" class="form-control" multiple
+                                                size="6" required>
+                                                @foreach ($colors as $color)
+                                                    <option value="{{ $color->color_code }}"
+                                                        style="color: {{ $color->color_code }};"
+                                                        @if (in_array($color->color_code, $savedColors)) selected @endif>
+                                                        {{ ucfirst($color->color) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 mb-3">
+
+
+                                    <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="size" class="col-form-label">Sizes</label>
-                                            <input type="text" class="form-control" id="size" name="size"
-                                                value="{{ $product->productDetail->size ?? null }}{{ old('size') }}">
+
+                                            <select name="sizes[]" id="size" class="form-control" multiple
+                                                size="6" required>
+                                                @foreach ($sizes as $size)
+                                                    <option value="{{ $size->short_name }}"
+                                                        @if (in_array($size->short_name, $savedSizes)) selected @endif>
+                                                        {{ ucfirst($size->size) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-1 mb-3">
+
+                                    <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="capacity" class="col-form-label">Capacity</label>
                                             <input type="text" class="form-control" id="capacity" name="capacity"
                                                 value="{{ $product->capacity ?? null }}{{ old('capacity') }}">
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="sku" class="col-form-label">SKU</label>
-                                            <input type="text" class="form-control" id="sku" name="sku"
-                                                value="{{ $product->sku ?? null }}{{ old('sku') }}">
-                                        </div>
-                                    </div>
+
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="tags" class="col-form-label">Tags</label>
-                                            <input type="text" class="form-control" id="tags" name="tags"
-                                                value="{{ $product->tags ?? null }}{{ old('tags') }}">
+                                            <select name="tags[]" id="tag" class="form-control" multiple
+                                                size="6" required>
+                                                @foreach ($tags as $tag)
+                                                    <option value="{{ $tag->tag }}" style=""
+                                                        @if (in_array($tag->tag, $savedTags)) selected @endif>
+                                                        {{ ucfirst($tag->tag) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="water_resistance" class="col-form-label">Water Resistance</label>
-                                            <input type="text" class="form-control" id="water_resistance"
-                                                name="water_resistance"
-                                                value="{{ $product->water_resistance ?? null }}{{ old('water_resistance') }}">
+                                            <select name="water_resistance" id="" class="form-control form-select">
+                                                <option value="Yes" @if($product->water_resistance=="Yes") Selected @endif>Yes</option>
+                                                <option value="No" @if($product->water_resistance=="No") Selected @endif>No</option>
+                                            </select>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">
                                         <div class="form-group">
                                             <label for="material" class="col-form-label">Material</label>
-                                            <input type="text" class="form-control" id="material" name="material"
-                                                value="{{ $product->material ?? null }}{{ old('material') }}">
+                                            <select name="material" id="" class="form-control form-select">
+                                                <option value="Metal"  @if($product->material=="Metal") Selected @endif>Metal</option>
+                                                <option value="Plastic" @if($product->material=="Plastic") Selected @endif>Plastic</option>
+                                                <option value="Leather" @if($product->material=="Leather") Selected @endif>Leather</option>
+                                                <option value="Wood" @if($product->material=="Wood") Selected @endif>Wood</option>
+                                                <option value="Rubber" @if($product->material=="Rubber") Selected @endif>Rubber</option>
+                                                <option value="Glass" @if($product->material=="Glass") Selected @endif>Glass</option>
+                                                <option value="Ceramic" @if($product->material=="Ceramic") Selected @endif>Ceramic</option>
+                                            </select>
+                                            
                                         </div>
                                     </div>
                                     <div class="col-sm-3 mb-3">
@@ -284,5 +332,19 @@
                 height: 300
             });
         });
+    </script>
+    <script>
+        function calculateDiscount() {
+            let price = parseFloat(document.getElementById("price").value) || 0;
+            let percent = parseFloat(document.getElementById("percent").value) || 0;
+
+            let discountAmount = price * (percent / 100);
+            let finalPrice = price - discountAmount;
+
+            document.getElementById("discount_price").value = finalPrice.toFixed(2);
+        }
+
+        document.getElementById("price").addEventListener("input", calculateDiscount);
+        document.getElementById("percent").addEventListener("input", calculateDiscount);
     </script>
 @endsection

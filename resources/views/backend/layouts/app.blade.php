@@ -31,9 +31,11 @@
 	<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/r-3.0.3/datatables.min.css" rel="stylesheet">
 	<script src="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/r-3.0.3/datatables.min.js"></script>
 	<title>Admin Dashboard - @yield('title')</title>
-	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+	{{-- <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script> --}}
+    <script src="{{ asset('assets/js/axios.min.js')}}"></script>
+	<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	 @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
@@ -245,7 +247,7 @@
 	<!-- Bootstrap JS -->
 	<script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 	<!--plugins-->
-	{{-- <script src="{{ asset('assets/js/jquery.min.js')}}"></script> --}}
+	
 	<script src="{{ asset('assets/plugins/simplebar/js/simplebar.min.js')}}"></script>
 	<script src="{{ asset('assets/plugins/metismenu/js/metisMenu.min.js')}}"></script>
 	<script src="{{ asset('assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js')}}"></script>
@@ -256,7 +258,7 @@
 	<!--app JS-->
 	<script src="{{ asset('assets/js/app.js')}}"></script>
 	<script>
-		new PerfectScrollbar(".app-container");
+		// new PerfectScrollbar(".app-container");
 	</script>
 	<script>
 		let table = new DataTable('#myTable', {
@@ -264,6 +266,7 @@
 			"lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
 		});
 	</script>
+	@stack('script')
 </body>
 
 </html>

@@ -55,12 +55,12 @@
                                             <td>{{ $menu->order }}</td>
                                             <td>
                                                 <a href="{{ route('menus.edit', $menu) }}"
-                                                    class="btn btn-sm btn-primary">Edit</a>
+                                                   class="btn btn-primary p-1"><i class='bx bx-pen'></i></a>
                                                 <form action="{{ route('menus.destroy', $menu) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf @method('DELETE')
-                                                    <button class="btn btn-sm btn-danger"
-                                                        onclick="return confirm('Delete?')">Delete</button>
+                                                    <button class="btn p-1 btn-danger"
+                                                        onclick="return confirm('Delete?')"><i class="bx bx-trash"></i></button>
                                                 </form>
                                             </td>
                                         </tr>

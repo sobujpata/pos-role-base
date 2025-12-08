@@ -55,13 +55,13 @@
                                         <td>{{ $user->email }}</td>
                                         <td class="d-flex gap-2">
                                             @can('user-edit')
-                                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-small">edit</a>
+                                            <a href="{{ route('user.edit', $user->id) }}" class="btn btn-primary btn-small"><i class="bx bxs-pen"></i></a>
                                             @endcan
                                             @can('user-delete')
                                             <form action="{{ route('user.destroy', $user->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-small">delete</button>
+                                                <button type="submit" class="btn btn-danger btn-small"><i class="bx bx-trash"></i></button>
                                             </form>
                                             @endcan
                                         </td>

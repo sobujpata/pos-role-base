@@ -51,17 +51,19 @@
 
                                         <td><img src="{{'storage/'. $category ->categoryImg }}" alt="{{ $category ->categoryName }}" width="40"> </td>
                                         <td>{{ $category ->mainCategory->categoryName }}</td>
-                                        <td class="d-flex gap-2">
+                                        <td >
+                                            <span class="d-flex gap-2">
                                             @can('category-edit')
-                                            <a href="{{route('categories.edit', $category->id)}}" class="btn btn-primary btn-small">edit</a>
+                                            <a href="{{route('categories.edit', $category->id)}}" class="btn btn-primary p-1"><i class='bx bx-pen'></i></a>
                                             @endcan
                                             @can('category-delete')
                                             <form action="{{ route('categories.destroy', $category->id) }}" method="post" enctype="multipart/form-data">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-small">delete</button>
+                                                <button type="submit" class="btn btn-danger p-1"><i class='bx bx-trash'></i></button>
                                             </form>
                                             @endcan
+                                            </span>
                                         </td>
                                     </tr>
                                     @endforeach

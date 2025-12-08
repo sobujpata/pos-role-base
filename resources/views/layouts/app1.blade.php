@@ -18,6 +18,74 @@
     <!-- SITE TITLE -->
     {{-- <title>Shopwise - eCommerce Bootstrap 5 HTML Template</title> --}}
     <!-- Favicon Icon -->
+    <style>
+        body {
+            background: #fff;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        /* Container for each loading block */
+        .skeleton-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 24px;
+            max-width: 100%;
+        }
+
+        /* Base skeleton block */
+        .skeleton {
+            position: relative;
+            overflow: hidden;
+            background-color: #e3e3e3;
+            border-radius: 4px;
+        }
+
+        /* Shimmer animation overlay */
+        .skeleton::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            /* left: -150px; */
+            width: 100%;
+            height: 100hv;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.5),
+                    transparent);
+            animation: shimmer 1.5s infinite;
+        }
+
+        /* Shimmer animation keyframes */
+        @keyframes shimmer {
+            100% {
+                left: 100%;
+            }
+        }
+
+        /* Example layout pieces */
+        .thumbnail {
+            height: 180px;
+            width: 100%;
+        }
+
+        .title {
+            height: 30px;
+            width: 80%;
+        }
+
+        .text {
+            height: 20px;
+            width: 60%;
+        }
+
+        .fade-out {
+            opacity: 0;
+            transition: opacity 0.1s ease-out;
+            /* 100ms */
+        }
+    </style>
     <link rel="shortcut icon" type="image/x-icon" href="{{ asset('images/favicon.png') }}">
     <!-- Animation CSS -->
     <link rel="stylesheet" href="{{ asset('css/animate.css') }}">
@@ -41,54 +109,65 @@
     <!-- Magnific Popup CSS -->
     <link rel="stylesheet" href="{{ asset('css/magnific-popup.css') }}">
     <!-- jquery-ui CSS -->
-    <link rel="stylesheet" href="{{asset('css/jquery-ui.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/jquery-ui.css') }}">
     <!-- Slick CSS -->
     <link rel="stylesheet" href="{{ asset('css/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick-theme.css') }}">
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
-    <script src="{{asset('js/jquery-3.6.0.min.js')}}"></script>
-    <script src="{{asset('js/axios.min.js')}}"></script>
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
     <title>Localbazer.com-@yield('title')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
+
 </head>
 
 <body class="font-sans antialiased">
     <!-- LOADER -->
-    <div class="preloader">
-        {{-- <div class="lds-ellipsis">
+    {{-- <div class="preloader">
+        <div class="lds-ellipsis">
             <span></span>
             <span></span>
             <span></span>
-        </div> --}}
+        </div>
+    </div> --}}
+    <!-- Loader -->
+    <div id="loader">
+        <div class="skeleton-wrapper">
+            <div class="skeleton thumbnail"></div>
+            <div class="skeleton title"></div>
+            <div class="skeleton text"></div>
+        </div>
+        <div class="skeleton-wrapper">
+            <div class="skeleton thumbnail"></div>
+            <div class="skeleton title"></div>
+            <div class="skeleton text"></div>
+        </div>
     </div>
-    <!-- END LOADER -->
 
-
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-900" id="real-content" style="display: none;">
         @include('layouts.partials.nav_1_2')
         <!-- Page Content -->
         <main>
             @yield('content')
         </main>
+        @include('layouts.partials.footer_1')
     </div>
 
-    @include('layouts.partials.footer_1')
     <!-- END FOOTER -->
 
     <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
 
     <!-- Latest jQuery -->
     {{-- <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script> --}}
-    
+
     <!-- jquery-ui -->
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
     <!-- popper min js -->
@@ -119,7 +198,18 @@
     <script src="{{ asset('js/scripts.js') }}"></script>
     @yield('scripts')
     @stack('scripts')
-    
+    <script>
+        // Simulate loading (e.g., API call)
+        setTimeout(() => {
+            const loader = document.getElementById('loader');
+            loader.classList.add('fade-out'); // start fade-out
+            setTimeout(() => {
+                loader.style.display = 'none'; // remove loader after fade
+                //   document.getElementById("content-loader").style.display = "none";
+                document.getElementById('real-content').style.display = 'block';
+            }, 100); // match fade-out duration (100ms)
+        }, 1000); // simulate 2s loading delay
+    </script>
 </body>
 
 </html>

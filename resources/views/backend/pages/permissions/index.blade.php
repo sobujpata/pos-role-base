@@ -51,13 +51,13 @@
                                         </td>
                                         <td class="d-flex gap-2">
                                             @can('permission-edit')
-                                            <a href="{{ route('permission.edit', $permission->id) }}" class="btn btn-primary btn-small">edit</a>
+                                            <a href="{{ route('permission.edit', $permission->id) }}" class="btn btn-primary p-1"><i class='bx bx-pen'></i></a>
                                             @endcan
                                             @can('permission-delete')
                                             <form action="{{ route('permission.destroy', $permission->id) }}" method="post">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-small">delete</button>
+                                                <button type="submit" class="btn btn-danger p-1"><i class="bx bx-trash"></i></button>
                                             </form>
                                             @endcan
                                         </td>
