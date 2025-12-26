@@ -30,9 +30,9 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
                         <div class="product-image">
-                            {{-- <div class="product_img_box">
-                                <img id="product_img" src="{{ asset($product->productDetail->img1 ?? '') }}"
-                                    data-zoom-image="{{ asset($product->productDetail->zoom_img1 ?? '') }}"
+                            <div class="product_img_box">
+                                <img id="product_img" src="{{ asset('storage/'.$product->productDetail->img1 ?? '') }}"
+                                    data-zoom-image="{{ asset('storage/'.$product->productDetail->zoom_img1 ?? '') }}"
                                     alt="{{ $product->title }}" />
                                 <a href="#" class="product_img_zoom" title="Zoom">
                                     <span class="linearicons-zoom-in"></span>
@@ -44,20 +44,20 @@
                                 @php
                                     $galleryImages = [
                                         [
-                                            'thumb' => $product->productDetail->img1 ?? null,
-                                            'zoom' => $product->productDetail->zoom_img1 ?? null,
+                                            'thumb' => 'storage/'.$product->productDetail->img1 ?? null,
+                                            'zoom' => 'storage/'.$product->productDetail->zoom_img1 ?? null,
                                         ],
                                         [
-                                            'thumb' => $product->productDetail->img2 ?? null,
-                                            'zoom' => $product->productDetail->zoom_img2 ?? null,
+                                            'thumb' => 'storage/'.$product->productDetail->img2 ?? null,
+                                            'zoom' => 'storage/'.$product->productDetail->zoom_img2 ?? null,
                                         ],
                                         [
-                                            'thumb' => $product->productDetail->img3 ?? null,
-                                            'zoom' => $product->productDetail->zoom_img3 ?? null,
+                                            'thumb' => 'storage/'.$product->productDetail->img3 ?? null,
+                                            'zoom' => 'storage/'.$product->productDetail->zoom_img3 ?? null,
                                         ],
                                         [
-                                            'thumb' => $product->productDetail->img4 ?? null,
-                                            'zoom' => $product->productDetail->zoom_img4 ?? null,
+                                            'thumb' => 'storage/'.$product->productDetail->img4 ?? null,
+                                            'zoom' => 'storage/'.$product->productDetail->zoom_img4 ?? null,
                                         ],
                                     ];
                                 @endphp
@@ -72,10 +72,10 @@
                                         </a>
                                     </div>
                                 @endforeach
-                            </div> --}}
-                            <div class="product_img_box">
-                                <img id="product_img" src='{{ asset($product->productDetail->img1) }}'
-                                    data-zoom-image="{{asset($product->productDetail->zoom_img1)}}" alt="product_img1" />
+                            </div>
+                            {{-- <div class="product_img_box">
+                                <img id="product_img" src='{{ asset('storage/'.$product->productDetail->img1) }}'
+                                    data-zoom-image="{{asset('storage/'.$product->productDetail->zoom_img1)}}" alt="product_img1" />
                                 <a href="#" class="product_img_zoom" title="Zoom">
                                     <span class="linearicons-zoom-in"></span>
                                 </a>
@@ -84,33 +84,33 @@
                                 data-slides-to-scroll="1" data-infinite="false">
                                 <div class="item">
                                     <a href="#" class="product_gallery_item active"
-                                        data-image="{{ asset($product->productDetail->img1) }}"
-                                        data-zoom-image="{{ asset($product->productDetail->zoom_img1) }}">
-                                        <img src="{{ asset($product->productDetail->img1) }}" alt="product_small_img1" />
+                                        data-image="{{ asset('storage/'.$product->productDetail->img1) }}"
+                                        data-zoom-image="{{ asset('storage/'.$product->productDetail->zoom_img1) }}">
+                                        <img src="{{ asset('storage/'.$product->productDetail->img1) }}" alt="product_small_img1" />
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{ asset($product->productDetail->img2) }}"
+                                        data-image="{{ asset('storage/'.$product->productDetail->img2) }}"
                                         data-zoom-image="{{asset($product->productDetail->zoom_img2)}}">
-                                        <img src="{{ asset($product->productDetail->img2) }}" alt="product_small_img2" />
+                                        <img src="{{ asset('storage/'.$product->productDetail->img2) }}" alt="product_small_img2" />
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{asset($product->productDetail->img3)}}"
+                                        data-image="{{asset('storage/'.$product->productDetail->img3)}}"
                                         data-zoom-image="{{ asset($product->productDetail->zoom_img3) }}">
-                                        <img src="{{ asset($product->productDetail->img3) }}" alt="product_small_img3" />
+                                        <img src="{{ asset('storage/'.$product->productDetail->img3) }}" alt="product_small_img3" />
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{ asset($product->productDetail->img4) }}"
+                                        data-image="{{ asset('storage/'.$product->productDetail->img4) }}"
                                         data-zoom-image="{{ asset($product->productDetail->zoom_img4) }}">
-                                        <img src="{{ asset($product->productDetail->img4) }}" alt="product_small_img4" />
+                                        <img src="{{ asset('storage/'.$product->productDetail->img4) }}" alt="product_small_img4" />
                                     </a>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
 
 
@@ -399,7 +399,7 @@
                                 <div class="product">
                                     <div class="product_img">
                                         <a href="#">
-                                            <img src="{{ asset($item->image) }}" alt="product_img1">
+                                            <img src="{{ asset('storage/'.$item->image) }}" alt="product_img1">
                                         </a>
                                         <div class="product_action_box">
                                             <ul class="list_none pr_action_btn">

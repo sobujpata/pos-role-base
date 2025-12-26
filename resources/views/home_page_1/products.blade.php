@@ -372,7 +372,7 @@
                 res.data.cart.forEach(item => {
                     let cartItem = `<li>
                     <a href="/cart/remove/${item.id}" class="item_remove"><i class="ion-close"></i></a>
-                    <a href="#"><img src="${item.image}" alt="${item.name}">${item.name}</a>
+                    <a href="#"><img src="storage/${item.image}" alt="${item.name}">${item.name}</a>
                     <span class="cart_quantity">${item.quantity}  x
                     <span class="cart_amount"> <span class="price_symbole">Tk ${item.price}</span></span></span>
                     </li>

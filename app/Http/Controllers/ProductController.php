@@ -1,26 +1,26 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\Models\Tag;
-use App\Models\Size;
+use App\Helper\ResponseHelper;
 use App\Models\Brand;
-use App\Models\Color;
-use App\Models\Product;
 use App\Models\Category;
-use App\Models\ProductCart;
-use App\Models\ProductWish;
-use Illuminate\Http\Request;
+use App\Models\Color;
+use App\Models\CustomerProfile;
 use App\Models\ImportProduct;
+use App\Models\Product;
+use App\Models\ProductCart;
 use App\Models\ProductDetail;
 use App\Models\ProductReview;
 use App\Models\ProductSlider;
-use App\Helper\ResponseHelper;
+use App\Models\ProductWish;
+use App\Models\Size;
+use App\Models\Tag;
 // use Intervention\Image\Image;
-use App\Models\CustomerProfile;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 
 class ProductController extends Controller
@@ -128,19 +128,134 @@ class ProductController extends Controller
     {
         $categories = Category::all();
         $brands     = Brand::all();
-        $remarks = Product::remark;
-        $colors = Color::all();
-        $sizes = Size::all();
-        $tags = Tag::all();
+        $remarks    = Product::remark;
+        $colors     = Color::all();
+        $sizes      = Size::all();
+        $tags       = Tag::all();
         return view('backend.pages.products.create', compact('categories', 'brands', 'remarks', 'colors', 'sizes', 'tags'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(Request $request)
+    // {
+    //     // dd($request->all());
+    //     $validatedData = $request->validate([
+    //         'title'            => 'required|string|max:255',
+    //         'short_des'        => 'required|string|max:255',
+    //         'buy_price'        => 'required|numeric',
+    //         'price'            => 'required|numeric',
+    //         'discount'         => 'required|numeric',
+    //         'discount_price'   => 'required|numeric',
+    //         'stock'            => 'required|integer',
+    //         'star'             => 'required|integer|min:1|max:5',
+    //         'remark'           => 'required|string|max:255',
+    //         'category_id'      => 'required|integer',
+    //         'brand_id'         => 'required|integer',
+    //         'capacity'         => 'required|string|max:255',
+    //         'water_resistance' => 'required|string|max:255',
+    //         'material'         => 'required|string|max:255',
+    //         'des'              => 'required|string',
+    //         'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+    //         'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+    //         'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+    //         'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+    //     ]);
+    //     $sku = strtoupper(uniqid());
+
+    //     $colors = $request->colors; // array
+    //     $colorString = implode(',', $colors);
+    //     $tags = $request->tags; // array
+    //     $tagString = implode(',', $tags);
+    //     $sizes = $request->sizes; // array
+    //     $sizeString = implode(',', $sizes);
+
+    //     $imageUrls = [];
+    //     $sizes     = [
+    //         'normal' => [540, 600],
+    //         'zoom'   => [810, 900],
+    //     ];
+
+    //     foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+    //         if ($request->hasFile($imgField)) {
+    //             $file      = $request->file($imgField);
+    //             $extension = $file->getClientOriginalExtension();
+    //             $timestamp = time();
+
+    //             foreach ($sizes as $prefix => [$w, $h]) {
+    //                 $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . uniqid() . '.' . $extension;
+    //                 $path     = storage_path('app/public/products/' . $fileName);
+
+    //                 // Ensure directory exists
+    //                 if (! file_exists(dirname($path))) {
+    //                     mkdir(dirname($path), 0777, true);
+    //                 }
+
+    //                 $image = Image::make($file->getRealPath());
+    //                 $image->resize($w, $h)->save($path);
+
+    //                 $imageUrls[$imgField][$prefix] = "storage/products/{$fileName}";
+    //             }
+    //         }
+    //     }
+
+    //     // dd($imageUrls);
+    //     try {
+    //         DB::beginTransaction();
+
+    //         $product = Product::create([
+    //             'title'            => $validatedData['title'],
+    //             'short_des'        => $validatedData['short_des'],
+    //             'buy_price'        => $validatedData['buy_price'],
+    //             'price'            => $validatedData['price'],
+    //             'discount'         => $validatedData['discount'],
+    //             'discount_price'   => $validatedData['discount_price'],
+    //             'stock'            => $validatedData['stock'],
+    //             'remark'           => $validatedData['remark'],
+    //             'star'             => $validatedData['star'],
+    //             'capacity'         => $validatedData['capacity'],
+    //             'water_resistance' => $validatedData['water_resistance'],
+    //             'material'         => $validatedData['material'],
+    //             'sku'              => $sku,
+    //             'tags'             => $tagString,
+    //             'category_id'      => $validatedData['category_id'],
+    //             'brand_id'         => $validatedData['brand_id'],
+    //             'image'            => $imageUrls['img1']['normal'] ?? null,
+    //         ]);
+    //         // dd($product);
+    //         $productDetailsData = [
+    //             'color' => $colorString,
+    //             'size'  => $sizeString,
+    //             'des'   => $validatedData['des'],
+    //         ];
+
+    //         foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+    //             if (! empty($imageUrls[$imgField]['normal'])) {
+    //                 $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
+    //             }
+    //         }
+    //         foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
+    //             if (! empty($imageUrls[$imgField]['zoom'])) {
+    //                 $productDetailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
+    //             }
+    //         }
+
+    //         ProductDetail::create(array_merge(
+    //             ['product_id' => $product->id],
+    //             $productDetailsData
+    //         ));
+
+    //         DB::commit();
+    //         return redirect()->route('products.index')->with('success', 'Product created successfully!');
+    //     } catch (\Exception $e) {
+    //         DB::rollBack();
+    //         Log::error('Product create failed: ' . $e->getMessage());
+    //         return redirect()->route('products.index')->with('error', 'Product create failed: ' . $e->getMessage());
+    //     }
+    // }
     public function store(Request $request)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'title'            => 'required|string|max:255',
             'short_des'        => 'required|string|max:255',
@@ -162,46 +277,51 @@ class ProductController extends Controller
             'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
             'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
         ]);
+
         $sku = strtoupper(uniqid());
 
-        $colors = $request->colors; // array
-        $colorString = implode(',', $colors);
-        $tags = $request->tags; // array
-        $tagString = implode(',', $tags);
-        $sizes = $request->sizes; // array
-        $sizeString = implode(',', $sizes);
+        // Convert arrays to strings
+        $colorString = implode(',', $request->colors ?? []);
+        $tagString   = implode(',', $request->tags ?? []);
+        $sizeString  = implode(',', $request->sizes ?? []);
 
-
-        $imageUrls = [];
-        $sizes     = [
+        // Image sizes
+        $imageSizes = [
             'normal' => [540, 600],
             'zoom'   => [810, 900],
         ];
+
+        $imageUrls = [];
 
         foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
             if ($request->hasFile($imgField)) {
                 $file      = $request->file($imgField);
                 $extension = $file->getClientOriginalExtension();
-                $timestamp = time();
 
-                foreach ($sizes as $prefix => [$w, $h]) {
-                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . uniqid() . '.' . $extension;
-                    $path     = storage_path('app/public/products/' . $fileName);
+                foreach ($imageSizes as $prefix => [$width, $height]) {
 
-                    // Ensure directory exists
+                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-')
+                    . time() . '-' . uniqid() . '.' . $extension;
+
+                    $path = storage_path('app/public/products/' . $fileName);
+
                     if (! file_exists(dirname($path))) {
-                        mkdir(dirname($path), 0777, true);
+                        mkdir(dirname($path), 0755, true);
                     }
 
-                    $image = Image::make($file->getRealPath());
-                    $image->resize($w, $h)->save($path);
+                    Image::make($file->getRealPath())
+                        ->resize($width, $height, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        })
+                        ->save($path);
 
-                    $imageUrls[$imgField][$prefix] = "storage/products/{$fileName}";
+                    // ✅ STORE RELATIVE PATH ONLY (NO "storage/")
+                    $imageUrls[$imgField][$prefix] = "products/{$fileName}";
                 }
             }
         }
 
-        // dd($imageUrls);
         try {
             DB::beginTransaction();
 
@@ -224,64 +344,66 @@ class ProductController extends Controller
                 'brand_id'         => $validatedData['brand_id'],
                 'image'            => $imageUrls['img1']['normal'] ?? null,
             ]);
-            // dd($product);
+
             $productDetailsData = [
-                'color' => $colorString,
-                'size'  => $sizeString,
-                'des'   => $validatedData['des'],
+                'product_id' => $product->id,
+                'color'      => $colorString,
+                'size'       => $sizeString,
+                'des'        => $validatedData['des'],
             ];
 
             foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
                 if (! empty($imageUrls[$imgField]['normal'])) {
                     $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
                 }
-            }
-            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
                 if (! empty($imageUrls[$imgField]['zoom'])) {
                     $productDetailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
                 }
             }
 
-            ProductDetail::create(array_merge(
-                ['product_id' => $product->id],
-                $productDetailsData
-            ));
+            ProductDetail::create($productDetailsData);
 
             DB::commit();
-            return redirect()->route('products.index')->with('success', 'Product created successfully!');
-        } catch (\Exception $e) {
+
+            return redirect()
+                ->route('products.index')
+                ->with('success', 'Product created successfully!');
+        } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Product create failed: ' . $e->getMessage());
-            return redirect()->route('products.index')->with('error', 'Product create failed: ' . $e->getMessage());
+            Log::error('Product create failed', ['error' => $e->getMessage()]);
+
+            return redirect()
+                ->route('products.index')
+                ->with('error', 'Product create failed');
         }
     }
 
     public function edit(string $id)
     {
-        $product    = Product::with('productDetail', 'category', 'brand')->find($id);
-        $categories = Category::all();
-        $brands     = Brand::all();
-        $remarks = Product::remark;
-        $colors = Color::all();
-        $sizes = Size::all();
-        $tags = Tag::all();
+        $product     = Product::with('productDetail', 'category', 'brand')->find($id);
+        $categories  = Category::all();
+        $brands      = Brand::all();
+        $remarks     = Product::remark;
+        $colors      = Color::all();
+        $sizes       = Size::all();
+        $tags        = Tag::all();
         $savedColors = explode(',', $product->productDetail->color ?? '');
-        $savedSizes = explode(',', $product->productDetail->size ?? '');
-        $savedTags = explode(',', $product->tags ?? '');
-        $remarks = Product::remark;
+        $savedSizes  = explode(',', $product->productDetail->size ?? '');
+        $savedTags   = explode(',', $product->tags ?? '');
+        $remarks     = Product::remark;
         // dd($savedTags);
         return view('backend.pages.products.update', compact(
             'product',
-             'categories',
-              'brands',
-              'colors',
-               'sizes', 
-               'tags',
-                'savedColors',
-                'savedSizes',
-                'savedTags',
-                'remarks'
-            ));
+            'categories',
+            'brands',
+            'colors',
+            'sizes',
+            'tags',
+            'savedColors',
+            'savedSizes',
+            'savedTags',
+            'remarks'
+        ));
     }
 
     /**
@@ -290,76 +412,73 @@ class ProductController extends Controller
 
     public function update(Request $request, string $id)
     {
-        // dd($request->all());
         $validatedData = $request->validate([
             'title'            => 'required|string|max:255',
             'short_des'        => 'required|string|max:255',
-            'buy_price'            => 'required|string|max:255',
-            'price'            => 'required|string|max:255',
-            'discount'         => 'required|string|max:255',
-            'discount_price'   => 'required|string|max:255',
-            'stock'            => 'required|string|max:255',
-            'star'             => 'required|string|max:255',
+            'buy_price'        => 'required|numeric',
+            'price'            => 'required|numeric',
+            'discount'         => 'required|numeric',
+            'discount_price'   => 'required|numeric',
+            'stock'            => 'required|integer',
+            'star'             => 'required|integer|min:1|max:5',
             'remark'           => 'required|string|max:255',
-            'category_id'      => 'required|string|max:255',
-            'brand_id'         => 'required|string|max:255',
+            'category_id'      => 'required|integer',
+            'brand_id'         => 'required|integer',
             'capacity'         => 'required|string|max:255',
             'water_resistance' => 'required|string|max:255',
             'material'         => 'required|string|max:255',
             'des'              => 'required|string',
-            'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'img1'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img2'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img3'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'img4'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
         ]);
 
-        $colors = $request->colors; // array
-        $colorString = implode(',', $colors);
-        $tags = $request->tags; // array
-        $tagString = implode(',', $tags);
-        $sizes = $request->sizes; // array
-        $sizeString = implode(',', $sizes);
+        $product = Product::findOrFail($id);
 
-        $imageUrls = [];
-        $sizes     = [
+        $colorString = implode(',', $request->colors ?? []);
+        $tagString   = implode(',', $request->tags ?? []);
+        $sizeString  = implode(',', $request->sizes ?? []);
+
+        $imageSizes = [
             'normal' => [540, 600],
             'zoom'   => [810, 900],
         ];
 
-        // Handle multiple image uploads
+        $imageUrls = [];
+
         foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
             if ($request->hasFile($imgField)) {
-                $file         = $request->file($imgField);
-                $originalName = $file->getClientOriginalName();
-                $timestamp    = time();
+                $file      = $request->file($imgField);
+                $extension = $file->getClientOriginalExtension();
 
-                foreach ($sizes as $prefix => [$w, $h]) {
-                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-') . $timestamp . '-' . $originalName;
-                    $path     = public_path('products' . DIRECTORY_SEPARATOR . $fileName);
+                foreach ($imageSizes as $prefix => [$w, $h]) {
 
-                    $image = Image::make($file->getRealPath());
-                    $image->resize($w, $h)->save($path);
+                    $fileName = ($prefix === 'normal' ? '' : $prefix . '-')
+                    . time() . '-' . uniqid() . '.' . $extension;
 
+                    $path = storage_path('app/public/products/' . $fileName);
+
+                    if (! file_exists(dirname($path))) {
+                        mkdir(dirname($path), 0755, true);
+                    }
+
+                    Image::make($file->getRealPath())
+                        ->resize($w, $h, function ($constraint) {
+                            $constraint->aspectRatio();
+                            $constraint->upsize();
+                        })
+                        ->save($path);
+
+                    // ✅ store RELATIVE path only
                     $imageUrls[$imgField][$prefix] = "products/{$fileName}";
                 }
             }
-        }
-        // dd($imageUrls);
-        // Fetch existing product
-        $product = Product::find($id);
-        if (! $product) {
-            return redirect()->route('products.index')->with('error', 'Product not found.');
-        }
-
-        if(!$product->sku){
-            $product->sku = strtoupper(uniqid());
-            $product->save();
         }
 
         try {
             DB::beginTransaction();
 
-            // Update product
             $product->update([
                 'title'            => $validatedData['title'],
                 'short_des'        => $validatedData['short_des'],
@@ -379,8 +498,7 @@ class ProductController extends Controller
                 'image'            => $imageUrls['img1']['normal'] ?? $product->image,
             ]);
 
-            // Prepare product details data
-            $productDetailsData = [
+            $detailsData = [
                 'color' => $colorString,
                 'size'  => $sizeString,
                 'des'   => $validatedData['des'],
@@ -388,29 +506,30 @@ class ProductController extends Controller
 
             foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
                 if (! empty($imageUrls[$imgField]['normal'])) {
-                    $productDetailsData[$imgField] = $imageUrls[$imgField]['normal'];
+                    $detailsData[$imgField] = $imageUrls[$imgField]['normal'];
                 }
-            }
-            foreach (['img1', 'img2', 'img3', 'img4'] as $imgField) {
                 if (! empty($imageUrls[$imgField]['zoom'])) {
-                    $productDetailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
+                    $detailsData['zoom_' . $imgField] = $imageUrls[$imgField]['zoom'];
                 }
             }
 
-            
-            // Update or create product details
             $product->productDetail()->updateOrCreate(
                 ['product_id' => $product->id],
-                $productDetailsData
+                $detailsData
             );
 
             DB::commit();
 
-            return redirect()->route('products.index')->with('success', 'Product updated successfully!');
-        } catch (\Exception $e) {
+            return redirect()
+                ->route('products.index')
+                ->with('success', 'Product updated successfully!');
+        } catch (\Throwable $e) {
             DB::rollBack();
-            Log::error('Product update failed: ' . $e->getMessage());
-            return redirect()->route('products.index')->with('error', 'Product update failed: ' . $e->getMessage());
+            Log::error('Product update failed', ['error' => $e->getMessage()]);
+
+            return redirect()
+                ->route('products.index')
+                ->with('error', 'Product update failed');
         }
     }
 
@@ -583,9 +702,8 @@ class ProductController extends Controller
 
     public function ImportProductAll()
     {
-        $importProducts = ImportProduct::with('product')->orderBy('created_at','desc')->get();
+        $importProducts = ImportProduct::with('product')->orderBy('created_at', 'desc')->get();
         //orderBy('created_at','desc')->get();
-
 
         return response()->json([
             'data' => $importProducts,
@@ -604,10 +722,10 @@ class ProductController extends Controller
 
         // Validation for import product creation
         $validatedData = $request->validate([
-            'product_id'    => 'required|integer',
-            'import_price'  => 'required|numeric',
-            'sale_price'    => 'required|numeric',
-            'quantity'      => 'required|integer',
+            'product_id'   => 'required|integer',
+            'import_price' => 'required|numeric',
+            'sale_price'   => 'required|numeric',
+            'quantity'     => 'required|integer',
         ]);
 
         try {
@@ -624,7 +742,7 @@ class ProductController extends Controller
             $product = Product::find($request->input('product_id'));
             $product->stock += $request->input('quantity');
             $product->buy_price = $request->input('import_price');
-            $product->price = $request->input('sale_price');
+            $product->price     = $request->input('sale_price');
             $product->save();
 
             // Return a success response

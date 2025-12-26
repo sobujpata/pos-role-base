@@ -1,17 +1,17 @@
 <?php
 namespace App\Http\Controllers;
 
-use Exception;
-use Carbon\Carbon;
-use App\Models\User;
-use App\Models\Product;
 use App\Models\Category;
 use App\Models\PosInvoice;
-use Illuminate\Http\Request;
 use App\Models\PosInvoiceProduct;
+use App\Models\Product;
+use App\Models\User;
+use Carbon\Carbon;
+use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,12 +61,13 @@ class PosInvoiceController extends Controller
 
                 $qty        = is_numeric($item['qty']) ? $item['qty'] : 0;
                 $sale_price = is_numeric($item['sale_price']) ? $item['sale_price'] : 0;
-
+                $product = Product::find($item['product_id']);
+                $buy_price = $product ? $product->buy_price : 0;
                 // unit price
                 $rate = $sale_price / $qty;
 
                                                                     // Check what is being sent from frontend
-                $total_buy_price = $qty * $item['total_buy_price']; // adjust if needed
+                $total_buy_price = $qty * $buy_price; // adjust if needed
                                                                     // return $invoice->id;
                 PosInvoiceProduct::create([
                     'invoice_id'      => $invoice->id,
@@ -178,7 +179,6 @@ class PosInvoiceController extends Controller
         }
     }
 
-
     // Get all products for initial load
     public function posProducts()
     {
@@ -251,7 +251,7 @@ class PosInvoiceController extends Controller
             $search     = $request->get('search', '');
             $categoryId = $request->get('category');
             $inStock    = $request->get('in_stock', false);
-            $limit      = $request->get('limit', 20);
+            $limit      = $request->get('limit', 100);
 
             $query = Product::with(['category'])->active();
 
@@ -353,19 +353,27 @@ class PosInvoiceController extends Controller
                 $product = Product::find($productId);
 
                 if (! $product) {
-                    // Remove invalid product from cart
                     unset($cart[$productId]);
                     continue;
                 }
 
-                // Calculate price (use discount price if available)
-                $price = $product->discount && $product->discount_price
-                    ? $product->discount_price
-                    : $product->price;
+                // ✅ POS price priority:
+                // 1. session sale_price
+                // 2. discounted price
+                // 3. regular price
+                $price = isset($item['sale_price']) && $item['sale_price'] > 0
+                    ? (float) $item['sale_price']
+                    : (
+                    $product->discount && $product->discount_price
+                        ? (float) $product->discount_price
+                        : (float) $product->price
+                );
 
-                $itemTotal = $price * $item['quantity'];
+                $quantity  = (int) $item['quantity'];
+                $itemTotal = $price * $quantity;
+
                 $subtotal += $itemTotal;
-                $totalItems += $item['quantity'];
+                $totalItems += $quantity;
 
                 $cartItems[] = [
                     'id'             => $product->id,
@@ -373,42 +381,44 @@ class PosInvoiceController extends Controller
                     'barcode'        => $product->sku,
                     'title'          => $product->title,
                     'name'           => $product->title,
-                    'price'          => (float) $price,
-                    'quantity'       => $item['quantity'],
+                    'price'          => $price,
+                    'quantity'       => $quantity,
                     'total'          => $itemTotal,
                     'stock'          => $product->stock,
                     'unit'           => $product->unit,
-                    'image'          => $product->image ? asset('storage/' . $product->image) : null,
-                    'has_discount'   => $product->discount,
+                    'image'          => $product->image
+                        ? asset('storage/' . $product->image)
+                        : null,
+                    'has_discount'   => (bool) $product->discount,
                     'original_price' => (float) $product->price,
                     'item_key'       => $productId,
                 ];
             }
 
-            // Update session with cleaned cart
             session()->put('pos_cart', $cart);
 
-            $taxRate = 0.10; // 10% tax
-            $tax     = $subtotal * $taxRate;
-            $total   = $subtotal + $tax;
+            $taxRate = 0.00; // 10%
+            $tax     = round($subtotal * $taxRate, 2);
+            $total   = round($subtotal + $tax, 2);
 
             return response()->json([
                 'success' => true,
                 'items'   => $cartItems,
                 'summary' => [
-                    'subtotal'    => $subtotal,
+                    'subtotal'    => round($subtotal, 2),
                     'tax'         => $tax,
                     'total'       => $total,
                     'total_items' => $totalItems,
                     'item_count'  => count($cartItems),
                 ],
             ]);
-        } catch (\Exception $e) {
-            Log::error('Error in getCart:', ['error' => $e->getMessage()]);
+
+        } catch (\Throwable $e) {
+            Log::error('Error in getCart', ['error' => $e]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Server error: ' . $e->getMessage(),
+                'message' => 'Server error',
                 'items'   => [],
                 'summary' => [
                     'subtotal'    => 0,
@@ -427,6 +437,7 @@ class PosInvoiceController extends Controller
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1|max:999',
+            'salePrice'  => 'required|numeric|min:0.01|max:1000000',
         ]);
 
         if ($validator->fails()) {
@@ -437,55 +448,60 @@ class PosInvoiceController extends Controller
         }
 
         try {
-            $product = Product::find($request->product_id);
+            $product = Product::where('id', $request->product_id)
+                ->where('is_active', 1)
+                ->first();
 
-            if (! $product->is_active) {
+            if (! $product) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Product is not available',
                 ], 400);
             }
 
-            $cart     = session()->get('pos_cart', []);
-            $quantity = (int) $request->quantity;
+            $quantity   = (int) $request->quantity;
+            $sale_price = (float) $request->salePrice;
+            $cart       = session()->get('pos_cart', []);
 
-            // Check if product already in cart
-            if (isset($cart[$product->id])) {
-                $newQuantity = $cart[$product->id]['quantity'] + $quantity;
+            // Optional price safety check
+            // if ($sale_price >= $product->discount_price) {
+            //     return response()->json([
+            //         'success' => false,
+            //         'message' => 'Sale price cannot be lower than purchase price',
+            //     ], 400);
+            // }
 
-                if ($product->stock < $newQuantity) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Insufficient stock. Available: ' . $product->stock . ' ' . $product->unit,
-                    ], 400);
-                }
+            $existingQty = $cart[$product->id]['quantity'] ?? 0;
+            $newQuantity = $existingQty + $quantity;
 
-                $cart[$product->id]['quantity'] = $newQuantity;
-            } else {
-                if ($product->stock < $quantity) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Insufficient stock. Available: ' . $product->stock . ' ' . $product->unit,
-                    ], 400);
-                }
-
-                $cart[$product->id] = [
-                    'quantity' => $quantity,
-                    'added_at' => now()->toDateTimeString(),
-                ];
+            if ($product->stock < $newQuantity) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Insufficient stock. Available: ' . $product->stock,
+                ], 400);
             }
+
+            $cart[$product->id] = [
+                'product_id' => $product->id,
+                'name'       => $product->title,
+                'quantity'   => $newQuantity,
+                'sale_price' => $sale_price,
+                'added_at'   => now()->toDateTimeString(),
+            ];
 
             session()->put('pos_cart', $cart);
 
             return response()->json([
-                'success'    => true,
-                'message'    => 'Product added to cart',
-                'cart_count' => count($cart),
+                'success'     => true,
+                'message'     => 'Product added to cart',
+                'cart_count'  => count($cart),
+                'total_items' => array_sum(array_column($cart, 'quantity')),
             ]);
-        } catch (\Exception $e) {
+
+        } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Server error: ' . $e->getMessage(),
+                'message' => 'Server error',
             ], 500);
         }
     }

@@ -35,7 +35,7 @@
                 <div class="product">
                     <div class="product_img">
                         <a href="shop-product-detail.html">
-                            <img src="${item['image']}" alt="product_img1">
+                            <img src="storage/${item['image']}" alt="product_img1">
                         </a>
                         <div class="product_action_box">
                             <ul class="list_none pr_action_btn">
@@ -43,7 +43,7 @@
                                     <a href="#" class="addToCartBtnFeature" 
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
-                                   data-image="${item['image']}" 
+                                   data-image="storage/${item['image']}" 
                                    data-price="${item['price']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                     </a>

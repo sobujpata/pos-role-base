@@ -51,7 +51,7 @@
                                         <tr>
                                             <td>{{ $key + 1 }}</td>
                                             <td>
-                                                <img src="{{asset($product->image)}}" alt="{{ $product->title }}" style="width: 80px;">
+                                                <img src="{{asset('storage/'.$product->image)}}" alt="{{ $product->title }}" style="width: 80px;">
                                                 
                                             </td>
                                             <td>{{ $product->title }} <br><span style="color:red;"> {{$product->sku}}</span></td>

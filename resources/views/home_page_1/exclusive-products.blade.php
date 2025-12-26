@@ -94,7 +94,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="#">
-                        <img src="${item['image']}" alt="product_img">
+                        <img src="storage/${item['image']}" alt="product_img">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
@@ -102,7 +102,7 @@
                                 <a href="#" class="addToCartBtn" 
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
-                                   data-image="${item['image']}" 
+                                   data-image="storage/${item['image']}" 
                                    data-price="${item['price']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                 </a>
@@ -166,7 +166,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="${productUrl}">
-                        <img src="${item['image']}" alt="product_img">
+                        <img src="storage/${item['image']}" alt="product_img">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
@@ -174,7 +174,7 @@
                                 <a href="#" class="addToCartBtnNew" 
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
-                                   data-image="${item['image']}" 
+                                   data-image="storage/${item['image']}" 
                                    data-price="${item['price']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                 </a>
@@ -235,7 +235,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="${productUrl}">
-                        <img src="${item['image']}" alt="product_img">
+                        <img src="storage/${item['image']}" alt="product_img">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
@@ -243,7 +243,7 @@
                                 <a href="#" class="addToCartBtnTop" 
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
-                                   data-image="${item['image']}" 
+                                   data-image="storage/${item['image']}" 
                                    data-price="${item['price']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                 </a>
@@ -306,7 +306,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="#">
-                        <img src="${item['image']}" alt="product_img">
+                        <img src="storage/${item['image']}" alt="product_img">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
@@ -314,7 +314,7 @@
                                 <a href="#" class="addToCartBtnSpecial" 
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
-                                   data-image="${item['image']}" 
+                                   data-image="storage/${item['image']}" 
                                    data-price="${item['price']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                 </a>
@@ -376,7 +376,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="${productUrl}">
-                        <img src="${item['image']}" alt="product_img">
+                        <img src="storage/${item['image']}" alt="product_img">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">
@@ -385,7 +385,7 @@
                                    data-id="${item['id']}" 
                                    data-name="${item['title']}" 
                                    data-price="${item['price']}"
-                                   data-image="${item['image']}">
+                                   data-image="storage/${item['image']}">
                                     <i class="icon-basket-loaded"></i> Add To Cart
                                 </a>
                             </li>

@@ -6,24 +6,24 @@
         .pos-container {
             font-size: 14px;
         }
-        
+
         .scanner-input {
             font-family: monospace;
             font-size: 1.2rem;
             letter-spacing: 2px;
         }
-        
+
         .product-card {
             cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
             height: 100%;
         }
-        
+
         .product-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
         }
-        
+
         .product-image-container {
             height: 120px;
             display: flex;
@@ -33,34 +33,34 @@
             border-radius: 0.375rem;
             overflow: hidden;
         }
-        
+
         .product-image {
             max-height: 100%;
             max-width: 100%;
             object-fit: contain;
         }
-        
+
         .cart-item-name {
             max-width: 150px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        
+
         .total-amount {
             font-size: 1.5rem;
             font-weight: 700;
             color: #198754;
         }
-        
+
         .cursor-pointer {
             cursor: pointer;
         }
-        
+
         .dropdown-search-container {
             position: relative;
         }
-        
+
         .dropdown-search-results {
             position: absolute;
             top: 100%;
@@ -72,53 +72,53 @@
             background: white;
             border: 1px solid #dee2e6;
             border-radius: 0.375rem;
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15);
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             display: none;
         }
-        
+
         .dropdown-search-item {
             padding: 10px;
             border-bottom: 1px solid #f8f9fa;
             cursor: pointer;
         }
-        
+
         .dropdown-search-item:hover {
             background-color: #f8f9fa;
         }
-        
+
         .out-of-stock {
             color: #dc3545;
         }
-        
+
         .low-stock {
             color: #ffc107;
         }
-        
+
         .in-stock {
             color: #28a745;
         }
-        
+
         .product-search-highlight {
             background-color: yellow;
             font-weight: bold;
         }
-        
+
         .quantity-input {
             max-width: 60px;
         }
-        
+
         .toast-container {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 9999;
         }
-        
+
         @media (max-width: 768px) {
             .pos-container {
                 font-size: 12px;
             }
-            
+
             .cart-item-name {
                 max-width: 100px;
             }
@@ -139,9 +139,9 @@
                     </nav>
                 </div>
             </div>
-            
+
             <div class="container-fluid pos-container">
-                <div class="row g-3">
+                <div class="row g-3 mb-4">
                     <!-- Left Column: Product Search and Selection -->
                     <div class="col-lg-8">
                         <!-- Search Card -->
@@ -162,11 +162,9 @@
                                             <span class="input-group-text bg-light">
                                                 <i class="fas fa-qrcode"></i>
                                             </span>
-                                            <input type="text" id="barcodeInput" 
-                                                   class="form-control form-control-lg scanner-input"
-                                                   placeholder="Scan barcode..." 
-                                                   autocomplete="off" 
-                                                   autofocus>
+                                            <input type="text" id="barcodeInput"
+                                                class="form-control form-control-lg scanner-input"
+                                                placeholder="Scan barcode..." autocomplete="off" autofocus>
                                         </div>
                                         <small class="text-muted">Point barcode scanner here and scan</small>
                                     </div>
@@ -181,10 +179,8 @@
                                                 <span class="input-group-text bg-light">
                                                     <i class="fas fa-search"></i>
                                                 </span>
-                                                <input type="text" id="productSearch"
-                                                       class="form-control form-control-lg"
-                                                       placeholder="Type product name or barcode..." 
-                                                       autocomplete="off">
+                                                <input type="text" id="productSearch" class="form-control form-control-lg"
+                                                    placeholder="Type product name or barcode..." autocomplete="off">
                                                 <button class="btn btn-outline-secondary" type="button" id="clearSearch">
                                                     <i class="fas fa-times"></i>
                                                 </button>
@@ -203,7 +199,8 @@
                                         <select id="categoryFilter" class="form-select">
                                             <option value="">All Categories</option>
                                             @foreach($categories as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name ?? $category->categoryName }}</option>
+                                                <option value="{{ $category->id }}">
+                                                    {{ $category->name ?? $category->categoryName }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -258,23 +255,24 @@
                     <!-- Right Column: Shopping Cart -->
                     <div class="col-lg-4">
                         <!-- Cart Card -->
-                        <div class="card h-100">
+                        <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0">
-                                    <i class="fas fa-shopping-cart me-2"></i>Shopping Cart 
+                                    <i class="fas fa-shopping-cart me-2"></i>Shopping Cart
                                     <span id="cartCountBadge" class="badge bg-primary ms-2">0</span>
                                 </h5>
                                 <div class="d-flex">
                                     <button class="btn btn-sm btn-outline-danger me-2" id="clearCartBtn" title="Clear Cart">
                                         <i class="fas fa-trash"></i>
                                     </button>
-                                    <button class="btn btn-sm btn-outline-secondary" id="printReceiptBtn" title="Print Receipt">
+                                    <button class="btn btn-sm btn-outline-secondary" id="printReceiptBtn"
+                                        title="Print Receipt">
                                         <i class="fas fa-print"></i>
                                     </button>
                                 </div>
                             </div>
 
-                            <div class="card-body p-0 d-flex flex-column" style="height: calc(100% - 60px);">
+                            <div class="card-body p-0 d-flex flex-column">
                                 <!-- Cart Items -->
                                 <div class="table-responsive flex-grow-1">
                                     <table class="table table-hover mb-0">
@@ -282,8 +280,7 @@
                                             <tr>
                                                 <th width="5%"></th>
                                                 <th width="40%">Product</th>
-                                                <th width="15%">Price</th>
-                                                <th width="30%">Qty</th>
+                                                <th width="40%">Price & Quantity</th>
                                                 <th width="10%">Total</th>
                                             </tr>
                                         </thead>
@@ -307,7 +304,7 @@
                                         <div class="col-6 text-end" id="cartSubtotal">₹0.00</div>
                                     </div>
                                     <div class="row g-2 mb-2">
-                                        <div class="col-6 text-muted">Tax (10%):</div>
+                                        <div class="col-6 text-muted">Tax (0%):</div>
                                         <div class="col-6 text-end" id="cartTax">₹0.00</div>
                                     </div>
                                     <div class="row g-2 mb-3">
@@ -333,7 +330,7 @@
                         </div>
 
                         <!-- Quick Actions -->
-                        <div class="card mt-3">
+                        <div class="card mt-3 mb-4">
                             <div class="card-body">
                                 <h6 class="card-title mb-3">
                                     <i class="fas fa-bolt me-2"></i>Quick Actions
@@ -411,9 +408,12 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">Quantity</label>
-                                <input type="number" id="quantityInput" 
-                                       class="form-control form-control-lg text-center"
-                                       value="1" min="1" max="999" autofocus>
+                                <input type="number" id="quantityInput" class="form-control form-control-lg text-center"
+                                    value="1" min="1" max="999" autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Sale Price</label>
+                                <input type="number" id="salePriceInput" class="form-control form-control-lg text-center">
                             </div>
                             <div class="d-grid gap-2">
                                 <button class="btn btn-primary" id="confirmQuantityBtn">Add to Cart</button>
@@ -428,705 +428,769 @@
 @endsection
 
 @push('script')
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    // POS System Configuration
-    const POS_CONFIG = {
-        api: {
-            base: '{{ url("/") }}',
-            'pos-products': '/pos-products',
-            'pos-cart': '/pos-cart',
-            cart: '/cart'
-        },
-        settings: {
-            minSearchChars: 2,
-            debounceDelay: 300,
-            taxRate: 0.10,
-            currency: '₹',
-            maxQuantity: 999
-        },
-        sounds: {
-            scan: 'https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3',
-            error: 'https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3',
-            add: 'https://assets.mixkit.co/sfx/preview/mixkit-cash-register-purchase-876.mp3'
-        }
-    };
+    {{-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> --}}
+    <script>
+        // POS System Configuration
+        const POS_CONFIG = {
+            api: {
+                base: '{{ url("/") }}',
+                'pos-products': '/pos-products',
+                'pos-cart': '/pos-cart',
+                cart: '/cart'
+            },
+            settings: {
+                minSearchChars: 2,
+                debounceDelay: 300,
+                taxRate: 0.10,
+                currency: '₹',
+                maxQuantity: 999
+            },
+            sounds: {
+                scan: 'https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3',
+                error: 'https://assets.mixkit.co/sfx/preview/mixkit-wrong-answer-fail-notification-946.mp3',
+                add: 'https://assets.mixkit.co/sfx/preview/mixkit-cash-register-purchase-876.mp3'
+            }
+        };
 
-    // POS System Class
-    class POSSystem {
-        constructor() {
-            this.currentProduct = null;
-            this.searchTimeout = null;
-            this.scanTimeout = null;
-            this.cartData = null;
-            this.init();
-        }
+        // POS System Class
+        class POSSystem {
+            constructor() {
+                this.currentProduct = null;
+                this.searchTimeout = null;
+                this.scanTimeout = null;
+                this.cartData = null;
+                this.init();
+            }
 
-        init() {
-            this.loadCartCount();
-            this.loadProducts();
-            this.attachEvents();
-            this.setupSearch();
-            this.keepBarcodeFocus();
-        }
-
-        attachEvents() {
-            // Barcode scanner input
-            $("#barcodeInput").on("input", (e) => this.handleBarcodeInput(e.target.value));
-            $("#barcodeInput").on("keypress", (e) => {
-                if (e.key === "Enter") {
-                    this.handleBarcodeScan($("#barcodeInput").val());
-                    $("#barcodeInput").val("");
-                }
-            });
-
-            // Manual search
-            $("#productSearch").on("input", (e) => this.handleManualSearch(e.target.value));
-            $("#clearSearch").on("click", () => {
-                $("#productSearch").val("").focus();
-                $("#searchResults").hide();
-            });
-
-            // Filters
-            $("#categoryFilter, #stockFilter").on("change", () => this.loadProducts());
-
-            // Cart actions
-            $("#clearCartBtn").on("click", () => this.clearCart());
-            $("#checkoutBtn").on("click", () => this.showCheckoutModal());
-            $("#printReceiptBtn").on("click", () => this.printReceipt());
-
-            // Quick actions
-            $("#quickSaleBtn").on("click", () => this.quickSale());
-            $("#applyDiscountBtn").on("click", () => this.applyDiscount());
-            $("#returnBtn").on("click", () => this.processReturn());
-            $("#loadCartBtn").on("click", () => this.loadSavedCarts());
-            $("#holdCartBtn").on("click", () => this.holdCart());
-
-            // Show images toggle
-            $("#showImages").on("change", (e) => {
-                localStorage.setItem("posShowImages", e.target.checked);
+            init() {
+                this.loadCartCount();
                 this.loadProducts();
-            });
-
-            // Quantity modal
-            $("#confirmQuantityBtn").on("click", () => this.addProductWithQuantity());
-            $("#quantityInput").on("keypress", (e) => {
-                if (e.key === "Enter") this.addProductWithQuantity();
-            });
-
-            // Close dropdown when clicking outside
-            $(document).on("click", (e) => {
-                if (!$(e.target).closest(".dropdown-search-container").length) {
-                    $("#searchResults").hide();
-                }
-            });
-
-            // Keyboard shortcuts
-            $(document).on("keydown", (e) => {
-                if (e.ctrlKey && e.key === "f") {
-                    e.preventDefault();
-                    $("#productSearch").focus();
-                }
-                if (e.key === "F2") {
-                    e.preventDefault();
-                    this.clearCart();
-                }
-                if (e.key === "F3") {
-                    e.preventDefault();
-                    this.showCheckoutModal();
-                }
-                if (e.key === "F5") {
-                    e.preventDefault();
-                    this.loadProducts();
-                }
-                if (e.key === "Escape") {
-                    $("#searchResults").hide();
-                }
-            });
-        }
-
-        setupSearch() {
-            const showImages = localStorage.getItem("posShowImages") === "true";
-            $("#showImages").prop("checked", showImages);
-        }
-
-        keepBarcodeFocus() {
-            $(document).on("click", (e) => {
-                if (!$(e.target).closest("#barcodeInput, .modal").length) {
-                    setTimeout(() => $("#barcodeInput").focus(), 100);
-                }
-            });
-        }
-
-        handleBarcodeInput(value) {
-            clearTimeout(this.scanTimeout);
-            this.scanTimeout = setTimeout(() => {
-                if (value.length >= 3) {
-                    this.handleBarcodeScan(value);
-                    $("#barcodeInput").val("");
-                }
-            }, 500);
-        }
-
-        async handleBarcodeScan(barcode) {
-            if (!barcode.trim()) return;
-            try {
-                const response = await axios.get(`/pos-products/by-barcode/${encodeURIComponent(barcode)}`);
-                if (response.data.success && response.data.product) {
-                    this.currentProduct = response.data.product;
-                    this.showQuantityModal(response.data.product);
-                    this.playSound("scan");
-                } else {
-                    this.showToast("Product not found", "error");
-                    this.playSound("error");
-                }
-            } catch (error) {
-                console.error("Barcode scan error:", error);
-                this.showToast("Error scanning product", "error");
-                this.playSound("error");
+                this.attachEvents();
+                this.setupSearch();
+                this.keepBarcodeFocus();
+                this.loadCart();
             }
-        }
 
-        handleManualSearch(searchTerm) {
-            clearTimeout(this.searchTimeout);
-            if (searchTerm.length < POS_CONFIG.settings.minSearchChars) {
-                $("#searchResults").hide();
-                return;
-            }
-            this.searchTimeout = setTimeout(() => {
-                this.searchProducts(searchTerm);
-            }, POS_CONFIG.settings.debounceDelay);
-        }
-
-        async searchProducts(searchTerm) {
-            try {
-                const params = { search: searchTerm };
-                const category = $("#categoryFilter").val();
-                const inStock = $("#stockFilter").val() === "in_stock";
-                if (category) params.category = category;
-                if (inStock) params.in_stock = true;
-
-                const response = await axios.get('/pos-products/search', { params });
-                if (response.data.success && response.data.products.length > 0) {
-                    this.showSearchResults(response.data.products, searchTerm);
-                } else {
-                    $("#searchResults").hide();
-                }
-            } catch (error) {
-                console.error("Search error:", error);
-                $("#searchResults").hide();
-            }
-        }
-
-        showSearchResults(products, searchTerm) {
-            const resultsDiv = $("#searchResults");
-            let html = "";
-            products.forEach((product) => {
-                const highlightedName = this.highlightText(product.title || product.name, searchTerm);
-                const stockClass = product.stock <= 0 ? "out-of-stock" : "in-stock";
-                html += `
-                    <div class="dropdown-search-item" data-product='${JSON.stringify(product).replace(/'/g, "&#39;")}'>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="flex-grow-1">
-                                <div class="fw-medium">${highlightedName}</div>
-                                <div class="small text-muted">
-                                    <span class="me-2">${product.sku || 'N/A'}</span>
-                                    <span class="${stockClass}">
-                                        <i class="fas fa-box me-1"></i>${product.stock || 0} ${product.unit || 'pcs'}
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="text-end">
-                                <div class="fw-bold text-primary">${POS_CONFIG.settings.currency}${parseFloat(product.price || 0).toFixed(2)}</div>
-                                <button class="btn btn-sm btn-outline-primary mt-1 add-from-search">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>`;
-            });
-            resultsDiv.html(html).show();
-
-            $(".dropdown-search-item").on("click", (e) => {
-                if (!$(e.target).hasClass("add-from-search")) {
-                    const productData = $(e.currentTarget).data('product');
-                    if (productData) this.selectProduct(productData);
-                }
-            });
-
-            $(".add-from-search").on("click", (e) => {
-                e.stopPropagation();
-                const productData = $(e.target).closest(".dropdown-search-item").data('product');
-                if (productData) this.selectProduct(productData);
-            });
-        }
-
-        highlightText(text, search) {
-            if (!search || !text) return text;
-            const regex = new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
-            return text.replace(regex, '<span class="product-search-highlight">$1</span>');
-        }
-
-        selectProduct(product) {
-            this.currentProduct = product;
-            $("#productSearch").val("").focus();
-            $("#searchResults").hide();
-            this.showQuantityModal(product);
-        }
-
-        showQuantityModal(product) {
-            this.currentProduct = product;
-            $("#quantityModal .modal-title").text(`Add ${product.title || product.name}`);
-            const maxQty = Math.min(POS_CONFIG.settings.maxQuantity, product.stock || 999);
-            $("#quantityInput").val(1).attr("max", maxQty).focus().select();
-            $("#quantityModal").modal("show");
-        }
-
-        async addProductWithQuantity() {
-            if (!this.currentProduct) return;
-            const quantity = parseInt($("#quantityInput").val());
-            if (isNaN(quantity) || quantity < 1) {
-                this.showToast("Invalid quantity", "error");
-                return;
-            }
-            if (quantity > (this.currentProduct.stock || 0)) {
-                this.showToast(`Only ${this.currentProduct.stock || 0} items in stock`, "error");
-                return;
-            }
-            try {
-                const response = await axios.post('/pos-cart/add', {
-                    product_id: this.currentProduct.id,
-                    quantity: quantity,
-                });
-                if (response.data.success) {
-                    this.showToast(`Added ${quantity} × ${this.currentProduct.title || this.currentProduct.name}`, "success");
-                    this.playSound("add");
-                    await this.loadCart();
-                    $("#quantityModal").modal("hide");
-                    this.currentProduct = null;
-                } else {
-                    this.showToast(response.data.message || "Failed to add to cart", "error");
-                    this.playSound("error");
-                }
-            } catch (error) {
-                console.error("Add to cart error:", error);
-                this.showToast("Error adding to cart", "error");
-                this.playSound("error");
-            }
-        }
-
-        async loadProducts() {
-            try {
-                $("#productsGrid").hide();
-                $("#productsLoading").show();
-                $("#noProducts").hide();
-                const params = {};
-                const category = $("#categoryFilter").val();
-                const inStock = $("#stockFilter").val() === "in_stock";
-                if (category) params.category = category;
-                if (inStock) params.in_stock = true;
-                const response = await axios.get('/pos-products/search', { params });
-                console.log(response)
-                if (response.data.success) {
-                    this.renderProducts(response.data.products, $("#showImages").is(":checked"));
-                    $("#productCount").text(`${response.data.count} products`);
-                    if (response.data.count === 0) {
-                        $("#noProducts").show();
+            attachEvents() {
+                // Barcode scanner input
+                $("#barcodeInput").on("input", (e) => this.handleBarcodeInput(e.target.value));
+                $("#barcodeInput").on("keypress", (e) => {
+                    if (e.key === "Enter") {
+                        this.handleBarcodeScan($("#barcodeInput").val());
+                        $("#barcodeInput").val("");
                     }
-                }
-            } catch (error) {
-                console.error("Load products error:", error);
-                this.showToast("Error loading products", "error");
-            } finally {
-                $("#productsLoading").hide();
-                $("#productsGrid").show();
-            }
-        }
+                });
 
-        renderProducts(products, showImages) {
-            const grid = $("#productsGrid");
-            let html = "";
-            products.forEach((product) => {
-                const stockClass = product.stock <= 0 ? "out-of-stock" : "in-stock";
-                const stockBadge = product.stock <= 0 
-                    ? '<span class="badge bg-danger">Out of Stock</span>' 
-                    : '<span class="badge bg-success">In Stock</span>';
-                html += `
-                    <div class="col-xl-4 col-lg-4 col-md-6">
-                        <div class="card product-card h-100 cursor-pointer" data-product='${JSON.stringify(product).replace(/'/g, "&#39;")}'>
-                            <div class="card-body">
-                                <div class="d-flex align-items-start mb-2">
-                                    ${showImages && product.image 
-                                        ? `<img src="${product.image}" class="product-image me-2" alt="${product.title || product.name}" style="width: 60px; height: 60px; object-fit: cover;">` 
-                                        : '<div class="product-image me-2 bg-light rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;"><i class="fas fa-box text-muted"></i></div>'}
-                                    <div class="flex-grow-1">
-                                        <h6 class="card-title mb-1">${product.title || product.name}</h6>
-                                        <div class="small text-muted mb-2">${product.sku || 'N/A'}</div>
-                                        ${stockBadge}
+                // Manual search
+                $("#productSearch").on("input", (e) => this.handleManualSearch(e.target.value));
+                $("#clearSearch").on("click", () => {
+                    $("#productSearch").val("").focus();
+                    $("#searchResults").hide();
+                });
+
+                // Filters
+                $("#categoryFilter, #stockFilter").on("change", () => this.loadProducts());
+
+                // Cart actions
+                $("#clearCartBtn").on("click", () => this.clearCart());
+                $("#checkoutBtn").on("click", () => this.showCheckoutModal());
+                $("#printReceiptBtn").on("click", () => this.printReceipt());
+
+                // Quick actions
+                $("#quickSaleBtn").on("click", () => this.quickSale());
+                $("#applyDiscountBtn").on("click", () => this.applyDiscount());
+                $("#returnBtn").on("click", () => this.processReturn());
+                $("#loadCartBtn").on("click", () => this.loadSavedCarts());
+                $("#holdCartBtn").on("click", () => this.holdCart());
+
+                // Show images toggle
+                $("#showImages").on("change", (e) => {
+                    localStorage.setItem("posShowImages", e.target.checked);
+                    this.loadProducts();
+                });
+
+                // Quantity modal
+                $("#confirmQuantityBtn").on("click", () => this.addProductWithQuantity());
+                $("#quantityInput").on("keypress", (e) => {
+                    if (e.key === "Enter") this.addProductWithQuantity();
+                });
+
+                // Close dropdown when clicking outside
+                $(document).on("click", (e) => {
+                    if (!$(e.target).closest(".dropdown-search-container").length) {
+                        $("#searchResults").hide();
+                    }
+                });
+
+                // Keyboard shortcuts
+                $(document).on("keydown", (e) => {
+                    if (e.ctrlKey && e.key === "f") {
+                        e.preventDefault();
+                        $("#productSearch").focus();
+                    }
+                    if (e.key === "F2") {
+                        e.preventDefault();
+                        this.clearCart();
+                    }
+                    if (e.key === "F3") {
+                        e.preventDefault();
+                        this.showCheckoutModal();
+                    }
+                    if (e.key === "F5") {
+                        e.preventDefault();
+                        this.loadProducts();
+                    }
+                    if (e.key === "Escape") {
+                        $("#searchResults").hide();
+                    }
+                });
+            }
+
+            setupSearch() {
+                const showImages = localStorage.getItem("posShowImages") === "true";
+                $("#showImages").prop("checked", showImages);
+            }
+
+            keepBarcodeFocus() {
+                $(document).on("click", (e) => {
+                    if (!$(e.target).closest("#barcodeInput, .modal").length) {
+                        setTimeout(() => $("#barcodeInput").focus(), 100);
+                    }
+                });
+            }
+
+            handleBarcodeInput(value) {
+                clearTimeout(this.scanTimeout);
+                this.scanTimeout = setTimeout(() => {
+                    if (value.length >= 3) {
+                        this.handleBarcodeScan(value);
+                        $("#barcodeInput").val("");
+                    }
+                }, 500);
+            }
+
+            async handleBarcodeScan(barcode) {
+                if (!barcode.trim()) return;
+                try {
+                    const response = await axios.get(`/pos-products/by-barcode/${encodeURIComponent(barcode)}`);
+                    if (response.data.success && response.data.product) {
+                        this.currentProduct = response.data.product;
+                        this.showQuantityModal(response.data.product);
+                        this.playSound("scan");
+                    } else {
+                        this.showToast("Product not found", "error");
+                        this.playSound("error");
+                    }
+                } catch (error) {
+                    console.error("Barcode scan error:", error);
+                    this.showToast("Error scanning product", "error");
+                    this.playSound("error");
+                }
+            }
+
+            handleManualSearch(searchTerm) {
+                clearTimeout(this.searchTimeout);
+                if (searchTerm.length < POS_CONFIG.settings.minSearchChars) {
+                    $("#searchResults").hide();
+                    return;
+                }
+                this.searchTimeout = setTimeout(() => {
+                    this.searchProducts(searchTerm);
+                }, POS_CONFIG.settings.debounceDelay);
+            }
+
+            async searchProducts(searchTerm) {
+                try {
+                    const params = { search: searchTerm };
+                    const category = $("#categoryFilter").val();
+                    const inStock = $("#stockFilter").val() === "in_stock";
+                    if (category) params.category = category;
+                    if (inStock) params.in_stock = true;
+
+                    const response = await axios.get('/pos-products/search', { params });
+                    if (response.data.success && response.data.products.length > 0) {
+                        this.showSearchResults(response.data.products, searchTerm);
+                    } else {
+                        $("#searchResults").hide();
+                    }
+                } catch (error) {
+                    console.error("Search error:", error);
+                    $("#searchResults").hide();
+                }
+            }
+
+            showSearchResults(products, searchTerm) {
+                const resultsDiv = $("#searchResults");
+                let html = "";
+                products.forEach((product) => {
+                    const highlightedName = this.highlightText(product.title || product.name, searchTerm);
+                    const stockClass = product.stock <= 0 ? "out-of-stock" : "in-stock";
+                    html += `
+                        <div class="dropdown-search-item" data-product='${JSON.stringify(product).replace(/'/g, "&#39;")}'>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="flex-grow-1">
+                                    <div class="fw-medium">${highlightedName}</div>
+                                    <div class="small text-muted">
+                                        <span class="me-2">${product.sku || 'N/A'}</span>
+                                        <span class="${stockClass}">
+                                            <i class="fas fa-box me-1"></i>${product.stock || 0} ${product.unit || 'pcs'}
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center mt-3">
-                                    <div>
-                                        <div class="fw-bold text-primary fs-5">${POS_CONFIG.settings.currency}${parseFloat(product.price || 0).toFixed(2)}</div>
-                                        <div class="small ${stockClass}">
-                                            <i class="fas fa-box me-1"></i>${product.stock || 0} ${product.unit || 'pcs'}
-                                        </div>
-                                    </div>
-                                    <button class="btn btn-primary add-product-btn">
+                                <div class="text-end">
+                                    <div class="fw-bold text-primary">${POS_CONFIG.settings.currency}${parseFloat(product.price || 0).toFixed(2)}</div>
+                                    <button class="btn btn-sm btn-outline-primary mt-1 add-from-search">
                                         <i class="fas fa-plus"></i>
                                     </button>
                                 </div>
                             </div>
-                        </div>
-                    </div>`;
-            });
-            grid.html(html);
-            $(".product-card").on("click", (e) => {
-                if (!$(e.target).hasClass("add-product-btn")) {
-                    const productData = $(e.currentTarget).data('product');
-                    if (productData) this.selectProduct(productData);
-                }
-            });
-            $(".add-product-btn").on("click", (e) => {
-                e.stopPropagation();
-                const productData = $(e.target).closest(".product-card").data('product');
-                if (productData) this.selectProduct(productData);
-            });
-        }
+                        </div>`;
+                });
+                resultsDiv.html(html).show();
 
-        async loadCart() {
-            try {
-                const response = await axios.get('/pos-cart');
-                if (response.data.success) {
-                    this.cartData = response.data;
-                    this.renderCart(response.data);
-                    $("#cartCountBadge").text(response.data.summary.total_items || 0);
-                } else {
-                    console.error("Cart API returned error:", response.data.message);
+                $(".dropdown-search-item").on("click", (e) => {
+                    if (!$(e.target).hasClass("add-from-search")) {
+                        const productData = $(e.currentTarget).data('product');
+                        if (productData) this.selectProduct(productData);
+                    }
+                });
+
+                $(".add-from-search").on("click", (e) => {
+                    e.stopPropagation();
+                    const productData = $(e.target).closest(".dropdown-search-item").data('product');
+                    if (productData) this.selectProduct(productData);
+                });
+            }
+
+            highlightText(text, search) {
+                if (!search || !text) return text;
+                const regex = new RegExp(`(${search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})`, "gi");
+                return text.replace(regex, '<span class="product-search-highlight">$1</span>');
+            }
+
+            selectProduct(product) {
+                this.currentProduct = product;
+                $("#productSearch").val("").focus();
+                $("#searchResults").hide();
+                this.showQuantityModal(product);
+            }
+
+            showQuantityModal(product) {
+                this.currentProduct = product;
+                $("#quantityModal .modal-title").text(`Add ${product.title || product.name}`);
+                const maxQty = Math.min(POS_CONFIG.settings.maxQuantity, product.stock || 999);
+                $("#quantityInput").val(1).attr("max", maxQty).focus().select();
+                $("#salePriceInput").val(product.discount_price);
+
+                $("#quantityModal").modal("show");
+            }
+
+            async addProductWithQuantity() {
+                if (!this.currentProduct) return;
+
+                const quantity = parseInt($("#quantityInput").val(), 10);
+                const salePrice = parseFloat($("#salePriceInput").val());
+
+                if (isNaN(quantity) || quantity < 1) {
+                    this.showToast("Invalid quantity", "error");
+                    return;
+                }
+
+                if (quantity > (this.currentProduct.stock ?? 0)) {
+                    this.showToast(`Only ${this.currentProduct.stock ?? 0} items in stock`, "error");
+                    return;
+                }
+
+                if (isNaN(salePrice) || salePrice <= 0) {
+                    this.showToast("Invalid sale price", "error");
+                    return;
+                }
+
+                try {
+                    const response = await axios.post('/pos-cart/add', {
+                        product_id: this.currentProduct.id,
+                        quantity: quantity,
+                        salePrice: salePrice,
+                    });
+                    // console.log(response)
+                    if (response.data.success) {
+                        this.showToast(
+                            `Added ${quantity} × ${this.currentProduct.title || this.currentProduct.name}`,
+                            "success"
+                        );
+                        this.playSound("add");
+                        await this.loadCart();
+                        $("#quantityModal").modal("hide");
+                        this.currentProduct = null;
+                    } else {
+                        this.showToast(response.data.message || "Failed to add to cart", "error");
+                        this.playSound("error");
+                    }
+                } catch (error) {
+                    console.error("Add to cart error:", error);
+
+                    const message =
+                        error.response?.data?.message ||
+                        error.response?.data?.errors?.salePrice?.[0] ||
+                        "Error adding to cart";
+
+                    this.showToast(message, "error");
+                    this.playSound("error");
+                }
+            }
+
+
+            async loadProducts() {
+                try {
+                    $("#productsGrid").hide();
+                    $("#productsLoading").show();
+                    $("#noProducts").hide();
+                    const params = {};
+                    const category = $("#categoryFilter").val();
+                    const inStock = $("#stockFilter").val() === "in_stock";
+                    if (category) params.category = category;
+                    if (inStock) params.in_stock = true;
+                    const response = await axios.get('/pos-products/search', { params });
+                    // console.log(response)
+                    if (response.data.success) {
+                        this.renderProducts(response.data.products, $("#showImages").is(":checked"));
+                        $("#productCount").text(`${response.data.count} products`);
+                        if (response.data.count === 0) {
+                            $("#noProducts").show();
+                        }
+                    }
+                } catch (error) {
+                    console.error("Load products error:", error);
+                    this.showToast("Error loading products", "error");
+                } finally {
+                    $("#productsLoading").hide();
+                    $("#productsGrid").show();
+                }
+            }
+
+            renderProducts(products, showImages) {
+                const grid = $("#productsGrid");
+                let html = "";
+                products.forEach((product) => {
+                    let imageUrl = product.image || null;
+                    // console.log(imageUrl);
+                    const stockClass = product.stock <= 0 ? "out-of-stock" : "in-stock";
+                    const stockBadge = product.stock <= 0
+                        ? '<span class="badge bg-danger">Out of Stock</span>'
+                        : '<span class="badge bg-success">In Stock</span>';
+                    html += `
+                        <div class="col-xl-4 col-lg-4 col-md-6">
+                            <div class="card product-card h-100 cursor-pointer" data-product='${JSON.stringify(product).replace(/'/g, "&#39;")}'>
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start mb-2">
+                                        ${showImages && imageUrl
+                            ? `<img src="${product.image}" class="product-image me-2" alt="${product.title || product.name}" style="width: 60px; height: 60px; object-fit: cover;">`
+                            : '<div class="product-image me-2 bg-light rounded d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;"><i class="fas fa-box text-muted"></i></div>'}
+                                        <div class="flex-grow-1">
+                                            <h6 class="card-title mb-1">${product.title || product.name}</h6>
+                                            <div class="small text-muted mb-2">${product.sku || 'N/A'}</div>
+                                            ${stockBadge}
+                                        </div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div>
+                                            <div class="fw-bold text-primary fs-5">${POS_CONFIG.settings.currency}${parseFloat(product.price || 0).toFixed(2)}</div>
+                                            <div class="small ${stockClass}">
+                                                <i class="fas fa-box me-1"></i>${product.stock || 0} ${product.unit || 'pcs'}
+                                            </div>
+                                        </div>
+                                        <button class="btn btn-primary add-product-btn">
+                                            <i class="fas fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                });
+                grid.html(html);
+                $(".product-card").on("click", (e) => {
+                    if (!$(e.target).hasClass("add-product-btn")) {
+                        const productData = $(e.currentTarget).data('product');
+                        if (productData) this.selectProduct(productData);
+                    }
+                });
+                $(".add-product-btn").on("click", (e) => {
+                    e.stopPropagation();
+                    const productData = $(e.target).closest(".product-card").data('product');
+                    if (productData) this.selectProduct(productData);
+                });
+            }
+
+            async loadCart() {
+                try {
+                    const response = await axios.get('/pos-cart');
+                    console.log(response)
+                    if (response.data.success) {
+                        this.cartData = response.data;
+                        this.renderCart(response.data);
+                        $("#cartCountBadge").text(response.data.summary.total_items || 0);
+                    } else {
+                        console.error("Cart API returned error:", response.data.message);
+                        this.cartData = { items: [], summary: { subtotal: 0, tax: 0, total: 0, total_items: 0, item_count: 0 } };
+                        this.renderCart(this.cartData);
+                    }
+                } catch (error) {
+                    console.error("Load cart error:", error);
                     this.cartData = { items: [], summary: { subtotal: 0, tax: 0, total: 0, total_items: 0, item_count: 0 } };
                     this.renderCart(this.cartData);
+                    $("#cartCountBadge").text("0");
                 }
-            } catch (error) {
-                console.error("Load cart error:", error);
-                this.cartData = { items: [], summary: { subtotal: 0, tax: 0, total: 0, total_items: 0, item_count: 0 } };
-                this.renderCart(this.cartData);
-                $("#cartCountBadge").text("0");
             }
-        }
 
-        renderCart(cartData) {
-            const table = $("#cartTable");
-            const emptyCart = $("#emptyCart");
-            const cartSummary = $("#cartSummary");
-            if (cartData.items.length === 0) {
-                table.html("");
-                emptyCart.show();
-                cartSummary.hide();
-                return;
-            }
-            emptyCart.hide();
-            cartSummary.show();
-            let html = "";
-            cartData.items.forEach((item) => {
-                html += `
-                    <tr class="cart-item align-middle" data-product-id="${item.id}">
-                        <td><button class="btn btn-sm btn-outline-danger remove-item-btn"><i class="fas fa-times"></i></button></td>
-                        <td><div class="fw-medium cart-item-name">${item.title || item.name}</div><div class="small text-muted">${item.sku || 'N/A'}</div></td>
-                        <td>${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)}</td>
-                        <td>
-                            <div class="input-group input-group-sm">
-                                <button class="btn btn-outline-secondary qty-decrease">-</button>
-                                <input type="number" class="form-control text-center quantity-input" value="${item.quantity}" min="1" max="${item.stock || 999}" data-product-id="${item.id}">
-                                <button class="btn btn-outline-secondary qty-increase">+</button>
-                            </div>
-                        </td>
-                        <td class="fw-bold">${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}</td>
-                    </tr>`;
-            });
-            table.html(html);
-            $("#cartSubtotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.subtotal || 0).toFixed(2)}`);
-            $("#cartTax").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.tax || 0).toFixed(2)}`);
-            $("#cartTotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.total || 0).toFixed(2)}`);
-            this.attachCartEvents();
-        }
-
-        attachCartEvents() {
-            $(".remove-item-btn").on("click", async (e) => {
-                const productId = $(e.target).closest(".cart-item").data("product-id");
-                await this.removeFromCart(productId);
-            });
-            $(".qty-decrease").on("click", async (e) => {
-                const input = $(e.target).closest(".input-group").find(".quantity-input");
-                const productId = input.data("product-id");
-                let qty = parseInt(input.val()) - 1;
-                if (qty >= 1) await this.updateCartQuantity(productId, qty);
-            });
-            $(".qty-increase").on("click", async (e) => {
-                const input = $(e.target).closest(".input-group").find(".quantity-input");
-                const productId = input.data("product-id");
-                let qty = parseInt(input.val()) + 1;
-                await this.updateCartQuantity(productId, qty);
-            });
-            $(".quantity-input").on("change", async (e) => {
-                const input = $(e.target);
-                const productId = input.data("product-id");
-                const qty = parseInt(input.val());
-                if (qty >= 1) await this.updateCartQuantity(productId, qty);
-            });
-        }
-
-        async removeFromCart(productId) {
-            if (!confirm("Remove this item from cart?")) return;
-            try {
-                const response = await axios.delete(`/pos-cart/remove/${productId}`);
-                if (response.data.success) {
-                    this.showToast("Item removed from cart", "success");
-                    await this.loadCart();
-                } else {
-                    this.showToast(response.data.message || "Failed to remove item", "error");
+            renderCart(cartData) {
+                const table = $("#cartTable");
+                const emptyCart = $("#emptyCart");
+                const cartSummary = $("#cartSummary");
+                if (cartData.items.length === 0) {
+                    table.html("");
+                    emptyCart.show();
+                    cartSummary.hide();
+                    return;
                 }
-            } catch (error) {
-                console.error("Remove from cart error:", error);
-                this.showToast("Error removing item", "error");
-            }
-        }
-
-        async updateCartQuantity(productId, quantity) {
-            try {
-                const response = await axios.put('/pos-cart/update', {
-                    product_id: productId,
-                    quantity: quantity,
+                emptyCart.hide();
+                cartSummary.show();
+                let html = "";
+                cartData.items.forEach((item) => {
+                    html += `
+                        <tr class="cart-item align-middle" data-product-id="${item.id}">
+                            <td><button class="btn btn-sm btn-outline-danger remove-item-btn"><i class="fas fa-times"></i></button></td>
+                            <td><div class="fw-medium cart-item-name">${item.title || item.name}</div><div class="small text-muted">${item.sku || 'N/A'}</div></td>
+                            <td>
+                                ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)}
+                                <div class="input-group input-group-sm">
+                                    <button class="btn btn-outline-secondary qty-decrease">-</button>
+                                    <input type="number" class="form-control text-center quantity-input" value="${item.quantity}" min="1" max="${item.stock || 999}" data-product-id="${item.id}">
+                                    <button class="btn btn-outline-secondary qty-increase">+</button>
+                                </div>
+                            </td>
+                            <td class="fw-bold">${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}</td>
+                        </tr>`;
                 });
-                if (response.data.success) {
-                    await this.loadCart();
-                } else {
-                    this.showToast(response.data.message || "Failed to update quantity", "error");
-                }
-            } catch (error) {
-                console.error("Update quantity error:", error);
-                this.showToast("Error updating quantity", "error");
+                table.html(html);
+                $("#cartSubtotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.subtotal || 0).toFixed(2)}`);
+                $("#cartTax").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.tax || 0).toFixed(2)}`);
+                $("#cartTotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.total || 0).toFixed(2)}`);
+                this.attachCartEvents();
             }
-        }
 
-        async clearCart() {
-            if (!this.cartData || this.cartData.items.length === 0) return;
-            if (!confirm("Clear all items from cart?")) return;
-            try {
-                const response = await axios.delete('/pos-cart/clear');
-                if (response.data.success) {
-                    this.showToast("Cart cleared", "success");
-                    await this.loadCart();
-                } else {
-                    this.showToast(response.data.message || "Failed to clear cart", "error");
-                }
-            } catch (error) {
-                console.error("Clear cart error:", error);
-                this.showToast("Error clearing cart", "error");
+            attachCartEvents() {
+                $(".remove-item-btn").on("click", async (e) => {
+                    const productId = $(e.target).closest(".cart-item").data("product-id");
+                    await this.removeFromCart(productId);
+                });
+                $(".qty-decrease").on("click", async (e) => {
+                    const input = $(e.target).closest(".input-group").find(".quantity-input");
+                    const productId = input.data("product-id");
+                    let qty = parseInt(input.val()) - 1;
+                    if (qty >= 1) await this.updateCartQuantity(productId, qty);
+                });
+                $(".qty-increase").on("click", async (e) => {
+                    const input = $(e.target).closest(".input-group").find(".quantity-input");
+                    const productId = input.data("product-id");
+                    let qty = parseInt(input.val()) + 1;
+                    await this.updateCartQuantity(productId, qty);
+                });
+                $(".quantity-input").on("change", async (e) => {
+                    const input = $(e.target);
+                    const productId = input.data("product-id");
+                    const qty = parseInt(input.val());
+                    if (qty >= 1) await this.updateCartQuantity(productId, qty);
+                });
             }
-        }
 
-        async loadCartCount() {
-            try {
-                const response = await axios.get('/pos-cart/count');
-                if (response.data.success) {
-                    $("#cartCountBadge").text(response.data.total_items || 0);
+            async removeFromCart(productId) {
+                if (!confirm("Remove this item from cart?")) return;
+                try {
+                    const response = await axios.delete(`/pos-cart/remove/${productId}`);
+                    if (response.data.success) {
+                        this.showToast("Item removed from cart", "success");
+                        await this.loadCart();
+                    } else {
+                        this.showToast(response.data.message || "Failed to remove item", "error");
+                    }
+                } catch (error) {
+                    console.error("Remove from cart error:", error);
+                    this.showToast("Error removing item", "error");
                 }
-            } catch (error) {
-                console.error("Load cart count error:", error);
             }
-        }
 
-        showCheckoutModal() {
-            if (!this.cartData || this.cartData.items.length === 0) {
-                this.showToast("Cart is empty", "error");
-                return;
+            async updateCartQuantity(productId, quantity) {
+                try {
+                    const response = await axios.put('/pos-cart/update', {
+                        product_id: productId,
+                        quantity: quantity,
+                    });
+                    if (response.data.success) {
+                        await this.loadCart();
+                    } else {
+                        this.showToast(response.data.message || "Failed to update quantity", "error");
+                    }
+                } catch (error) {
+                    console.error("Update quantity error:", error);
+                    this.showToast("Error updating quantity", "error");
+                }
             }
-            const modal = $("#checkoutModal");
-            const modalBody = modal.find(".modal-body");
-            let html = `
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card mb-3">
-                            <div class="card-header"><h6 class="mb-0">Order Summary</h6></div>
-                            <div class="card-body">
-                                <div class="mb-2 d-flex justify-content-between"><span>Subtotal:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.subtotal || 0).toFixed(2)}</span></div>
-                                <div class="mb-2 d-flex justify-content-between"><span>Tax (10%):</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.tax || 0).toFixed(2)}</span></div>
-                                <hr><div class="d-flex justify-content-between fw-bold fs-5"><span>Total:</span><span class="text-primary">${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.total || 0).toFixed(2)}</span></div>
+
+            async clearCart() {
+                if (!this.cartData || this.cartData.items.length === 0) return;
+                if (!confirm("Clear all items from cart?")) return;
+                try {
+                    const response = await axios.delete('/pos-cart/clear');
+                    if (response.data.success) {
+                        this.showToast("Cart cleared", "success");
+                        await this.loadCart();
+                    } else {
+                        this.showToast(response.data.message || "Failed to clear cart", "error");
+                    }
+                } catch (error) {
+                    console.error("Clear cart error:", error);
+                    this.showToast("Error clearing cart", "error");
+                }
+            }
+
+            async loadCartCount() {
+                try {
+                    const response = await axios.get('/pos-cart/count');
+                    if (response.data.success) {
+                        $("#cartCountBadge").text(response.data.total_items || 0);
+                    }
+                } catch (error) {
+                    console.error("Load cart count error:", error);
+                }
+            }
+
+            showCheckoutModal() {
+                if (!this.cartData || this.cartData.items.length === 0) {
+                    this.showToast("Cart is empty", "error");
+                    return;
+                }
+                const modal = $("#checkoutModal");
+                const modalBody = modal.find(".modal-body");
+                let html = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-header"><h6 class="mb-0">Order Summary</h6></div>
+                                <div class="card-body">
+                                    <div class="mb-2 d-flex justify-content-between"><span>Subtotal:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.subtotal || 0).toFixed(2)}</span></div>
+                                    <div class="mb-2 d-flex justify-content-between"><span>Tax (10%):</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.tax || 0).toFixed(2)}</span></div>
+                                    <hr><div class="d-flex justify-content-between fw-bold fs-5"><span>Total:</span><span class="text-primary">${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.total || 0).toFixed(2)}</span></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-header"><h6 class="mb-0">Payment Method</h6></div>
-                            <div class="card-body">
-                                <div class="row g-2">
-                                    <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method active" data-method="cash"><i class="fas fa-money-bill-wave me-2"></i>Cash</button></div>
-                                    <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="card"><i class="fas fa-credit-card me-2"></i>Card</button></div>
-                                    <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="upi"><i class="fas fa-mobile-alt me-2"></i>UPI</button></div>
-                                    <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="wallet"><i class="fas fa-wallet me-2"></i>Wallet</button></div>
+                            <div class="card">
+                                <div class="card-header"><h6 class="mb-0">Payment Method</h6></div>
+                                <div class="card-body">
+                                    <div class="row g-2">
+                                        <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method active" data-method="cash"><i class="fas fa-money-bill-wave me-2"></i>Cash</button></div>
+                                        <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="card"><i class="fas fa-credit-card me-2"></i>Card</button></div>
+                                        <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="upi"><i class="fas fa-mobile-alt me-2"></i>UPI</button></div>
+                                        <div class="col-6"><button class="btn btn-outline-primary w-100 payment-method" data-method="wallet"><i class="fas fa-wallet me-2"></i>Wallet</button></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header"><h6 class="mb-0">Payment Details</h6></div>
-                            <div class="card-body">
-                                <div class="mb-3"><label class="form-label">Amount Paid</label><input type="number" id="amountPaid" class="form-control form-control-lg" value="${parseFloat(this.cartData.summary.total || 0).toFixed(2)}" step="0.01" min="0" autofocus></div>
-                                <div class="mb-3" id="changeAmountContainer" style="display: none;"><label class="form-label">Change</label><input type="text" id="changeAmount" class="form-control form-control-lg text-success fw-bold" readonly></div>
-                                <div class="mb-3"><label class="form-label">Customer (Optional)</label><input type="text" id="customerName" class="form-control" placeholder="Customer name"></div>
-                                <div class="mb-3"><label class="form-label">Notes (Optional)</label><textarea id="paymentNotes" class="form-control" rows="2" placeholder="Any notes..."></textarea></div>
-                                <div class="d-grid gap-2">
-                                    <button class="btn btn-success btn-lg" id="completePaymentBtn"><i class="fas fa-check-circle me-2"></i>Complete Payment</button>
-                                    <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header"><h6 class="mb-0">Payment Details</h6></div>
+                                <div class="card-body">
+                                    <div class="mb-3"><label class="form-label">Amount Paid</label><input type="number" id="amountPaid" class="form-control form-control-lg" value="${parseFloat(this.cartData.summary.total || 0).toFixed(2)}" step="0.01" min="0" autofocus></div>
+                                    <div class="mb-3" id="changeAmountContainer" style="display: none;"><label class="form-label">Change</label><input type="text" id="changeAmount" class="form-control form-control-lg text-success fw-bold" readonly></div>
+                                    <div class="mb-3"><label class="form-label">Customer (Optional)</label><input type="text" id="customerName" class="form-control" placeholder="Customer name"></div>
+                                    <div class="mb-3"><label class="form-label">Notes (Optional)</label><textarea id="paymentNotes" class="form-control" rows="2" placeholder="Any notes..."></textarea></div>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-success btn-lg" id="completePaymentBtn"><i class="fas fa-check-circle me-2"></i>Complete Payment</button>
+                                        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>`;
-            modalBody.html(html);
-            modal.modal("show");
-            $(".payment-method").on("click", function() {
-                $(".payment-method").removeClass("active");
-                $(this).addClass("active");
-            });
-            $("#amountPaid").on("input", () => {
-                const total = this.cartData.summary.total;
-                const paid = parseFloat($("#amountPaid").val()) || 0;
-                const change = paid - total;
-                if (change >= 0) {
-                    $("#changeAmount").val(`${POS_CONFIG.settings.currency}${change.toFixed(2)}`);
-                    $("#changeAmountContainer").show();
-                } else {
-                    $("#changeAmountContainer").hide();
-                }
-            });
-            $("#completePaymentBtn").on("click", async () => {
-                await this.processPayment();
-            });
-        }
-
-        async processPayment() {
-            const paymentMethod = $(".payment-method.active").data("method") || "cash";
-            const amountPaid = parseFloat($("#amountPaid").val()) || 0;
-            const customerName = $("#customerName").val();
-            const notes = $("#paymentNotes").val();
-            if (amountPaid < this.cartData.summary.total) {
-                this.showToast("Amount paid is less than total", "error");
-                return;
+                    </div>`;
+                modalBody.html(html);
+                modal.modal("show");
+                $(".payment-method").on("click", function () {
+                    $(".payment-method").removeClass("active");
+                    $(this).addClass("active");
+                });
+                $("#amountPaid").on("input", () => {
+                    const total = this.cartData.summary.total;
+                    const paid = parseFloat($("#amountPaid").val()) || 0;
+                    const change = paid - total;
+                    if (change >= 0) {
+                        $("#changeAmount").val(`${POS_CONFIG.settings.currency}${change.toFixed(2)}`);
+                        $("#changeAmountContainer").show();
+                    } else {
+                        $("#changeAmountContainer").hide();
+                    }
+                });
+                $("#completePaymentBtn").on("click", async () => {
+                    await this.processPayment();
+                });
             }
-            try {
-                // Simulate payment processing
-                await new Promise(resolve => setTimeout(resolve, 1000));
+
+            async processPayment() {
+                const paymentMethod = $(".payment-method.active").data("method") || "cash";
+                const amountPaid = parseFloat($("#amountPaid").val()) || 0;
+                const customerName = $("#customerName").val();
+                const notes = $("#paymentNotes").val();
+                const total = parseFloat(this.cartData.summary.subtotal || 0).toFixed(2);
+                const discount = (parseFloat(this.cartData.summary.discount || 0)).toFixed(2);
+                const vat = parseFloat(this.cartData.summary.tax || 0).toFixed(2);
+                const payable = parseFloat(this.cartData.summary.total || 0).toFixed(2);
+                let InvoiceItemList = [];
+                this.cartData.items.forEach((item) => {
+                    InvoiceItemList.push({
+                        product_id: item.id,
+                        name: item.title || item.name,
+                        sku: item.sku || '',
+                        qty: item.quantity,
+                        sale_price: parseFloat(item.price || 0).toFixed(2),
+                        total: parseFloat(item.total || 0).toFixed(2),
+                    });
+                });
+
+                if (amountPaid < this.cartData.summary.total) {
+                    this.showToast("Amount paid is less than total", "error");
+                    return;
+                }
+                try {
+                    // Simulate payment processing
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    this.generateReceipt({
+                        paymentMethod,
+                        amountPaid,
+                        customerName,
+                        notes,
+                        change: amountPaid - this.cartData.summary.total,
+                    });
+                    let Data = {
+                        "total": total,
+                        "discount": discount,
+                        "vat": vat,
+                        "payable": payable,
+                        "products": InvoiceItemList
+                    }
+                    if (InvoiceItemList.length === 0) {
+                        console.log("Product Required !")
+                    } else {
+                        let res = await axios.post("/pos-invoice-create", Data)
+                        // console.log(res);
+                        if (res.data === 1) {
+                            await this.clearCart();
+                            this.showToast("Payment completed successfully!", "success");
+                            this.playSound("scan");
+                            $("#checkoutModal").modal("hide");
+                            console.log("Invoice Created");
+                            // window.location.href = '/invoicePage'
+                        } else {
+                            console.log("Something Went Wrong")
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error("Payment error:", error);
+                    this.showToast("Error processing payment", "error");
+                }
+            }
+
+            generateReceipt(paymentInfo) {
+                const receipt = $("#receiptContent");
+                const now = new Date();
+                const receiptNumber = "REC-" + Date.now().toString().slice(-8);
+                let itemsHtml = "";
+                this.cartData.items.forEach((item) => {
+                    itemsHtml += `${item.title || item.name}\n${item.quantity} × ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)} = ${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}\n`;
+                });
+                const html = `
+                    <div class="text-center mb-3"><h5 class="fw-bold">POS SYSTEM</h5><p class="mb-1">123 Main Street, City</p><p class="mb-1">Phone: (123) 456-7890</p><p class="mb-1">GSTIN: 29ABCDE1234F1Z5</p></div>
+                    <hr><div class="mb-2">
+                        <div class="d-flex justify-content-between"><span>Receipt #:</span><span>${receiptNumber}</span></div>
+                        <div class="d-flex justify-content-between"><span>Date:</span><span>${now.toLocaleDateString()}</span></div>
+                        <div class="d-flex justify-content-between"><span>Time:</span><span>${now.toLocaleTimeString()}</span></div>
+                        ${paymentInfo.customerName ? `<div class="d-flex justify-content-between"><span>Customer:</span><span>${paymentInfo.customerName}</span></div>` : ""}
+                    </div><hr><pre class="mb-2" style="font-family: inherit;">${itemsHtml}</pre><hr>
+                    <div class="mb-2">
+                        <div class="d-flex justify-content-between"><span>Subtotal:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.subtotal || 0).toFixed(2)}</span></div>
+                        <div class="d-flex justify-content-between"><span>Tax (10%):</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.tax || 0).toFixed(2)}</span></div>
+                        <div class="d-flex justify-content-between fw-bold"><span>Total:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.total || 0).toFixed(2)}</span></div>
+                    </div><hr>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between"><span>Payment Method:</span><span>${paymentInfo.paymentMethod.toUpperCase()}</span></div>
+                        <div class="d-flex justify-content-between"><span>Amount Paid:</span><span>${POS_CONFIG.settings.currency}${paymentInfo.amountPaid.toFixed(2)}</span></div>
+                        <div class="d-flex justify-content-between"><span>Change:</span><span>${POS_CONFIG.settings.currency}${paymentInfo.change.toFixed(2)}</span></div>
+                    </div><hr>
+                    <div class="text-center"><p class="mb-1">Thank you for your purchase!</p><p class="mb-1">*** Goods once sold cannot be returned ***</p><p class="mb-0">Visit Again!</p></div>`;
+                receipt.html(html);
+                $("#receiptModal").modal("show");
+            }
+
+            printReceipt() {
+                if (!this.cartData || this.cartData.items.length === 0) {
+                    this.showToast("Cart is empty", "error");
+                    return;
+                }
                 this.generateReceipt({
-                    paymentMethod,
-                    amountPaid,
-                    customerName,
-                    notes,
-                    change: amountPaid - this.cartData.summary.total,
+                    paymentMethod: "cash",
+                    amountPaid: this.cartData.summary.total,
+                    customerName: "",
+                    notes: "",
+                    change: 0,
                 });
-                await this.clearCart();
-                this.showToast("Payment completed successfully!", "success");
-                this.playSound("scan");
-                $("#checkoutModal").modal("hide");
-            } catch (error) {
-                console.error("Payment error:", error);
-                this.showToast("Error processing payment", "error");
+            }
+
+            quickSale() { this.showToast("Quick sale feature coming soon", "info"); }
+            applyDiscount() {
+                if (!this.cartData || this.cartData.items.length === 0) {
+                    this.showToast("Cart is empty", "error");
+                    return;
+                }
+                const discount = prompt("Enter discount percentage:", "10");
+                if (discount && !isNaN(discount)) this.showToast(`Discount of ${discount}% applied`, "success");
+            }
+            processReturn() { this.showToast("Return feature coming soon", "info"); }
+            loadSavedCarts() { this.showToast("Load cart feature coming soon", "info"); }
+            holdCart() {
+                if (!this.cartData || this.cartData.items.length === 0) {
+                    this.showToast("Cart is empty", "error");
+                    return;
+                }
+                const cartName = prompt("Enter a name for this cart:", `Cart ${new Date().toLocaleTimeString()}`);
+                if (cartName) {
+                    const savedCarts = JSON.parse(localStorage.getItem("savedCarts") || "[]");
+                    savedCarts.push({ name: cartName, data: this.cartData, timestamp: new Date().toISOString() });
+                    localStorage.setItem("savedCarts", JSON.stringify(savedCarts));
+                    this.showToast(`Cart saved as "${cartName}"`, "success");
+                    this.clearCart();
+                }
+            }
+
+            showToast(message, type = "info") {
+                const toastId = "toast-" + Date.now();
+                const icons = { success: "fas fa-check-circle", error: "fas fa-exclamation-circle", warning: "fas fa-exclamation-triangle", info: "fas fa-info-circle" };
+                const toast = $(`<div id="${toastId}" class="toast align-items-center border-0 bg-${type}" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"><div class="d-flex"><div class="toast-body text-white"><i class="${icons[type]} me-2"></i>${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`);
+                $('body').append(toast);
+                const bsToast = new bootstrap.Toast(toast[0]);
+                bsToast.show();
+                toast.on("hidden.bs.toast", () => toast.remove());
+                setTimeout(() => { if ($(`#${toastId}`).length) bsToast.hide(); }, 3000);
+            }
+
+            playSound(type) {
+                if (POS_CONFIG.sounds[type]) {
+                    const audio = new Audio(POS_CONFIG.sounds[type]);
+                    audio.play().catch(() => { });
+                }
             }
         }
 
-        generateReceipt(paymentInfo) {
-            const receipt = $("#receiptContent");
-            const now = new Date();
-            const receiptNumber = "REC-" + Date.now().toString().slice(-8);
-            let itemsHtml = "";
-            this.cartData.items.forEach((item) => {
-                itemsHtml += `${item.title || item.name}\n${item.quantity} × ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)} = ${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}\n`;
-            });
-            const html = `
-                <div class="text-center mb-3"><h5 class="fw-bold">POS SYSTEM</h5><p class="mb-1">123 Main Street, City</p><p class="mb-1">Phone: (123) 456-7890</p><p class="mb-1">GSTIN: 29ABCDE1234F1Z5</p></div>
-                <hr><div class="mb-2">
-                    <div class="d-flex justify-content-between"><span>Receipt #:</span><span>${receiptNumber}</span></div>
-                    <div class="d-flex justify-content-between"><span>Date:</span><span>${now.toLocaleDateString()}</span></div>
-                    <div class="d-flex justify-content-between"><span>Time:</span><span>${now.toLocaleTimeString()}</span></div>
-                    ${paymentInfo.customerName ? `<div class="d-flex justify-content-between"><span>Customer:</span><span>${paymentInfo.customerName}</span></div>` : ""}
-                </div><hr><pre class="mb-2" style="font-family: inherit;">${itemsHtml}</pre><hr>
-                <div class="mb-2">
-                    <div class="d-flex justify-content-between"><span>Subtotal:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.subtotal || 0).toFixed(2)}</span></div>
-                    <div class="d-flex justify-content-between"><span>Tax (10%):</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.tax || 0).toFixed(2)}</span></div>
-                    <div class="d-flex justify-content-between fw-bold"><span>Total:</span><span>${POS_CONFIG.settings.currency}${parseFloat(this.cartData.summary.total || 0).toFixed(2)}</span></div>
-                </div><hr>
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between"><span>Payment Method:</span><span>${paymentInfo.paymentMethod.toUpperCase()}</span></div>
-                    <div class="d-flex justify-content-between"><span>Amount Paid:</span><span>${POS_CONFIG.settings.currency}${paymentInfo.amountPaid.toFixed(2)}</span></div>
-                    <div class="d-flex justify-content-between"><span>Change:</span><span>${POS_CONFIG.settings.currency}${paymentInfo.change.toFixed(2)}</span></div>
-                </div><hr>
-                <div class="text-center"><p class="mb-1">Thank you for your purchase!</p><p class="mb-1">*** Goods once sold cannot be returned ***</p><p class="mb-0">Visit Again!</p></div>`;
-            receipt.html(html);
-            $("#receiptModal").modal("show");
-        }
-
-        printReceipt() {
-            if (!this.cartData || this.cartData.items.length === 0) {
-                this.showToast("Cart is empty", "error");
-                return;
-            }
-            this.generateReceipt({
-                paymentMethod: "cash",
-                amountPaid: this.cartData.summary.total,
-                customerName: "",
-                notes: "",
-                change: 0,
-            });
-        }
-
-        quickSale() { this.showToast("Quick sale feature coming soon", "info"); }
-        applyDiscount() { 
-            if (!this.cartData || this.cartData.items.length === 0) {
-                this.showToast("Cart is empty", "error");
-                return;
-            }
-            const discount = prompt("Enter discount percentage:", "10");
-            if (discount && !isNaN(discount)) this.showToast(`Discount of ${discount}% applied`, "success");
-        }
-        processReturn() { this.showToast("Return feature coming soon", "info"); }
-        loadSavedCarts() { this.showToast("Load cart feature coming soon", "info"); }
-        holdCart() {
-            if (!this.cartData || this.cartData.items.length === 0) {
-                this.showToast("Cart is empty", "error");
-                return;
-            }
-            const cartName = prompt("Enter a name for this cart:", `Cart ${new Date().toLocaleTimeString()}`);
-            if (cartName) {
-                const savedCarts = JSON.parse(localStorage.getItem("savedCarts") || "[]");
-                savedCarts.push({ name: cartName, data: this.cartData, timestamp: new Date().toISOString() });
-                localStorage.setItem("savedCarts", JSON.stringify(savedCarts));
-                this.showToast(`Cart saved as "${cartName}"`, "success");
-                this.clearCart();
-            }
-        }
-
-        showToast(message, type = "info") {
-            const toastId = "toast-" + Date.now();
-            const icons = { success: "fas fa-check-circle", error: "fas fa-exclamation-circle", warning: "fas fa-exclamation-triangle", info: "fas fa-info-circle" };
-            const toast = $(`<div id="${toastId}" class="toast align-items-center border-0 bg-${type}" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"><div class="d-flex"><div class="toast-body text-white"><i class="${icons[type]} me-2"></i>${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`);
-            $('body').append(toast);
-            const bsToast = new bootstrap.Toast(toast[0]);
-            bsToast.show();
-            toast.on("hidden.bs.toast", () => toast.remove());
-            setTimeout(() => { if ($(`#${toastId}`).length) bsToast.hide(); }, 3000);
-        }
-
-        playSound(type) {
-            if (POS_CONFIG.sounds[type]) {
-                const audio = new Audio(POS_CONFIG.sounds[type]);
-                audio.play().catch(() => {});
-            }
-        }
-    }
-
-    // Initialize POS System
-    $(document).ready(function() {
-        window.posSystem = new POSSystem();
-        setTimeout(() => $("#barcodeInput").focus(), 500);
-    });
-</script>
+        // Initialize POS System
+        $(document).ready(function () {
+            window.posSystem = new POSSystem();
+            setTimeout(() => $("#barcodeInput").focus(), 500);
+        });
+    </script>
 @endpush
