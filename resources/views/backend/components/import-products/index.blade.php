@@ -67,8 +67,9 @@
         tableList.empty();
 
         res.data.data.forEach(function (item, index) {
+            let imgUrl = item['product']['image'];
             let row = `<tr>
-                    <td><img style="width: 90px; height: 100px;" alt="" src="${item['product']['image']}"></td>
+                    <td><img style="width: 90px; height: 100px;" alt="" src="storage/${imgUrl}"></td>
                     <td>${item['product']['title']}<br>${item['product']['sku']}</td>
                     <td>${item['import_price']}</td>
                     <td>${item['sale_price']}</td>
