@@ -302,7 +302,7 @@
                         <td>
                             <div class="row">
                                 <div class="col-4">
-                                    <img src="${item['image']}" alt="No Image" class="me-2 product-image" style="width:100px; object-fit:cover; border-radius:5px;">
+                                    <img src="storage/${item['image']}" alt="No Image" class="me-2 product-image" style="width:100px; object-fit:cover; border-radius:5px;">
                                 </div>
                                 <div class="col-8">
                                     ${item['title']}<br>${item['sku']}

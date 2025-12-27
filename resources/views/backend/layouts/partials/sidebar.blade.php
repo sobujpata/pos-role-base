@@ -93,7 +93,7 @@
 						@endcan
 						@can('product-create')
 						<li>
-							<a href="{{ url('/import-product-page') }}"><i class='bx bx-radio-circle'></i>Product Bar Code</a>
+							<a href="{{ url('/product-barcode-generate') }}"><i class='bx bx-radio-circle'></i>Barcode Generate</a>
 						</li>
 						@endcan
 					</ul>

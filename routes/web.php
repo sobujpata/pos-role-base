@@ -23,6 +23,7 @@ use App\Http\Controllers\PosInvoiceController;
 use App\Http\Controllers\ShopBannerController;
 use App\Http\Controllers\SingleBannerController;
 use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\BarcodeGenerateController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -156,7 +157,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/import-product-all', [ProductController::class,'ImportProductAll']);
     Route::post("/import-product",[ProductController::class,'ImportProduct']);
     Route::get("/import-product-list/{product_id}",[ProductController::class,'ImportProductList']);
+    Route::post("/import-product-by-id",[ProductController::class,'ImportProductsById']);
+    Route::post("/import-product-update",[ProductController::class,'ImportProductsUpdate']);
+    Route::post("/import-product-delete",[ProductController::class,'destroyImportProduct']);
 
+    //barcode generate
+    Route::get('/product-barcode-generate', [BarcodeGenerateController::class, 'index'])->name('barcode.index')->middleware('permission:product-menu|product-view');
+    //barcode generate API
+    Route::post("/barcode-generate-by-id",[BarcodeGenerateController::class,'BarcodeGenerateById']);
+    
     //category Route
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('permission:category-menu|category-view');
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create')->middleware('permission:category-create');
