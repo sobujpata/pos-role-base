@@ -22,7 +22,7 @@
             <div class="product">
                 <div class="product_img">
                     <a href="{{ url('details/' . slugify($product->title) . '-' . $product->id) }}">
-                        <img src="{{ asset($product->image) }}" alt="product_img1">
+                        <img src="{{ asset('storage/'.$product->image) }}" alt="product_img1">
                     </a>
                     <div class="product_action_box">
                         <ul class="list_none pr_action_btn">

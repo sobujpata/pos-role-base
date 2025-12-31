@@ -2,7 +2,7 @@
 @section('content')
     <!-- START SECTION BREADCRUMB -->
     <div class="breadcrumb_section bg_gray page-title-mini" style="padding: 40px 0">
-        <div class="container" ><!-- STRART CONTAINER -->
+        <div class="container"><!-- STRART CONTAINER -->
             <div class="row align-items-center">
                 <div class="col-md-6">
                     <div class="page-title">
@@ -31,90 +31,66 @@
                     <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
                         <div class="product-image">
                             <div class="product_img_box">
-                                <img id="product_img" src="{{ asset('storage/'.$product->productDetail->img1 ?? '') }}"
-                                    data-zoom-image="{{ asset('storage/'.$product->productDetail->zoom_img1 ?? '') }}"
-                                    alt="{{ $product->title }}" />
+                                <img id="product_img"
+                                    src='{{ asset('storage/' . ($product->productDetail?->img1 ?? 'products/product-default.jpg')) }}'
+                                    data-zoom-image="{{ asset('storage/' . ($product->productDetail?->zoom_img1 ?? 'products/product-default.jpg')) }}"
+                                    alt="product_img1"
+                                    onmouseover="this.style.transform='scale(1.5)'; this.style.transition='transform 0.3s';"
+                                    onmouseout="this.style.transform='scale(1)';">
                                 <a href="#" class="product_img_zoom" title="Zoom">
                                     <span class="linearicons-zoom-in"></span>
                                 </a>
                             </div>
-                            <div id="pr_item_gallery" class="product_gallery_item slick_slider" data-slides-to-show="4"
-                                data-slides-to-scroll="1" data-infinite="false">
-
-                                @php
-                                    $galleryImages = [
-                                        [
-                                            'thumb' => 'storage/'.$product->productDetail->img1 ?? null,
-                                            'zoom' => 'storage/'.$product->productDetail->zoom_img1 ?? null,
-                                        ],
-                                        [
-                                            'thumb' => 'storage/'.$product->productDetail->img2 ?? null,
-                                            'zoom' => 'storage/'.$product->productDetail->zoom_img2 ?? null,
-                                        ],
-                                        [
-                                            'thumb' => 'storage/'.$product->productDetail->img3 ?? null,
-                                            'zoom' => 'storage/'.$product->productDetail->zoom_img3 ?? null,
-                                        ],
-                                        [
-                                            'thumb' => 'storage/'.$product->productDetail->img4 ?? null,
-                                            'zoom' => 'storage/'.$product->productDetail->zoom_img4 ?? null,
-                                        ],
-                                    ];
-                                @endphp
-
-                                @foreach (array_filter($galleryImages, fn($img) => $img['thumb'] && $img['zoom']) as $index => $img)
-                                    <div class="item">
-                                        <a href="#" class="product_gallery_item {{ $index === 0 ? 'active' : '' }}"
-                                            data-image="{{ asset($img['thumb']) }}"
-                                            data-zoom-image="{{ asset($img['zoom']) }}">
-                                            <img src="{{ asset($img['thumb']) }}"
-                                                alt="product_small_img{{ $index + 1 }}" />
-                                        </a>
-                                    </div>
-                                @endforeach
-                            </div>
-                            {{-- <div class="product_img_box">
-                                <img id="product_img" src='{{ asset('storage/'.$product->productDetail->img1) }}'
-                                    data-zoom-image="{{asset('storage/'.$product->productDetail->zoom_img1)}}" alt="product_img1" />
-                                <a href="#" class="product_img_zoom" title="Zoom">
-                                    <span class="linearicons-zoom-in"></span>
-                                </a>
-                            </div>
-                            <div id="pr_item_gallery" class="product_gallery_item slick_slider" data-slides-to-show="4"
-                                data-slides-to-scroll="1" data-infinite="false">
+                            <div id="pr_item_gallery" class="product_gallery_item"
+                                style="display: flex; gap: 10px; justify-content: center; margin-top: 10px;">
                                 <div class="item">
                                     <a href="#" class="product_gallery_item active"
-                                        data-image="{{ asset('storage/'.$product->productDetail->img1) }}"
-                                        data-zoom-image="{{ asset('storage/'.$product->productDetail->zoom_img1) }}">
-                                        <img src="{{ asset('storage/'.$product->productDetail->img1) }}" alt="product_small_img1" />
+                                        data-image="{{ asset('storage/' . ($product->productDetail?->img1 ?? 'products/product-default.jpg')) }}"
+                                        data-zoom-image="{{ asset('storage/' . ($product->productDetail?->zoom_img1 ?? 'products/product-default.jpg')) }}">
+                                        <img src="{{ asset('storage/' . ($product->productDetail?->img1 ?? 'products/product-default.jpg')) }}"
+                                            alt="product_small_img1"
+                                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                            onmouseover="this.style.transform='scale(1.2)'; this.style.transition='transform 0.3s';"
+                                            onmouseout="this.style.transform='scale(1)';">
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{ asset('storage/'.$product->productDetail->img2) }}"
-                                        data-zoom-image="{{asset($product->productDetail->zoom_img2)}}">
-                                        <img src="{{ asset('storage/'.$product->productDetail->img2) }}" alt="product_small_img2" />
+                                        data-image="{{ asset('storage/' . ($product->productDetail?->img2 ?? 'products/product-default.jpg')) }}"
+                                        data-zoom-image="{{ asset('storage/' . ($product->productDetail?->zoom_img2 ?? 'products/product-default.jpg')) }}">
+                                        <img src="{{ asset('storage/' . ($product->productDetail?->img2 ?? 'products/product-default.jpg')) }}"
+                                            alt="product_small_img2"
+                                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                            onmouseover="this.style.transform='scale(1.2)'; this.style.transition='transform 0.3s';"
+                                            onmouseout="this.style.transform='scale(1)';">
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{asset('storage/'.$product->productDetail->img3)}}"
-                                        data-zoom-image="{{ asset($product->productDetail->zoom_img3) }}">
-                                        <img src="{{ asset('storage/'.$product->productDetail->img3) }}" alt="product_small_img3" />
+                                        data-image="{{ asset('storage/' . ($product->productDetail?->img3 ?? 'products/product-default.jpg')) }}"
+                                        data-zoom-image="{{ asset('storage/' . ($product->productDetail?->zoom_img3 ?? 'products/product-default.jpg')) }}">
+                                        <img src="{{ asset('storage/' . ($product->productDetail?->img3 ?? 'products/product-default.jpg')) }}"
+                                            alt="product_small_img3"
+                                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                            onmouseover="this.style.transform='scale(1.2)'; this.style.transition='transform 0.3s';"
+                                            onmouseout="this.style.transform='scale(1)';">
                                     </a>
                                 </div>
                                 <div class="item">
                                     <a href="#" class="product_gallery_item"
-                                        data-image="{{ asset('storage/'.$product->productDetail->img4) }}"
-                                        data-zoom-image="{{ asset($product->productDetail->zoom_img4) }}">
-                                        <img src="{{ asset('storage/'.$product->productDetail->img4) }}" alt="product_small_img4" />
+                                        data-image="{{ asset('storage/' . ($product->productDetail?->img4 ?? 'products/product-default.jpg')) }}"
+                                        data-zoom-image="{{ asset('storage/' . ($product->productDetail?->zoom_img4 ?? 'products/product-default.jpg')) }}">
+                                        <img src="{{ asset('storage/' . ($product->productDetail?->img4 ?? 'products/product-default.jpg')) }}"
+                                            alt="product_small_img4"
+                                            style="width: 80px; height: 80px; object-fit: cover; cursor: pointer;"
+                                            onmouseover="this.style.transform='scale(1.2)'; this.style.transition='transform 0.3s';"
+                                            onmouseout="this.style.transform='scale(1)';">
                                     </a>
                                 </div>
-                            </div> --}}
+                            </div>
                         </div>
-
-
                     </div>
+
                     <div class="col-lg-6 col-md-6">
                         <div class="pr_detail">
                             <div class="product_description">
@@ -168,10 +144,6 @@
                                                 </span>
                                             @endforeach
                                         @endif
-
-
-
-
                                     </div>
                                 </div>
                                 <div class="pr_switch_wrap">
@@ -196,8 +168,8 @@
                                 <div class="cart-product-quantity">
                                     <div class="quantity">
                                         <input type="button" value="-" class="minusQty">
-                                        <input type="text" name="quantity" value="1" title="Qty" class="qty"
-                                            size="4">
+                                        <input type="text" name="quantity" value="1" title="Qty"
+                                            class="qty" size="4">
                                         <input type="button" value="+" class="plusQty">
                                     </div>
                                 </div>
@@ -395,244 +367,54 @@
                         <div class="releted_product_slider carousel_slider owl-carousel owl-theme" data-margin="20"
                             data-responsive='{"0":{"items": "1"}, "481":{"items": "2"}, "768":{"items": "3"}, "1199":{"items": "4"}}'>
                             @foreach ($related_products as $item)
-                            <div class="item">
-                                <div class="product">
-                                    <div class="product_img">
-                                        <a href="#">
-                                            <img src="{{ asset('storage/'.$item->image) }}" alt="product_img1">
-                                        </a>
-                                        <div class="product_action_box">
-                                            <ul class="list_none pr_action_btn">
-                                                <li class="add-to-cart"><a href="#"><i
-                                                            class="icon-basket-loaded"></i>
-                                                        Add To Cart</a></li>
-                                                <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
-                                                <li><a href="shop-quick-view.html" class="popup-ajax"><i
-                                                            class="icon-magnifier-add"></i></a></li>
-                                                <li><a href="#"><i class="icon-heart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product_info">
-                                        <h6 class="product_title"><a href="#">{{ $item->title }}</a></h6>
-                                        <div class="product_price">
-                                            <span class="price">${{ $item->discount_price }}</span>
-                                            <del>${{$item->price}}</del>
-                                            <div class="on_sale">
-                                                <span>{{ $item->discount }}</span>
+                                <div class="item">
+                                    <div class="product">
+                                        <div class="product_img">
+                                            <a href="#">
+                                                <img src="{{ asset('storage/' . $item->image) }}" alt="product_img1">
+                                            </a>
+                                            <div class="product_action_box">
+                                                <ul class="list_none pr_action_btn">
+                                                    <li class="add-to-cart"><a href="#"><i
+                                                                class="icon-basket-loaded"></i>
+                                                            Add To Cart</a></li>
+                                                    <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
+                                                    <li><a href="shop-quick-view.html" class="popup-ajax"><i
+                                                                class="icon-magnifier-add"></i></a></li>
+                                                    <li><a href="#"><i class="icon-heart"></i></a></li>
+                                                </ul>
                                             </div>
                                         </div>
-                                        <div class="rating_wrap">
-                                            <div class="rating">
-                                                <div class="product_rate" style="width:80%"></div>
+                                        <div class="product_info">
+                                            <h6 class="product_title"><a href="#">{{ $item->title }}</a></h6>
+                                            <div class="product_price">
+                                                <span class="price">${{ $item->discount_price }}</span>
+                                                <del>${{ $item->price }}</del>
+                                                <div class="on_sale">
+                                                    <span>{{ $item->discount }}</span>
+                                                </div>
                                             </div>
-                                            <span class="rating_num">({{ $item->star }})</span>
-                                        </div>
-                                        <div class="pr_desc">
-                                            <p>{{$item->short_des}}</p>
-                                        </div>
-                                        <div class="pr_switch_wrap">
-                                            <div class="product_color_switch">
-                                                <span class="active" data-color="#87554B"></span>
-                                                <span data-color="#333333"></span>
-                                                <span data-color="#DA323F"></span>
+                                            <div class="rating_wrap">
+                                                <div class="rating">
+                                                    <div class="product_rate" style="width:80%"></div>
+                                                </div>
+                                                <span class="rating_num">({{ $item->star }})</span>
+                                            </div>
+                                            <div class="pr_desc">
+                                                <p>{{ $item->short_des }}</p>
+                                            </div>
+                                            <div class="pr_switch_wrap">
+                                                <div class="product_color_switch">
+                                                    <span class="active" data-color="#87554B"></span>
+                                                    <span data-color="#333333"></span>
+                                                    <span data-color="#DA323F"></span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
                             @endforeach
-                            {{-- <div class="item">
-                                <div class="product">
-                                    <div class="product_img">
-                                        <a href="shop-product-detail.html">
-                                            <img src="{{ asset('/images/product_img2.jpg') }}" alt="product_img2">
-                                        </a>
-                                        <div class="product_action_box">
-                                            <ul class="list_none pr_action_btn">
-                                                <li class="add-to-cart"><a href="#"><i
-                                                            class="icon-basket-loaded"></i>
-                                                        Add To Cart</a></li>
-                                                <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
-                                                <li><a href="shop-quick-view.html" class="popup-ajax"><i
-                                                            class="icon-magnifier-add"></i></a></li>
-                                                <li><a href="#"><i class="icon-heart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product_info">
-                                        <h6 class="product_title"><a href="shop-product-detail.html">Lether Gray
-                                                Tuxedo</a></h6>
-                                        <div class="product_price">
-                                            <span class="price">$55.00</span>
-                                            <del>$95.00</del>
-                                            <div class="on_sale">
-                                                <span>25% Off</span>
-                                            </div>
-                                        </div>
-                                        <div class="rating_wrap">
-                                            <div class="rating">
-                                                <div class="product_rate" style="width:68%"></div>
-                                            </div>
-                                            <span class="rating_num">(15)</span>
-                                        </div>
-                                        <div class="pr_desc">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                                blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                        </div>
-                                        <div class="pr_switch_wrap">
-                                            <div class="product_color_switch">
-                                                <span class="active" data-color="#847764"></span>
-                                                <span data-color="#0393B5"></span>
-                                                <span data-color="#DA323F"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product">
-                                    <span class="pr_flash">New</span>
-                                    <div class="product_img">
-                                        <a href="shop-product-detail.html">
-                                            <img src="{{ asset('/images/product_img3.jpg') }}" alt="product_img3">
-                                        </a>
-                                        <div class="product_action_box">
-                                            <ul class="list_none pr_action_btn">
-                                                <li class="add-to-cart"><a href="#"><i
-                                                            class="icon-basket-loaded"></i>
-                                                        Add To Cart</a></li>
-                                                <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
-                                                <li><a href="shop-quick-view.html" class="popup-ajax"><i
-                                                            class="icon-magnifier-add"></i></a></li>
-                                                <li><a href="#"><i class="icon-heart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product_info">
-                                        <h6 class="product_title"><a href="shop-product-detail.html">woman full sliv
-                                                dress</a></h6>
-                                        <div class="product_price">
-                                            <span class="price">$68.00</span>
-                                            <del>$99.00</del>
-                                        </div>
-                                        <div class="rating_wrap">
-                                            <div class="rating">
-                                                <div class="product_rate" style="width:87%"></div>
-                                            </div>
-                                            <span class="rating_num">(25)</span>
-                                        </div>
-                                        <div class="pr_desc">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                                blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                        </div>
-                                        <div class="pr_switch_wrap">
-                                            <div class="product_color_switch">
-                                                <span class="active" data-color="#333333"></span>
-                                                <span data-color="#7C502F"></span>
-                                                <span data-color="#2F366C"></span>
-                                                <span data-color="#874A3D"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product">
-                                    <div class="product_img">
-                                        <a href="shop-product-detail.html">
-                                            <img src="{{ asset('/images/product_img4.jpg') }}" alt="product_img4">
-                                        </a>
-                                        <div class="product_action_box">
-                                            <ul class="list_none pr_action_btn">
-                                                <li class="add-to-cart"><a href="#"><i
-                                                            class="icon-basket-loaded"></i>
-                                                        Add To Cart</a></li>
-                                                <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
-                                                <li><a href="shop-quick-view.html" class="popup-ajax"><i
-                                                            class="icon-magnifier-add"></i></a></li>
-                                                <li><a href="#"><i class="icon-heart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product_info">
-                                        <h6 class="product_title"><a href="shop-product-detail.html">light blue
-                                                Shirt</a></h6>
-                                        <div class="product_price">
-                                            <span class="price">$69.00</span>
-                                            <del>$89.00</del>
-                                            <div class="on_sale">
-                                                <span>20% Off</span>
-                                            </div>
-                                        </div>
-                                        <div class="rating_wrap">
-                                            <div class="rating">
-                                                <div class="product_rate" style="width:70%"></div>
-                                            </div>
-                                            <span class="rating_num">(22)</span>
-                                        </div>
-                                        <div class="pr_desc">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                                blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                        </div>
-                                        <div class="pr_switch_wrap">
-                                            <div class="product_color_switch">
-                                                <span class="active" data-color="#333333"></span>
-                                                <span data-color="#A92534"></span>
-                                                <span data-color="#B9C2DF"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="product">
-                                    <div class="product_img">
-                                        <a href="shop-product-detail.html">
-                                            <img src="{{ asset('/images/product_img5.jpg') }}" alt="product_img5">
-                                        </a>
-                                        <div class="product_action_box">
-                                            <ul class="list_none pr_action_btn">
-                                                <li class="add-to-cart"><a href="#"><i
-                                                            class="icon-basket-loaded"></i>
-                                                        Add To Cart</a></li>
-                                                <li><a href="shop-compare.html"><i class="icon-shuffle"></i></a></li>
-                                                <li><a href="shop-quick-view.html" class="popup-ajax"><i
-                                                            class="icon-magnifier-add"></i></a></li>
-                                                <li><a href="#"><i class="icon-heart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="product_info">
-                                        <h6 class="product_title"><a href="shop-product-detail.html">blue dress for
-                                                woman</a></h6>
-                                        <div class="product_price">
-                                            <span class="price">$45.00</span>
-                                            <del>$55.25</del>
-                                            <div class="on_sale">
-                                                <span>35% Off</span>
-                                            </div>
-                                        </div>
-                                        <div class="rating_wrap">
-                                            <div class="rating">
-                                                <div class="product_rate" style="width:80%"></div>
-                                            </div>
-                                            <span class="rating_num">(21)</span>
-                                        </div>
-                                        <div class="pr_desc">
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-                                                blandit massa enim. Nullam id varius nunc id varius nunc.</p>
-                                        </div>
-                                        <div class="pr_switch_wrap">
-                                            <div class="product_color_switch">
-                                                <span class="active" data-color="#87554B"></span>
-                                                <span data-color="#333333"></span>
-                                                <span data-color="#5FB7D4"></span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> --}}
+
                         </div>
                     </div>
                 </div>
@@ -644,7 +426,7 @@
 
     </div>
     <!-- END MAIN CONTENT -->
-    <script>
+    {{-- <script>
         document.querySelectorAll('.star_rating span').forEach(star => {
             star.addEventListener('click', function() {
                 let value = this.getAttribute('data-value');
@@ -657,53 +439,64 @@
                 });
             });
         });
-    </script>
+    </script> --}}
 
-   
+
     {{-- <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const mainImage = document.getElementById("product_img");
-        const galleryLinks = document.querySelectorAll(".product_gallery_item");
+        document.addEventListener("DOMContentLoaded", function() {
+            const mainImage = document.getElementById("product_img");
+            const galleryLinks = document.querySelectorAll(".product_gallery_item");
 
-        function initZoom() {
-            if (typeof $.fn.elevateZoom !== "undefined") {
-                $(".zoomContainer").remove(); // clear previous zoom instance
-                $(mainImage).elevateZoom({
-                    zoomType: "lens",
-                    lensShape: "round",
-                    lensSize: 200,
-                    responsive: true,
-                    cursor: "crosshair"
-                });
+            function initZoom() {
+                if (typeof $.fn.elevateZoom !== "undefined") {
+                    $(".zoomContainer").remove(); // clear previous zoom instance
+                    $(mainImage).removeData('elevateZoom'); // remove data
+                    $(mainImage).elevateZoom({
+                        zoomType: "lens",
+                        lensShape: "round",
+                        lensSize: 200,
+                        responsive: true,
+                        cursor: "crosshair"
+                    });
+                }
             }
-        }
 
-        // Initialize zoom on page load (for default image)
-        initZoom();
+            // Initialize zoom on page load (for default image)
+            initZoom();
 
-        galleryLinks.forEach(link => {
-            link.addEventListener("click", function(e) {
-                e.preventDefault();
+            galleryLinks.forEach(link => {
+                link.addEventListener("click", function(e) {
+                    e.preventDefault();
 
-                // Remove active class from all thumbnails
-                galleryLinks.forEach(l => l.classList.remove("active"));
+                    // Remove active class from all thumbnails
+                    galleryLinks.forEach(l => l.classList.remove("active"));
 
-                // Add active class to clicked thumbnail
-                this.classList.add("active");
+                    // Add active class to clicked thumbnail
+                    this.classList.add("active");
 
-                // Update main image + zoom image
-                let newImage = this.getAttribute("data-image");
-                let zoomImage = this.getAttribute("data-zoom-image");
+                    // Destroy current zoom
+                    $(".zoomContainer").remove();
+                    $(mainImage).removeData('elevateZoom');
 
-                mainImage.src = newImage;
-                mainImage.setAttribute("data-zoom-image", zoomImage);
+                    // Update main image + zoom image
+                    let newImage = this.getAttribute("data-image");
+                    let zoomImage = this.getAttribute("data-zoom-image");
 
-                // Reinit zoom with new image
-                initZoom();
+                    mainImage.setAttribute("data-zoom-image", zoomImage);
+                    mainImage.src = newImage;
+
+                    // Reinit zoom
+                    if (mainImage.complete) {
+                        initZoom();
+                    } else {
+                        mainImage.onload = function() {
+                            initZoom();
+                        };
+                    }
+                });
             });
         });
-    });
-</script> --}}
+    </script> --}}
 
 
 @endsection

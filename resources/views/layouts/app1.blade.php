@@ -11,12 +11,10 @@
     <meta content="Anil z" name="author">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description"
-        content="Shopwise is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
+        content="Localbazer is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion, Auto parts, Electrical prats, Electronincs Equipment, Lather shoes, Sanitary, Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
     <meta name="keywords"
         content="ecommerce, electronics store, Fashion store, furniture store,  bootstrap 4, clean, minimal, modern, online store, responsive, retail, shopping, ecommerce store">
 
-    <!-- SITE TITLE -->
-    {{-- <title>Shopwise - eCommerce Bootstrap 5 HTML Template</title> --}}
     <!-- Favicon Icon -->
     <style>
         body {
@@ -116,13 +114,12 @@
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+    
     <title>Localbazer.com-@yield('title')</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    {{-- <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -167,7 +164,8 @@
 
     <!-- Latest jQuery -->
     {{-- <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script> --}}
-
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
     <!-- jquery-ui -->
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
     <!-- popper min js -->
