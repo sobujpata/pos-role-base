@@ -31,7 +31,7 @@ use App\Http\Controllers\BarcodeGenerateController;
 
 Route::get('/', function () {
     return view('home_page_1.index');
-});
+})->name('home');
 Route::get('/home-2', function () {
     return view('home_page_2.index');
 });
@@ -120,6 +120,8 @@ Route::get('/cart/count', function () {
         'cart'   => $cart,
     ]);
 });
+//welecome page route
+Route::get('/welecome', [CartController::class, 'welecomePage'])->name('welecome.index');
 
 
 
@@ -257,6 +259,13 @@ Route::get('/product-barcode-view/{id}',
     Route::get('/tags/{id}/edit', [TagController::class, 'edit'])->name('tags.edit')->middleware('permission:color-update');
     Route::put('/tags/{id}', [TagController::class, 'update'])->name('tags.update')->middleware('permission:color-update');
     Route::delete('/tags/{id}', [TagController::class, 'destroy'])->name('tags.destroy')->middleware('permission:color-delete');
+    //Subscrip route
+    Route::get('/subscribe-notice', [MenuController::class, 'subscribePage'])->name('subscribe-notice.index');
+    Route::get('/subscribe-notice/create', [MenuController::class, 'subscribePageCreate'])->name('subscribe-notice.create');
+    Route::post('/subscribe-notice', [MenuController::class, 'subscribePageStore'])->name('subscribe-notice.store');
+    Route::get('/subscribe-notice/{id}/edit', [MenuController::class, 'subscribePageEdit'])->name('subscribe-notice.edit');
+    Route::put('/subscribe-notice/{id}', [MenuController::class, 'subscribePageUpdate'])->name('subscribe-notice.update');
+    Route::delete('/subscribe-notice/{id}', [MenuController::class, 'subscribePageDestroy'])->name('subscribe-notice.destroy')->middleware('permission:color-delete');
 
     //permissions
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permission.index')->middleware('permission:permission-menu|permission-view');

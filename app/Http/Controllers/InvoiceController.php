@@ -204,6 +204,9 @@ class InvoiceController extends Controller
             Cookie::queue(Cookie::forget('cart'));
             DB::commit();
 
+            // Set cookie with invoice ID for 10 days (14400 minutes)
+            Cookie::queue('last_invoice_id', $invoice->id, 14400);
+
             return response()->json([
                 'success'    => true,
                 'message'    => 'Invoice created successfully',

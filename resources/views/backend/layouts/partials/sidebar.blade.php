@@ -220,6 +220,26 @@
 					</ul>
 				</li>
 				@endcan
+				@can('subscribe-menu')
+				<li>
+					<a href="javascript:;" class="has-arrow">
+						<div class="parent-icon"><i class="bx bx-circle"></i></div>
+						<div class="menu-title">Subscribe</div>
+					</a>
+					<ul>
+						@can('subscribe-menu')
+						<li>
+							<a href="{{ route('subscribe-notice.index') }}"><i class='bx bx-radio-circle'></i>Subscribe page settings</a>
+						</li>
+						@endcan
+						@can('subscribe-menu')
+						<li>
+							<a href="{{ route('subscribe-notice.create') }}"><i class='bx bx-radio-circle'></i>Create tags</a>
+						</li>
+						@endcan
+					</ul>
+				</li>
+				@endcan
 				
 				
 				

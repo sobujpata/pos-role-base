@@ -14,6 +14,7 @@
         content="Localbazer is Powerful features and You Can Use The Perfect Build this Template For Any eCommerce Website. The template is built for sell Fashion, Auto parts, Electrical prats, Electronincs Equipment, Lather shoes, Sanitary, Products, Shoes, Bags, Cosmetics, Clothes, Sunglasses, Furniture, Kids Products, Electronics, Stationery Products and Sporting Goods.">
     <meta name="keywords"
         content="ecommerce, electronics store, Fashion store, furniture store,  bootstrap 4, clean, minimal, modern, online store, responsive, retail, shopping, ecommerce store">
+    <title>Localbazer.com-@yield('title')</title>
 
     <!-- Favicon Icon -->
     <style>
@@ -115,11 +116,11 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}">
     
-    <title>Localbazer.com-@yield('title')</title>
-
+    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
+    <script src="{{ asset('js/axios.min.js') }}"></script>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    {{-- <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" /> --}}
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -163,9 +164,8 @@
     <a href="#" class="scrollup" style="display: none;"><i class="ion-ios-arrow-up"></i></a>
 
     <!-- Latest jQuery -->
-    {{-- <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script> --}}
-    <script src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
-    <script src="{{ asset('js/axios.min.js') }}"></script>
+    <script src="{{ asset('js/jquery-3.7.1.min.js') }}"></script>
+    
     <!-- jquery-ui -->
     <script src="{{ asset('js/jquery-ui.js') }}"></script>
     <!-- popper min js -->
