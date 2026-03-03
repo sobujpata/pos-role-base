@@ -22,7 +22,11 @@
         body {
             background: #fff;
             font-family: Arial, sans-serif;
-            padding: 40px;
+        }
+        @media only screen and (min-width: 575px) {
+            body {
+                padding: 40px;
+            }
         }
 
         /* Container for each loading block */
