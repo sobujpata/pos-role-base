@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 
@@ -98,5 +99,15 @@ class CartController extends Controller
         $cart = array_filter($cart, fn($item) => $item['id'] != $id);
         return redirect()->back()
             ->cookie('cart', json_encode(array_values($cart)), 60);
+    }
+    public function welecomePage(){
+        $orderId = json_decode(Cookie::get('last_invoice_id'), true) ?? [];
+        // dd($order);
+        if(empty($orderId)){
+            return redirect()->route('home')->with('error','Please order confirm first.');
+        }
+        $order = Invoice::findOrFail($orderId);
+
+        return view('home_page_1.welecome-page', compact('order'));
     }
 }

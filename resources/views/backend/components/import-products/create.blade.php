@@ -15,14 +15,14 @@
                                 <select type="text" class="form-control form-select" id="productId">
                                     <option value="" disabled selected>Select Products</option>
                                 </select>
-                                <label class="form-label mt-2">Import Price</label>
-                                <input type="text" class="form-control" id="importPrice">
+                                <label class="form-label mt-3">Import Price</label>
+                                <input type="number" class="form-control" id="importPrice">
 
-                                <label class="form-label mt-2">Sale Price</label>
-                                <input type="text" class="form-control" id="salePrice">
+                                <label class="form-label mt-3">Sale Price</label>
+                                <input type="number" class="form-control" id="salePrice">
 
-                                <label class="form-label mt-2">Quantity</label>
-                                <input type="text" class="form-control" id="productQty"
+                                <label class="form-label mt-3">Quantity</label>
+                                <input type="number" class="form-control" id="productQty"
                                     placeholder="New Product Quantity">
 
                             </div>
@@ -41,9 +41,9 @@
 
 
 <script>
-    FillCategoryDropDown();
+    FillProducts();
 
-    async function FillCategoryDropDown() {
+    async function FillProducts() {
         let res = await axios.get("/list-products");
         // console.log(res)
         res.data.forEach(function (item, i) {
@@ -72,7 +72,7 @@
             // $('#productQty').val(data.buy_qty ?? '');
         } catch (error) {
             console.error(error);
-            errorToast('Failed to load product details!');
+            flasher.error('Failed to load product details!');
         }
     }
 
@@ -83,11 +83,11 @@
         let productQty = $('#productQty').val();
 
         if (!productId) {
-            return errorToast("Product Required!");
+            return flasher.error("Product Required!");
         } else if (!salePrice) {
-            return errorToast("Sale Price Required!");
+            return flasher.error("Sale Price Required!");
         } else if (!productQty) {
-            return errorToast("Quantity Required!");
+            return flasher.error("Quantity Required!");
         }
 
         $('#modal-close').click();
@@ -105,11 +105,11 @@
         // hideLoader();
         console.log(res)
         if (res.status === 201) {
-            alert('Product import successfully!');
+            flasher.success('Product import successfully!');
             $("#save-form")[0].reset();
             await getList();
         } else {
-            errorToast("Request failed!");
+            flasher.error("Request failed!");
         }
     }
 </script>

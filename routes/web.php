@@ -23,6 +23,7 @@ use App\Http\Controllers\PosInvoiceController;
 use App\Http\Controllers\ShopBannerController;
 use App\Http\Controllers\SingleBannerController;
 use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\BarcodeGenerateController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -30,7 +31,7 @@ use App\Http\Controllers\RoleManagementController;
 
 Route::get('/', function () {
     return view('home_page_1.index');
-});
+})->name('home');
 Route::get('/home-2', function () {
     return view('home_page_2.index');
 });
@@ -96,7 +97,7 @@ Route::get('/cart', [CartController::class, 'showCart'])->name('cart.index');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 
 Route::post('/cart/update', [CartController::class, 'updateCartAjax'])->name('cart.update.ajax');
-Route::get('/cart/checkout',[CartController::class, 'checkOut'])->name('cart.checkout');
+Route::get('/cart/checkout', [CartController::class, 'checkOut'])->name('cart.checkout');
 
 Route::post('/invoice-create', [InvoiceController::class, 'invoiceCreate'])->name('invoice.create');
 
@@ -119,12 +120,14 @@ Route::get('/cart/count', function () {
         'cart'   => $cart,
     ]);
 });
+//welecome page route
+Route::get('/welecome', [CartController::class, 'welecomePage'])->name('welecome.index');
 
 
 
 
 //policy
-Route::get("/PolicyByType/{type}",[PolicyController::class,'PolicyByType']);
+Route::get("/PolicyByType/{type}", [PolicyController::class, 'PolicyByType']);
 
 // Route::get('/dashboard', function () {
 //     return view('dashboard');
@@ -132,15 +135,15 @@ Route::get("/PolicyByType/{type}",[PolicyController::class,'PolicyByType']);
 // ->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard',[DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     //Product Route
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:product-menu|product-view');
     //invoice API
-    Route::get("/invoice-select",[InvoiceController::class,'invoiceSelect']);
-    Route::post("/invoice-details",[InvoiceController::class,'InvoiceDetails']);
-    Route::post("/invoice-delete",[InvoiceController::class,'invoiceDelete']);
-    Route::post("/invoice-complete",[InvoiceController::class,'invoiceComplete']);
-    Route::get("/invoice-printed",[InvoiceController::class,'invoicePrinted']);
+    Route::get("/invoice-select", [InvoiceController::class, 'invoiceSelect']);
+    Route::post("/invoice-details", [InvoiceController::class, 'InvoiceDetails']);
+    Route::post("/invoice-delete", [InvoiceController::class, 'invoiceDelete']);
+    Route::post("/invoice-complete", [InvoiceController::class, 'invoiceComplete']);
+    Route::get("/invoice-printed", [InvoiceController::class, 'invoicePrinted']);
 
     //Product Route
     Route::get('/products-list', [ProductController::class, 'index'])->name('products.index')->middleware('permission:product-menu|product-view');
@@ -149,13 +152,27 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/{id}/edit', [ProductController::class, 'edit'])->name('products.edit')->middleware('permission:product-edit');
     Route::put('/products/{id}', [ProductController::class, 'update'])->name('products.update')->middleware('permission:product-edit');
     Route::delete('/products/{id}', [ProductController::class, 'destroy'])->name('products.destroy')->middleware('permission:product-delete');
-    
+
     //import Product Route
-    Route::get("/import-product-page",[ProductController::class,'ImportProductPage'])->name('importProductPage');
+    Route::get("/import-product-page", [ProductController::class, 'ImportProductPage'])->name('importProductPage');
     // Import Product API
-    Route::get('/import-product-all', [ProductController::class,'ImportProductAll']);
-    Route::post("/import-product",[ProductController::class,'ImportProduct']);
-    Route::get("/import-product-list/{product_id}",[ProductController::class,'ImportProductList']);
+    Route::get('/import-product-all', [ProductController::class, 'ImportProductAll']);
+    Route::post("/import-product", [ProductController::class, 'ImportProduct']);
+    Route::get("/import-product-list/{product_id}", [ProductController::class, 'ImportProductList']);
+    Route::post("/import-product-by-id", [ProductController::class, 'ImportProductsById']);
+    Route::post("/import-product-update", [ProductController::class, 'ImportProductsUpdate']);
+    Route::post("/import-product-delete", [ProductController::class, 'destroyImportProduct']);
+
+
+Route::get('/product-barcode-generate',
+    [BarcodeGenerateController::class, 'index']
+)->name('barcode.index')->middleware('permission:product-menu|product-view');
+
+Route::get('/product-barcode-view/{id}',
+    [BarcodeGenerateController::class, 'barcodeView']
+)->name('barcode.view')->middleware('permission:product-menu|product-view');
+
+
 
     //category Route
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('permission:category-menu|category-view');
@@ -185,18 +202,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/roles/{id}/edit', [RoleManagementController::class, 'edit'])->name('role.edit')->middleware('permission:role-edit');
     Route::put('/roles/{id}', [RoleManagementController::class, 'update'])->name('role.update')->middleware('permission:role-edit');
     Route::delete('/roles/{id}', [RoleManagementController::class, 'destroy'])->name('role.destroy')->middleware('permission:role-delete');
-    
-    //Point of sales
-    Route::get('/point-of-sales',[PosInvoiceController::class,'index'])->name('pos.index')->middleware('permission:pos-menu|pos-view');
-    Route::get('/invoicePage',[PosInvoiceController::class,'InvoicePage'])->name('invoicePage')->middleware('permission:pos-create');
-    Route::get('/list-products', [PosInvoiceController::class, 'ProductList'])->middleware('permission:pos-view');
-    Route::post("/pos-invoice-create",[PosInvoiceController::class,'invoiceCreate'])->middleware('permission:pos-create');
 
-    Route::get("/pos-invoice-select",[PosInvoiceController::class,'invoiceSelect']);
-    Route::post("/pos-invoice-details",[PosInvoiceController::class,'InvoiceDetails']);
-    Route::post("/pos-invoice-delete",[PosInvoiceController::class,'invoiceDelete']);
-    Route::post("/pos-invoice-complete",[PosInvoiceController::class,'invoiceComplete']);
-    Route::get("/pos-invoice-printed",[PosInvoiceController::class,'invoicePrinted']);
+    //Point of sales
+    Route::get('/point-of-sales', [PosInvoiceController::class, 'index'])->name('pos.index')->middleware('permission:pos-menu|pos-view');
+    Route::get('/invoicePage', [PosInvoiceController::class, 'InvoicePage'])->name('invoicePage')->middleware('permission:pos-create');
+    Route::get('/list-products', [PosInvoiceController::class, 'ProductList'])->middleware('permission:product-menu|product-view');
+    Route::post("/pos-invoice-create", [PosInvoiceController::class, 'invoiceCreate'])->middleware('permission:pos-create');
+
+    Route::get("/pos-invoice-select", [PosInvoiceController::class, 'invoiceSelect']);
+    Route::post("/pos-invoice-details", [PosInvoiceController::class, 'InvoiceDetails']);
+    Route::post("/pos-invoice-delete", [PosInvoiceController::class, 'invoiceDelete']);
+    Route::post("/pos-invoice-complete", [PosInvoiceController::class, 'invoiceComplete']);
+    Route::get("/pos-invoice-printed", [PosInvoiceController::class, 'invoicePrinted']);
 
     // POS Routes
     Route::get('/pos-by-barcode-scanner', [PosInvoiceController::class, 'posByScanner'])->name('posByBarcodeScanner');
@@ -242,6 +259,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/tags/{id}/edit', [TagController::class, 'edit'])->name('tags.edit')->middleware('permission:color-update');
     Route::put('/tags/{id}', [TagController::class, 'update'])->name('tags.update')->middleware('permission:color-update');
     Route::delete('/tags/{id}', [TagController::class, 'destroy'])->name('tags.destroy')->middleware('permission:color-delete');
+    //Subscrip route
+    Route::get('/subscribe-notice', [MenuController::class, 'subscribePage'])->name('subscribe-notice.index');
+    Route::get('/subscribe-notice/create', [MenuController::class, 'subscribePageCreate'])->name('subscribe-notice.create');
+    Route::post('/subscribe-notice', [MenuController::class, 'subscribePageStore'])->name('subscribe-notice.store');
+    Route::get('/subscribe-notice/{id}/edit', [MenuController::class, 'subscribePageEdit'])->name('subscribe-notice.edit');
+    Route::put('/subscribe-notice/{id}', [MenuController::class, 'subscribePageUpdate'])->name('subscribe-notice.update');
+    Route::delete('/subscribe-notice/{id}', [MenuController::class, 'subscribePageDestroy'])->name('subscribe-notice.destroy')->middleware('permission:color-delete');
 
     //permissions
     Route::get('/permissions', [PermissionController::class, 'index'])->name('permission.index')->middleware('permission:permission-menu|permission-view');
@@ -264,10 +288,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/menus/{menu}/edit', [MenuController::class, 'edit'])->name('menus.edit')->middleware('permission:menu-edit');
     Route::put('/menus/{menu}', [MenuController::class, 'update'])->name('menus.update')->middleware('permission:menu-edit');
     Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy')->middleware('permission:menu-edit');
-    
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

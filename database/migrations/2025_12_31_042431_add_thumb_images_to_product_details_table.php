@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('product_details', function (Blueprint $table) {
-            $table->string('zoom_img1',255)->nullable()->after('img1');
-            $table->string('zoom_img2',255)->nullable()->after('img2');
-            $table->string('zoom_img3',255)->nullable()->after('img3');
-            $table->string('zoom_img4',255)->nullable()->after('img4');
+            $table->string('thumb_img1')->nullable();
+            $table->string('thumb_img2')->nullable();
+            $table->string('thumb_img3')->nullable();
+            $table->string('thumb_img4')->nullable();
         });
     }
 
@@ -25,10 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('product_details', function (Blueprint $table) {
-            $table->dropColumn('zoom_img1');
-            $table->dropColumn('zoom_img2');
-            $table->dropColumn('zoom_img3');
-            $table->dropColumn('zoom_img4');
+            $table->dropColumn(['thumb_img1', 'thumb_img2', 'thumb_img3', 'thumb_img4']);
         });
     }
 };

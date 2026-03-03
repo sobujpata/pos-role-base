@@ -17,21 +17,14 @@
                     <ol class="breadcrumb mb-0 p-0">
                         <li class="breadcrumb-item"><a href="javascript:;"><i class="bx bx-home-alt"></i></a>
                         </li>
-                        <li class="breadcrumb-item active" aria-current="page">Product Table</li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Barcode Generate Table</li>
                     </ol>
                 </nav>
             </div>
-            @can('product-create')
-                <div class="ms-auto">
-                    <div class="btn-group">
-                        <button data-bs-toggle="modal" data-bs-target="#create-modal"
-                            class="float-end btn m-0  btn-primary">Import Product</button>
-                    </div>
-                </div>
-            @endcan
+            
         </div>
         <!--end breadcrumb-->
-        <h6 class="mb-0 text-uppercase">Product List</h6>
+        <h6 class="mb-0 text-uppercase">Product Barcode List</h6>
         <hr>
         <div class="card">
             <div class="card-body">
@@ -41,8 +34,7 @@
                             <thead>
                                 <tr class="bg-light">
                                     <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Import Price</th>
+                                    <th>Name & SKU</th>
                                     <th>Sale Price</th>
                                     <th>Quantity</th>
                                     <th>Action</th>
@@ -65,7 +57,7 @@
 
     async function getList() {
         // showLoader();
-        let res = await axios.get("/import-product-all");
+        let res = await axios.get("/list-products");
         // hideLoader();
         // console.log(res);
         let tableList = $("#tableList");
@@ -74,17 +66,15 @@
         tableData.DataTable().destroy();
         tableList.empty();
 
-        res.data.data.forEach(function(item, index) {
-            let imgUrl = item['product']['image'];
+        res.data.forEach(function(item, index) {
+            let imgUrl = item['image'];
             let row = `<tr>
                     <td><img style="width: 90px; height: 100px;" alt="" src="storage/${imgUrl}"></td>
-                    <td>${item['product']['title']}<br>${item['product']['sku']}</td>
-                    <td>${item['import_price']}</td>
-                    <td>${item['sale_price']}</td>
-                    <td>${item['quantity']}</td>
+                    <td>${item['title']}<br>${item['sku']}</td>
+                    <td>${item['discount_price']}</td>
+                    <td>${item['stock']}</td>
                     <td>
-                        <button data-id="${item['id']}" class="btn editBtn btn-sm btn-outline-success"><i class="fa text-sm  fa-pen"></i></button>
-                        <button data-id="${item['id']}" class="btn deleteBtn btn-sm btn-outline-danger"><i class="fa text-sm  fa-trash-alt"></i></button>
+                        <button data-id="${item['id']}" class="btn editBtn btn-sm btn-outline-success"><i class="fa text-sm  fa-eye"></i></button>
                     </td>
                  </tr>`
             tableList.append(row)
@@ -92,16 +82,11 @@
 
         $('.editBtn').on('click', async function() {
             let id = $(this).data('id');
-            await FillUpUpdateForm(id)
-            $("#update-modal").modal('show');
+            await FillUpBarcodeForm(id)
+            $("#barcode-modal").modal('show');
         })
 
-        $('.deleteBtn').on('click', function () {
-            let id = $(this).data('id');
-            $("#delete-modal").modal('show');
-            $("#deleteID").val(id);
-        })
-
+       
         new DataTable('#tableData', {
             // order:[[0,'desc']],
             lengthMenu: [10, 20, 50, 100, 500]

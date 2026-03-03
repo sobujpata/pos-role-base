@@ -50,7 +50,7 @@
             // console.log(res.data);
             if (res.status == 200) {
                 if (res.data != '') {
-                    document.getElementById('showImage').src = res.data.image;
+                    document.getElementById('showImage').src = 'storage/'+res.data.image;
                     document.getElementById('title_popup').innerHTML = res.data.title;
                     document.getElementById('short_des_popup').innerHTML = res.data.short_des;
                     // $('#onload-popup').modal('show');

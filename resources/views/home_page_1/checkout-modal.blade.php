@@ -189,12 +189,24 @@
         let response = await axios.post('/invoice-create', formData);
         
         if (response.data.success) {
-            alert('অর্ডার সফলভাবে কনফার্ম হয়েছে!');
             $('#checkoutModal').modal('hide');
-            //redirect url /cart
-            window.location.href = '/cart';
+            Swal.fire({
+                icon: 'success',
+                title: 'অর্ডার সফলভাবে কনফার্ম হয়েছে!',
+                text: 'আপনার অর্ডার গ্রহণ করা হয়েছে। শীঘ্রই আপনার সাথে যোগাযোগ করা হবে।',
+                confirmButtonText: 'ঠিক আছে',
+                confirmButtonColor: '#28a745'
+            }).then(() => {
+                window.location.href = '/welecome';
+            });
         } else {
-            alert('অর্ডার কনফার্ম করতে সমস্যা হয়েছে।');
+            Swal.fire({
+                icon: 'error',
+                title: 'সমস্যা হয়েছে!',
+                text: 'অর্ডার কনফার্ম করতে সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।',
+                confirmButtonText: 'ঠিক আছে',
+                confirmButtonColor: '#dc3545'
+            });
         }
     } catch (error) {
         console.error('Error confirming order:', error);

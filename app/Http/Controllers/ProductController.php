@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Helper\ResponseHelper;
@@ -33,7 +34,6 @@ class ProductController extends Controller
         $products   = Product::with('category', 'brand')->paginate(12);
 
         return view('home_page_1.products', compact('products', 'categories', 'brands', 'maxPrice'));
-
     }
 
     public function filter(Request $request)
@@ -92,7 +92,7 @@ class ProductController extends Controller
 
     public function show($slug)
     {
-                                                         // Example slug: samsung-galaxy-s24-15  (15 is the product id)
+        // Example slug: samsung-galaxy-s24-15  (15 is the product id)
         $id      = (int) substr(strrchr($slug, '-'), 1); // Get the part after the last dash
         $product = Product::with('productDetail', 'category', 'brand')->findOrFail($id);
 
@@ -114,9 +114,14 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $products = Product::all();
+        
+        if ($request->ajax()) {
+            return response()->json($products);
+        }
+        
         // dd($products);
         return view('backend.pages.products.index', compact('products'));
     }
@@ -301,7 +306,7 @@ class ProductController extends Controller
                 foreach ($imageSizes as $prefix => [$width, $height]) {
 
                     $fileName = ($prefix === 'normal' ? '' : $prefix . '-')
-                    . time() . '-' . uniqid() . '.' . $extension;
+                        . time() . '-' . uniqid() . '.' . $extension;
 
                     $path = storage_path('app/public/products/' . $fileName);
 
@@ -455,7 +460,7 @@ class ProductController extends Controller
                 foreach ($imageSizes as $prefix => [$w, $h]) {
 
                     $fileName = ($prefix === 'normal' ? '' : $prefix . '-')
-                    . time() . '-' . uniqid() . '.' . $extension;
+                        . time() . '-' . uniqid() . '.' . $extension;
 
                     $path = storage_path('app/public/products/' . $fileName);
 
@@ -621,7 +626,6 @@ class ProductController extends Controller
         } else {
             return ResponseHelper::Out('fail', 'Customer profile not exists', 200);
         }
-
     }
 
     public function ProductWishList(Request $request): JsonResponse
@@ -716,41 +720,128 @@ class ProductController extends Controller
         return response()->json(['data' => $product], 200);
     }
 
+
     public function ImportProduct(Request $request)
     {
-        $user_id = Auth::user()->id;
-
-        // Validation for import product creation
-        $validatedData = $request->validate([
-            'product_id'   => 'required|integer',
-            'import_price' => 'required|numeric',
-            'sale_price'   => 'required|numeric',
-            'quantity'     => 'required|integer',
+        $validated = $request->validate([
+            'product_id'   => 'required|integer|exists:products,id',
+            'import_price' => 'required|numeric|min:0',
+            'sale_price'   => 'required|numeric|min:0',
+            'quantity'     => 'required|integer|min:1',
         ]);
 
         try {
-            // Save the import product to the database
-            $importProduct = ImportProduct::create([
-                'user_id'      => $user_id,
-                'product_id'   => $request->input('product_id'),
-                'import_price' => $request->input('import_price'),
-                'sale_price'   => $request->input('sale_price'),
-                'quantity'     => $request->input('quantity'),
-            ]);
+            DB::transaction(function () use ($validated) {
 
-            // Update the product's buy_qty and prices
-            $product = Product::find($request->input('product_id'));
-            $product->stock += $request->input('quantity');
-            $product->buy_price = $request->input('import_price');
-            $product->price     = $request->input('sale_price');
-            $product->save();
+                $userId = auth()->id();
 
-            // Return a success response
-            return response()->json(['message' => 'Product imported successfully', 'import_product' => $importProduct], 201);
+                // Lock product row to prevent race conditions
+                $product = Product::where('id', $validated['product_id'])
+                    ->lockForUpdate()
+                    ->first();
 
-        } catch (\Exception $e) {
-            // Return error response in case of failure
-            return response()->json(['message' => 'Product import failed', 'error' => $e->getMessage()], 500);
+                ImportProduct::create([
+                    'user_id'      => $userId,
+                    'product_id'   => $product->id,
+                    'import_price' => $validated['import_price'],
+                    'sale_price'   => $validated['sale_price'],
+                    'quantity'     => $validated['quantity'],
+                ]);
+
+                // Safe stock update
+                $product->update([
+                    'buy_price' => $validated['import_price'],
+                    'price'     => $validated['sale_price'],
+                    'stock'     => $product->stock + $validated['quantity'],
+                ]);
+            });
+
+            return response()->json([
+                'message' => 'Product imported successfully'
+            ], 201);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Product import failed',
+                'error'   => $e->getMessage(),
+            ], 500);
         }
+    }
+
+
+    public function ImportProductsById(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $importProduct = ImportProduct::find($request->id);
+
+        return response()->json(['data' => $importProduct], 200);
+    }
+
+    public function ImportProductsUpdate(Request $request)
+    {
+        $validated = $request->validate([
+            'id'           => 'required|integer|exists:import_products,id',
+            'product_id'   => 'required|integer|exists:products,id',
+            'import_price' => 'required|numeric|min:0',
+            'sale_price'   => 'required|numeric|min:0',
+            'quantity'     => 'required|integer|min:1',
+        ]);
+
+        try {
+            DB::transaction(function () use ($validated) {
+
+                $userId = Auth::user()->id;
+
+                // Lock import product
+                $importProduct = ImportProduct::lockForUpdate()
+                    ->find($validated['id']);
+
+                // Calculate quantity difference safely
+                $oldQuantity = $importProduct->quantity;
+                $newQuantity = $validated['quantity'];
+                $netIncrease = $newQuantity - $oldQuantity;
+
+                // Update import product
+                $importProduct->update([
+                    'user_id'      => $userId,
+                    'product_id'   => $validated['product_id'],
+                    'import_price' => $validated['import_price'],
+                    'sale_price'   => $validated['sale_price'],
+                    'quantity'     => $newQuantity,
+                ]);
+
+                // Lock product row
+                $product = Product::lockForUpdate()
+                    ->find($validated['product_id']);
+
+                // Update product stock & prices
+                $product->update([
+                    'buy_price' => $validated['import_price'],
+                    'price'     => $validated['sale_price'],
+                    'stock'     => $product->stock + $netIncrease,
+                ]);
+            });
+
+            return response()->json([
+                'message' => 'Import product updated successfully'
+            ], 200);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'message' => 'Import product update failed',
+                'error'   => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function destroyImportProduct(Request $request)
+    {
+        $id = $request->id;
+        $importProduct = ImportProduct::findOrFail($id);
+        $importQuantity = $importProduct->quantity;
+        $importProductId = $importProduct->product_id;
+        $product = Product::findOrFail($importProductId);
+        $product->stock = max(0, $product->stock - $importQuantity);
+        $product->save();
+        ImportProduct::destroy($id);
+        return response()->json(['message' => 'Import product deleted successfully'], 200);
     }
 }

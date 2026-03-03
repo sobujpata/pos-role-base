@@ -6,6 +6,8 @@ use App\Models\Menu;
 use App\Models\Subscribe;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\str;
 
 class MenuController extends Controller
 {
@@ -87,5 +89,36 @@ class MenuController extends Controller
         Subscriber::create($request->only('email'));
 
         return response()->json(['message' => 'Subscribed successfully!']);
+    }
+
+    public function subscribePage(Request $request){
+        $pages = Subscribe::orderBy('created_at','desc')->get();
+        return view('backend.pages.subscribe-notice.index', compact('pages'));
+    }
+    public function subscribePageEdit(Request $request, $id){
+        // dd($id);
+        $page = Subscribe::find( $id );
+        return view('backend.pages.subscribe-notice.edit', compact('page'));
+    }
+    public function subscribePageUpdate(Request $request, $id){
+        $page = Subscribe::find( $id );
+        // dd($page);
+        $page->title = $request->title;
+        $page->short_des = $request->short_des;
+        if ($request->hasFile('image')) {
+            // Optionally delete old image
+            if ($page->image && Storage::disk('public')->exists($page->image)) {
+                Storage::disk('public')->delete($page->image);
+            }
+
+            // Store new image
+            $filename              = Str::slug($request->title) . '.' . $request->file('image')->getClientOriginalExtension();
+            $path                  = $request->file('image')->storeAs('notice', $filename, 'public');
+            $page->image = $path;
+        }
+        $page->save();
+
+        return redirect()->route('subscribe-notice.index')->with('success','Updated successfully.');
+
     }
 }
