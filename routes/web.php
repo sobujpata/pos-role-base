@@ -1,29 +1,30 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Cookie;
-use App\Http\Controllers\TagController;
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\MenuController;
-use App\Http\Controllers\SizeController;
+use App\Http\Controllers\BarcodeGenerateController;
 use App\Http\Controllers\BrandController;
-use App\Http\Controllers\ColorController;
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ClientController;
-use App\Http\Controllers\PolicyController;
-use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\PolicyController;
+use App\Http\Controllers\PosInvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SupportController;
-use App\Http\Controllers\CategoryController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\PosInvoiceController;
+use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\RoleManagementController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShopBannerController;
 use App\Http\Controllers\SingleBannerController;
-use App\Http\Controllers\RoleManagementController;
-use App\Http\Controllers\BarcodeGenerateController;
+use App\Http\Controllers\SizeController;
+use App\Http\Controllers\SupportController;
+use App\Http\Controllers\TagController;
+use App\Http\Controllers\UsersController;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -289,6 +290,9 @@ Route::get('/product-barcode-view/{id}',
     Route::put('/menus/{menu}', [MenuController::class, 'update'])->name('menus.update')->middleware('permission:menu-edit');
     Route::delete('/menus/{menu}', [MenuController::class, 'destroy'])->name('menus.destroy')->middleware('permission:menu-edit');
 
+    Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index')->middleware('permission:settings-menu');
+    Route::put('/settings/popup/update', [SettingsController::class, 'updatePopUp'])->name('settings.popup-update')->middleware('permission:settings-edit');
+    
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
