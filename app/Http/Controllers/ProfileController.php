@@ -3,58 +3,66 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
-    /**
-     * Display the user's profile form.
-     */
-    public function edit(Request $request): View
+    public function edit(): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        $user = auth()->user()->load('profile');
+
+        return view('backend.pages.profile.index', compact('user'));
     }
 
-    /**
-     * Update the user's profile information.
-     */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $data = $request->validated();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+
+        if (! empty($data['password'])) {
+            $user->password = Hash::make($data['password']);
         }
 
-        $request->user()->save();
+        $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    /**
-     * Delete the user's account.
-     */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $profile = $user->profile()->firstOrCreate([
+            'user_id' => $user->id,
         ]);
 
-        $user = $request->user();
+        $profile->phone = $data['phone'] ?? null;
+        $profile->address = $data['address'] ?? null;
+        $profile->nid_no = $data['nid_no'] ?? null;
 
-        Auth::logout();
+        if ($request->hasFile('image')) {
+            if ($profile->image && Storage::disk('public')->exists($profile->image)) {
+                Storage::disk('public')->delete($profile->image);
+            }
+
+            $profile->image = $request->file('image')->store('profile-images', 'public');
+        }
+
+        $profile->save();
+
+        return redirect()->route('profile.edit')->with('success', 'Profile updated successfully.');
+    }
+
+    public function destroy(): RedirectResponse
+    {
+        $user = auth()->user();
+
+        if ($user->profile && $user->profile->image && Storage::disk('public')->exists($user->profile->image)) {
+            Storage::disk('public')->delete($user->profile->image);
+        }
 
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return redirect()->route('login')->with('status', 'Your profile was deleted.');
     }
 }

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PosInvoiceController extends Controller
 {
@@ -709,5 +710,80 @@ class PosInvoiceController extends Controller
                     'error' => 'Error fetching invoices: ' . $e->getMessage()
                 ]);
         }
+    }
+
+    public function ReportPage()
+    {
+        return view('backend.pages.pos-system.invoice-report-page');
+    }
+    public function listCategory()
+    {
+        $category = Category::get();
+
+        return response()->json([
+            'data'=>$category
+        ]);
+    }
+    function SalesReport(Request $request){
+
+        $FormDate=date('Y-m-d',strtotime($request->FormDate));
+        $ToDate=date('Y-m-d',strtotime($request->ToDate));
+
+        $total=PosInvoice::whereDate('created_at', '>=', $FormDate)->whereDate('created_at', '<=', $ToDate)->sum('total');
+        $vat=PosInvoice::whereDate('created_at', '>=', $FormDate)->whereDate('created_at', '<=', $ToDate)->sum('vat');
+        $payable=PosInvoice::whereDate('created_at', '>=', $FormDate)->whereDate('created_at', '<=', $ToDate)->sum('payable');
+        $discount=PosInvoice::whereDate('created_at', '>=', $FormDate)->whereDate('created_at', '<=', $ToDate)->sum('discount');
+
+
+
+        $list=PosInvoice::whereDate('created_at', '>=', $FormDate)
+            ->whereDate('created_at', '<=', $ToDate)
+            ->with('user')
+            ->get();
+
+
+
+
+        $data=[
+            'payable'=> $payable,
+            'discount'=>$discount,
+            'total'=> $total,
+            'vat'=> $vat,
+            'list'=>$list,
+            'FormDate'=>$request->FormDate,
+            'ToDate'=>$request->ToDate
+        ];
+
+
+        $pdf = Pdf::loadView('report.SalesReport',$data);
+
+
+        return $pdf->download('invoice.pdf');
+
+    }
+
+    function CategoryWiseProduct(Request $request){
+        $category_id = $request->categoryId;
+
+        if($category_id == "all"){
+            $products = Product::orderBy('title', 'ASC')->get();
+
+            $data = [
+                'products'=>$products,
+            ];
+            $pdf = Pdf::loadView('report.categoryProducts', $data);
+    
+            return $pdf->download('products.pdf');
+        }else{
+            $products = Product::where('category_id', $category_id)->orderBy('title', "ASC")->get();
+
+            $data = [
+                'products'=>$products,
+            ];
+            $pdf = Pdf::loadView('report.categoryProducts', $data);
+    
+            return $pdf->download('products.pdf');
+        }
+        
     }
 }

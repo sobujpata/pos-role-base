@@ -18,6 +18,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\RoleManagementController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ShopBannerController;
+use App\Http\Controllers\ShopDetailController;
 use App\Http\Controllers\SingleBannerController;
 use App\Http\Controllers\SizeController;
 use App\Http\Controllers\SupportController;
@@ -31,16 +32,9 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    //Product Route
-    // Route::get('/invoices', [InvoiceController::class, 'index'])->name('invoice.index')->middleware('permission:product-menu|product-view');
-    //invoice API
-    // Route::get("/invoice-select", [InvoiceController::class, 'invoiceSelect']);
-    // Route::post("/invoice-details", [InvoiceController::class, 'InvoiceDetails']);
-    // Route::post("/invoice-delete", [InvoiceController::class, 'invoiceDelete']);
-    // Route::post("/invoice-complete", [InvoiceController::class, 'invoiceComplete']);
-    // Route::get("/invoice-printed", [InvoiceController::class, 'invoicePrinted']);
-
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('permission:dashboard-access');
+    Route::get('/dashboard-data', [DashboardController::class, 'dashboardData'])->name('dashboard.data')->middleware('permission:dashboard-access');
+    Route::get('/invoice-select-dashboard', [DashboardController::class, 'invoiceSelect'])->name('dashboard.invoice.select')->middleware('permission:dashboard-access');
     //Product Route
     Route::get('/products-list', [ProductController::class, 'index'])->name('products.index')->middleware('permission:product-menu|product-view');
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create')->middleware('permission:product-create');
@@ -60,13 +54,13 @@ Route::middleware('auth')->group(function () {
     Route::post("/import-product-delete", [ProductController::class, 'destroyImportProduct']);
 
 
-Route::get('/product-barcode-generate',
-    [BarcodeGenerateController::class, 'index']
-)->name('barcode.index')->middleware('permission:product-menu|product-view');
+    Route::get('/product-barcode-generate',
+        [BarcodeGenerateController::class, 'index']
+    )->name('barcode.index')->middleware('permission:product-menu|product-view');
 
-Route::get('/product-barcode-view/{id}',
-    [BarcodeGenerateController::class, 'barcodeView']
-)->name('barcode.view')->middleware('permission:product-menu|product-view');
+    Route::get('/product-barcode-view/{id}',
+        [BarcodeGenerateController::class, 'barcodeView']
+    )->name('barcode.view')->middleware('permission:product-menu|product-view');
 
 
 
@@ -77,13 +71,6 @@ Route::get('/product-barcode-view/{id}',
     Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit')->middleware('permission:category-edit');
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware('permission:category-edit');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('permission:category-delete');
-    //category Route
-    // Route::get('/main-categories', [CategoryController::class, 'MainIndex'])->name('MainCategories.index')->middleware('permission:category-menu|category-view');
-    // Route::get('/main-categories/create', [CategoryController::class, 'MainCreate'])->name('MainCategories.create')->middleware('permission:category-create');
-    // Route::post('/main-categories', [CategoryController::class, 'MainStore'])->name('MainCategories.store')->middleware('permission:category-create');
-    // Route::get('/main-categories/{id}/edit', [CategoryController::class, 'MainEdit'])->name('MainCategories.edit')->middleware('permission:category-edit');
-    // Route::put('/main-categories/{id}', [CategoryController::class, 'MainUpdate'])->name('MainCategories.update')->middleware('permission:category-edit');
-    // Route::delete('/main-categories/{category}', [CategoryController::class, 'MainDestroy'])->name('MainCategories.destroy')->middleware('permission:category-delete');
     //brand Route
     Route::get('/brand', [BrandController::class, 'index'])->name('brand.index')->middleware('permission:category-menu|category-view');
     Route::get('/brand/create', [BrandController::class, 'create'])->name('brand.create')->middleware('permission:category-create');
@@ -137,6 +124,10 @@ Route::get('/product-barcode-view/{id}',
     //Report Route
     Route::get('/invoice-report', [PosInvoiceController::class, 'invoiceReport'])->name('invoiceReport')->middleware('permission:report-menu|report-view');
     Route::post('/invoice-report', [PosInvoiceController::class, 'invoiceReportGenerate'])->name('invoiceReports')->middleware('permission:report-menu|report-view');
+    Route::get('/reportPage',[PosInvoiceController::class,'ReportPage'])->name('invoiceReportsPage')->middleware('permission:report-menu|report-view');
+    Route::get('/list-category', [PosInvoiceController::class, 'listCategory'])->name('listCategory')->middleware('permission:report-menu|report-view');
+    Route::get("/sales-report/{FormDate}/{ToDate}",[PosInvoiceController::class,'SalesReport'])->middleware('permission:report-menu|report-view');
+    Route::get("/category-product/{categoryId}",[PosInvoiceController::class,'CategoryWiseProduct'])->middleware('permission:report-menu|report-view');
 
     //Color Route
     // Route::get('/colors', [ColorController::class, 'index'])->name('colors.index')->middleware('permission:color-menu|color-view');
@@ -191,7 +182,12 @@ Route::get('/product-barcode-view/{id}',
 
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index')->middleware('permission:settings-menu');
     Route::put('/settings/popup/update', [SettingsController::class, 'updatePopUp'])->name('settings.popup-update')->middleware('permission:settings-edit');
-    
+    //shop setting route
+    Route::get('shop-details', [ShopDetailController::class, 'show'])->name('shop-details.show');
+    Route::get('/shop-setting', [ShopDetailController::class, 'edit'])->name('shop-details.edit')->middleware('permission:shop-menu|shop-view');
+    Route::PATCH('/shop-setting/{shop}', [ShopDetailController::class, 'update'])->name('shop-details.update')->middleware('permission:shop-menu|shop-edit');
+    Route::delete('/shop-setting/{shop}', [ShopDetailController::class, 'destroy'])->name('shop-details.destroy')->middleware('permission:shop-menu|shop-delete');
+    //profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

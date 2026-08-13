@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\RoleTableSeeder;
 use Database\Seeders\PermissionTableSeeder;
+use Database\Seeders\ShopDetailSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class DatabaseSeeder extends Seeder
         PermissionTableSeeder::class,
         RoleTableSeeder::class,
         UserSeeder::class,
+        ShopDetailSeeder::class,
         ]);
     }
 }

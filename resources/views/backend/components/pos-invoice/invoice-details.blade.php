@@ -68,10 +68,7 @@
     </div>
 </div>
     <style>
-    .invoice {
-        /* height: 1748px;
-        width: 1240px; */
-        /* Optional: to prevent overflow and make sure the content fits */
+    .invoice {        
         overflow: hidden;
     }
   </style>

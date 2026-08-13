@@ -74,16 +74,16 @@
                             <div class="col-md-6 col-sm-12 col-lg-6">
                                 <div class="d-flex justify-content-end">
                                     <div class="me-3">
-                                        <strong>Total Invoices:</strong> {{ $totalInv }}
+                                        <strong>Total Invoices:</strong> {{ $totalInv ?? 0 }}
                                     </div>
                                     <div class="me-3">
-                                        <strong>Total Amount:</strong> {{ number_format($totalAmount, 2) }}
+                                        <strong>Total Amount:</strong> {{ number_format($totalAmount ?? 0, 2) }}
                                     </div>
                                     <div class="me-3">
-                                        <strong>Total Paid:</strong> {{ number_format($totalPaidAmount, 2) }}
+                                        <strong>Total Paid:</strong> {{ number_format($totalPaidAmount ?? 0, 2) }}
                                     </div>
                                     <div class="me-3">
-                                        <strong>Total Earned:</strong> {{ number_format($totalProfit, 2) }}
+                                        <strong>Total Earned:</strong> {{ number_format($totalProfit ?? 0, 2) }}
                                     </div>
                                 </div>
                             </div>
@@ -140,10 +140,10 @@
                                     </tbody>
                                     <tfoot>
                                         <tr>
-                                            <td>Total Inv: {{ $totalInv }}</td>
-                                            <td>Total Amount: {{ $totalAmount }}</td>
-                                            <td>Total Paid: {{ $totalPaidAmount }}</td>
-                                            <td>Total Earn: {{ $totalProfit }}</td>
+                                            <td>Total Inv: {{ $totalInv ?? 0 }}</td>
+                                            <td>Total Amount: {{ $totalAmount ?? 0 }}</td>
+                                            <td>Total Paid: {{ $totalPaidAmount ?? 0 }}</td>
+                                            <td>Total Earn: {{ $totalProfit ?? 0 }}</td>
                                             <td colspan="2"></td>
 
                                         </tr>

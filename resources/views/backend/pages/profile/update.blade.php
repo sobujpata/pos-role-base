@@ -1,5 +1,6 @@
 @extends('backend.layouts.app')
 @section('content')
+    <!--start page wrapper -->
     <div class="page-wrapper">
         <div class="page-content">
             <!-- start-content -->
@@ -18,7 +19,7 @@
                 </div>
                 <div class="ms-auto">
                     <div class="btn-group">
-                        <a href="user-index.html" class="btn btn-primary">All Users</a>
+                        <a href="{{ route('users.index') }}" class="btn btn-primary">All Users</a>
                     </div>
                 </div>
             </div>
@@ -28,54 +29,50 @@
                     <div class="card">
                         <div class="card-body p-4">
                             <h5 class="mb-4">Create Products</h5>
-                            <form action="{{ route('user.store') }}" method="post">
+                            <form action="{{ route('user.update', $user->id) }}" method="post">
                                 @csrf
-                                @method('post')
+                                @method('put')
+                                {{-- @dd($user) --}}
                                 <div class="row mb-3">
                                     <label for="name" class="col-sm-3 col-form-label">Name</label>
                                     <div class="col-sm-9">
-                                        <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
-                                            value="{{ old('name') }}" placeholder="Enter Your Name">
-                                             @error('name')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                        <input type="text" class="form-control  @error('name') is-invalid @enderror"
+                                            id="name" name="name" value="{{ $user->name }}"
+                                            placeholder="Enter Your Name">
+                                        @error('name')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                   
 
                                 </div>
                                 <div class="row mb-3">
                                     <label for="email" class="col-sm-3 col-form-label">Email</label>
                                     <div class="col-sm-9">
-                                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email"
-                                            value="{{ old('email') }}" placeholder="Enter your email">
-                                            @error('email')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                        <input type="email" class="form-control  @error('email') is-invalid @enderror"
+                                            id="email" name="email" value="{{ $user->email }}"
+                                            placeholder="Enter your email">
+                                        @error('email')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                    
+
                                 </div>
                                 <div class="row mb-3">
                                     <label for="password" class="col-sm-3 col-form-label">Password</label>
                                     <div class="col-sm-9">
-                                        <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password"
-                                            value="{{ old('password') }}" placeholder="Enter your password">
-                                            @error('password')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                        <input type="password" class="form-control"
+                                            id="password" name="password" value="" placeholder="Enter your password">
+                                       
                                     </div>
-                                    
                                 </div>
 
                                 <div class="row mb-3">
                                     <label for="password" class="col-sm-3 col-form-label">Confirm Password</label>
                                     <div class="col-sm-9">
-                                        <input type="password" class="form-control @error('confirm_password') is-invalid @enderror" id="confirm_password"
-                                            name="confirm_password" value="{{ old('confirm_password') }}" placeholder="Enter confirm password">
-                                            @error('confirm_password')
-                                        <div class="alert alert-danger">{{ $message }}</div>
-                                    @enderror
+                                        <input type="password" class="form-control"
+                                            id="confirm_password" name="confirm_password" value=""
+                                            placeholder="Enter confirm password">
                                     </div>
-                                    
                                 </div>
 
                                 <div class="row mb-3">
@@ -83,8 +80,10 @@
                                     <div class="col-sm-9">
                                         <select multiple class="form-select" name="roles[]">
                                             <option selected="" disabled>Select Roles</option>
-                                            @foreach($roles as $role)
-                                            <option value="{{ $role->name }}">{{ $role->name }}</option>
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}"
+                                                    {{ in_array($role->name, $userRole) ? 'selected' : '' }}>
+                                                    {{ $role->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -108,4 +107,5 @@
             <!-- end-content -->
         </div>
     </div>
+    <!--end page wrapper -->
 @endsection

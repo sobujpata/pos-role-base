@@ -59,12 +59,23 @@ class PermissionTableSeeder extends Seeder
             'category-delete',
             'category-view',
 
-            // menu Management
-            'menu-menu',
-            'menu-create',
-            'menu-edit',
-            'menu-delete',
-            'menu-view',
+            // Shop Management
+            'shop-menu',
+            'shop-view',
+            'shop-edit',
+            'shop-delete',
+
+            // Report Management
+            'report-menu',
+            'invoice-report-page',            
+            'report-view',
+            'invoice-report-by-day',
+
+            // pos Management
+            'pos-menu',
+            'barcode-pos-create',
+            'pos-view',
+            'invoice-pos-view',
 
             // Orders & Dashboard
             'order-manage',

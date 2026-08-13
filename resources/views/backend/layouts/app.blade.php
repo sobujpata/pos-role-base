@@ -8,7 +8,7 @@
 	<meta name="csrf-token" content="{{ csrf_token() }}">
 	<!--favicon-->
 
-	<link rel="icon" href="{{ asset('assets/images/favicon-32x32.png')}}" type="image/png" />
+	<link rel="icon" href="{{ asset('assets/images/favicon-32x32.png')}}" type="image/png" id="titleLogo"/>
 	<!--plugins-->
 	<link href="{{ asset('assets/plugins/vectormap/jquery-jvectormap-2.0.2.css')}}" rel="stylesheet" />
 	<link href="{{ asset('assets/plugins/simplebar/css/simplebar.css')}}" rel="stylesheet" />
@@ -192,6 +192,8 @@
 				<input class="form-check-input" type="radio" id="minimaltheme" name="flexRadioDefault">
 				<label class="form-check-label" for="minimaltheme">Minimal Theme</label>
 			</div>
+			<hr />
+			<button type="button" class="btn btn-sm btn-outline-secondary w-100" id="reset-customizer">Reset Theme Customizer</button>
 			<hr />
 			<h6 class="mb-0">Header Colors</h6>
 			<hr />

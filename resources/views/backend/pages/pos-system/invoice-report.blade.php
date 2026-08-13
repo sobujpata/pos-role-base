@@ -1,5 +1,4 @@
 @extends('backend.layouts.app')
 @section('content')
-    @include('backend.components.pos-invoice-report.index')
-    {{-- @include('backend.components.pos-invoice.invoice-details') --}}
+    @include('backend.components.pos-invoice-report.index')    
 @endsection
