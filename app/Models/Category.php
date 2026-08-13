@@ -8,12 +8,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
-    protected $fillable = ["categoryName", "categoryImg", "main_category_id"];
+    protected $fillable = ["categoryName", "categoryImg", "user_id"];
 
-    public function mainCategory()
-    {
-        return $this->belongsTo(MainCategory::class, 'main_category_id'); // 'main_category_id' is the foreign key
-    }
+    
     public function products()
     {
         return $this->hasMany(Product::class);

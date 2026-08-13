@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use App\Models\Category;
@@ -45,6 +46,7 @@ class PosInvoiceController extends Controller
 
     public function invoiceCreate(Request $request)
     {
+        // return response()->json($request->all());
         DB::beginTransaction();
         try {
             $user_id = Auth::id();
@@ -62,13 +64,13 @@ class PosInvoiceController extends Controller
                 $qty        = is_numeric($item['qty']) ? $item['qty'] : 0;
                 $sale_price = is_numeric($item['sale_price']) ? $item['sale_price'] : 0;
                 $product = Product::find($item['product_id']);
-                $buy_price = $product ? $product->buy_price : 0;
+                $buy_price = $product ? $product->original_price : 0;
                 // unit price
                 $rate = $sale_price / $qty;
 
-                                                                    // Check what is being sent from frontend
+                // Check what is being sent from frontend
                 $total_buy_price = $qty * $buy_price; // adjust if needed
-                                                                    // return $invoice->id;
+                // return $invoice->id;
                 PosInvoiceProduct::create([
                     'invoice_id'      => $invoice->id,
                     'user_id'         => $user_id,
@@ -86,7 +88,6 @@ class PosInvoiceController extends Controller
 
             DB::commit();
             return 1;
-
         } catch (\Exception $e) {
             DB::rollBack();
             return $e->getMessage();
@@ -109,7 +110,7 @@ class PosInvoiceController extends Controller
             // Calculate total buy price for this invoice
             $totalBuyPrice = PosInvoiceProduct::where('invoice_id', $invoice_id)
                 ->join('products', 'pos_invoice_products.product_id', '=', 'products.id')
-                ->select(DB::raw('SUM(products.buy_price * pos_invoice_products.qty) as total_buy_price'))
+                ->select(DB::raw('SUM(products.original_price * pos_invoice_products.qty) as total_buy_price'))
                 ->value('total_buy_price');
 
             return [
@@ -137,11 +138,11 @@ class PosInvoiceController extends Controller
         // Calculate total buy price using database query
         $totalBuyPrice = PosInvoiceProduct::where('pos_invoice_products.invoice_id', $request->input('inv_id'))
             ->join('products', 'pos_invoice_products.product_id', '=', 'products.id') // Adjust table/column names
-            ->select(DB::raw('SUM(products.buy_price * pos_invoice_products.qty) as total_buy_price'))
+            ->select(DB::raw('SUM(products.original_price * pos_invoice_products.qty) as total_buy_price'))
             ->value('total_buy_price');
 
         $alltotalBuyPrice = PosInvoiceProduct::join('products', 'pos_invoice_products.product_id', '=', 'products.id') // Join the product table
-            ->select(DB::raw('SUM(products.buy_price * pos_invoice_products.qty) as total_buy_price'))                     // Calculate the sum
+            ->select(DB::raw('SUM(products.original_price * pos_invoice_products.qty) as total_buy_price'))                     // Calculate the sum
             ->value('total_buy_price');                                                                                    // Retrieve the aggregated value
 
         // Get the start and end dates for last month
@@ -151,7 +152,7 @@ class PosInvoiceController extends Controller
         // Calculate the total for last month
         $totalBuyPriceLastMonth = PosInvoiceProduct::whereBetween('pos_invoice_products.created_at', [$startOfLastMonth, $endOfLastMonth])
             ->join('products', 'pos_invoice_products.product_id', '=', 'products.id')
-            ->select(DB::raw('SUM(products.buy_price * pos_invoice_products.qty) as total_buy_price'))
+            ->select(DB::raw('SUM(products.original_price * pos_invoice_products.qty) as total_buy_price'))
             ->value('total_buy_price');
 
         return [
@@ -364,10 +365,10 @@ class PosInvoiceController extends Controller
                 $price = isset($item['sale_price']) && $item['sale_price'] > 0
                     ? (float) $item['sale_price']
                     : (
-                    $product->discount && $product->discount_price
+                        $product->discount && $product->discount_price
                         ? (float) $product->discount_price
                         : (float) $product->price
-                );
+                    );
 
                 $quantity  = (int) $item['quantity'];
                 $itemTotal = $price * $quantity;
@@ -412,7 +413,6 @@ class PosInvoiceController extends Controller
                     'item_count'  => count($cartItems),
                 ],
             ]);
-
         } catch (\Throwable $e) {
             Log::error('Error in getCart', ['error' => $e]);
 
@@ -434,6 +434,7 @@ class PosInvoiceController extends Controller
     // Add item to cart
     public function addItem(Request $request)
     {
+        // return response()->json($request->all());
         $validator = Validator::make($request->all(), [
             'product_id' => 'required|exists:products,id',
             'quantity'   => 'required|integer|min:1|max:999',
@@ -497,7 +498,6 @@ class PosInvoiceController extends Controller
                 'cart_count'  => count($cart),
                 'total_items' => array_sum(array_column($cart, 'quantity')),
             ]);
-
         } catch (\Throwable $e) {
             return response()->json([
                 'success' => false,
@@ -625,5 +625,89 @@ class PosInvoiceController extends Controller
             'success' => true,
             'message' => 'Checkout completed successfully',
         ]);
+    }
+
+    public function invoiceReport()
+    {
+        $responseData = [];
+        return view('backend.pages.pos-system.invoice-report', compact('responseData'));
+    }
+
+
+
+    public function invoiceReportGenerate(Request $request)
+    {
+
+        $fromDate = $request->input('from-date');
+        $toDate   = $request->input('to-date');
+
+        // Validate dates
+        if (!$fromDate || !$toDate) {
+            return redirect()->back()
+                ->withErrors([
+                    'error' => 'Both From Date and To Date are required.'
+                ]);
+        }
+
+
+
+        try {
+
+            // Full day date range
+            $from = Carbon::parse($fromDate)->startOfDay();
+            $to   = Carbon::parse($toDate)->endOfDay();
+
+            // Get invoices with products
+            $invoices = PosInvoice::whereBetween('created_at', [$from, $to])
+                ->with('user')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            
+            $totalInv = $invoices->count();
+            $totalAmount = $invoices->sum('total') ?? null;
+            $totalPaidAmount = $invoices->sum('payable');
+
+            // dd($totalInv);
+
+            $responseData = $invoices->map(function ($invoice) {
+                $invoice_id = $invoice->id;
+
+                // Fetch invoice products for the current invoice
+                // $invoiceProducts = PosInvoiceProduct::where('invoice_id', $invoice_id)
+                //     ->with('product')
+                //     ->get();
+
+                // Calculate total buy price for this invoice
+                $totalBuyPrice = PosInvoiceProduct::where('invoice_id', $invoice_id)
+                    ->join('products', 'pos_invoice_products.product_id', '=', 'products.id')
+                    ->select(DB::raw('SUM(products.original_price * pos_invoice_products.qty) as total_buy_price'))
+                    ->value('total_buy_price');
+
+                return [
+                    'invoice'         => $invoice,
+                    'totalBuyPrice'   => $totalBuyPrice,
+                ];
+            });
+            $totalProfit = $totalPaidAmount-$responseData->sum('totalBuyPrice');
+            // dd($totalProfit);
+            return view(
+                'backend.pages.pos-system.invoice-report',
+                compact(
+                    'responseData',
+                    'fromDate',
+                    'toDate',
+                    'totalInv',
+                    'totalAmount',
+                    'totalPaidAmount',
+                    'totalProfit'
+                )
+            );
+        } catch (\Exception $e) {
+
+            return redirect()->back()
+                ->withErrors([
+                    'error' => 'Error fetching invoices: ' . $e->getMessage()
+                ]);
+        }
     }
 }

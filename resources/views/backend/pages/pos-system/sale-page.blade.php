@@ -198,7 +198,7 @@
                         <td>${item['product_name']}</td>
                         <td>${item['qty']}</td>
                         <td>${item['sale_price']}</td>
-                        <td style="display:none;">${item['total_buy_price']}</td>
+                        <td style="display:none;">${item['total_original_price']}</td>
                         <td><a data-index="${index}" class="btn remove text-xxs px-2 py-1  btn-sm m-0">Remove</a></td>
                      </tr>`
                         invoiceList.append(row)
@@ -254,10 +254,10 @@
                     let PId = document.getElementById('PId').value;
                     let PName = document.getElementById('PName').value;
                     let PPrice = document.getElementById('PPrice').value;
-                    let buy_price = document.getElementById('BuyPrice').value;
+                    let original_price = document.getElementById('BuyPrice').value;
                     let PQty = document.getElementById('PQty').value;
                     let PTotalPrice = (parseFloat(PPrice) * parseFloat(PQty)).toFixed(2);
-                    let PTotalBuyPrice = (parseFloat(buy_price) * parseFloat(PQty)).toFixed(2);
+                    let PTotalBuyPrice = (parseFloat(original_price) * parseFloat(PQty)).toFixed(2);
                     if (PId.length === 0) {
                         errorToast("Product ID Required");
                     } else if (PName.length === 0) {
@@ -272,7 +272,7 @@
                             product_id: PId,
                             qty: PQty,
                             sale_price: PTotalPrice,
-                            total_buy_price: PTotalBuyPrice
+                            total_original_price: PTotalBuyPrice
                         };
                         InvoiceItemList.push(item);
                         $('#create-modal').modal('hide')
@@ -280,11 +280,11 @@
                     }
                 }
 
-                function addModal(id, name, price, buy_price) {
+                function addModal(id, name, price, original_price) {
                     document.getElementById('PId').value = id
                     document.getElementById('PName').value = name
                     document.getElementById('PPrice').value = price
-                    document.getElementById('BuyPrice').value = buy_price
+                    document.getElementById('BuyPrice').value = original_price
 
                     $('#create-modal').modal('show')
                 }
@@ -310,14 +310,14 @@
                             </div>
                         </td>
                         <td>
-                            Buy Price : ${item['buy_price']}<br>
-                            <span class="text-bold">Sale Price : ${item['price']}</span>
+                            Product Price : ${item['price']}<br>
+                            <span class="text-bold">Discount Price : ${item['discount_price']}</span>
                         </td>
                         <td style="vertical-align: middle; text-align:center;">
                             <a 
                             data-name="${item['title']}" 
-                            data-price="${item['price']}" 
-                            data-buy_price="${item['buy_price']}" 
+                            data-price="${item['discount_price']}" 
+                            data-original_price="${item['price']}" 
                             data-id="${item['id']}"
                             class="btn btn-success text-xxs px-2 py-1 addProduct  btn-sm m-0">Add</a></td>
                      </tr>`
@@ -327,9 +327,9 @@
                     $('.addProduct').on('click', async function() {
                         let PName = $(this).data('name');
                         let PPrice = $(this).data('price')
-                        let buy_price = $(this).data('buy_price')
+                        let original_price = $(this).data('original_price')
                         let PId = $(this).data('id');
-                        addModal(PId, PName, PPrice, buy_price)
+                        addModal(PId, PName, PPrice, original_price)
                     })
 
                     new DataTable('#productTable', {

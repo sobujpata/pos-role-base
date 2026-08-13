@@ -86,10 +86,7 @@ class DashboardController extends Controller
         }
 
 
-        //Online Invoice Data
-        $invoices = Invoice::all();
-        $totalSales = $invoices->sum('total');
-        $totalOrders = $invoices->count();
+        
         $totalVisitor = DB::table('sessions')->count();
 
 
@@ -103,12 +100,8 @@ class DashboardController extends Controller
             'percentChangeSales',
             'yesterdayTotalPercentChange',
             'yesterdayPercentChange',
-
-
-            'invoices',
-             'totalSales',
-              'totalOrders',
-              'totalVisitor',
+            
+            'totalVisitor',
             ));
     }
 }

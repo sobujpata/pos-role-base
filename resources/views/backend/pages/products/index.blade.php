@@ -35,13 +35,12 @@
                             <table id="myTable" class="display table table-striped">
                                 <thead>
                                     <tr class="table-dark text-center align-middle">
-                                        <th class="text-center">No</th>
+                                        <th class="text-center">Ser No</th>
                                         <th class="text-center">Image</th>
                                         <th class="text-center">Name & SKU</th>
-                                        <th class="text-center">Buy Price</th>
-                                        <th class="text-center">Price</th>
-                                        <th class="text-center">Discount</th>
-                                        <th class="text-center">Discount Price</th>
+                                        <th class="text-center">Original Price</th>
+                                        <th class="text-center">Price</th>                                        
+                                        <th class="text-center">Discount Price</th>                                        
                                         <th class="text-center">Stock</th>
                                         <th class="text-center">Action</th>
                                     </tr>
@@ -49,18 +48,17 @@
                                 <tbody>
                                     @foreach ($products as $key => $product)
                                         <tr>
-                                            <td>{{ $key + 1 }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ $key + 1 }}</td>
                                             <td>
                                                 <img src="{{asset('storage/'.$product->image)}}" alt="{{ $product->title }}" style="width: 80px;">
                                                 
                                             </td>
-                                            <td>{{ $product->title }} <br><span style="color:red;"> {{$product->sku}}</span></td>
-                                            <td>{{ $product->buy_price }}</td>
-                                            <td>{{ $product->price }}</td>
-                                            <td>{{ $product->discount }}</td>
-                                            <td>{{ $product->discount_price }}</td>
-                                            <td>{{ $product->stock }}</td>
-                                            <td>
+                                            <td style="text-align: left; vertical-align: middle;">{{ $product->title }} <br><span style="color:red;"> {{$product->sku}}</span></td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ $product->original_price }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ $product->price }}</td>                                            
+                                            <td style="text-align: center; vertical-align: middle;">{{ $product->discount_price }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">{{ $product->stock }}</td>
+                                            <td style="text-align: center; vertical-align: middle;">
                                                 <span class="d-flex gap-2 align-middle">
                                                     @can('product-edit')
                                                         <a href="{{ route('products.edit', $product->id) }}"

@@ -24,11 +24,12 @@ class BrandController extends Controller
     {
         $request->validate([
             'brandName' => 'required|string|max:255',
-            'brandImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'brandImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $brand = new Brand();
         $brand->brandName = $request->brandName;
+        $brand->user_id = auth()->id();
 
         if ($request->hasFile('brandImg')) {
             $filename          = Str::slug($request->brandName) . '.' . $request->file('brandImg')->getClientOriginalExtension();
@@ -51,11 +52,12 @@ class BrandController extends Controller
     {
         $request->validate([
             'brandName' => 'required|string|max:255',
-            'brandImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'brandImg'  => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         $brand = Brand::findOrFail($id);
         $brand->brandName = $request->brandName;
+        $brand->user_id = auth()->id();
 
         if ($request->hasFile('brandImg')) {
             if ($brand->brandImg && Storage::disk('public')->exists($brand->brandImg)) {
@@ -83,14 +85,7 @@ class BrandController extends Controller
         $brand->delete();
 
         return redirect()->route('brand.index')->with('success', 'Brand deleted successfully.');
-    }
-
-    public function ByBrandPage()
-    {
-        return view('pages.product-by-brand');
-    }
-
-
+    }   
     public function BrandList():JsonResponse
     {
         $data= Brand::all();

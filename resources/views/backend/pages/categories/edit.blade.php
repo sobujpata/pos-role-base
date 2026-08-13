@@ -69,21 +69,7 @@
                                     </div>
 
                                 </div>
-                                <div class="row mb-4">
-                                    <label for="mainCategory" class="col-sm-3 col-form-label">Main Category</label>
-                                    <div class="col-sm-9">
-                                        <select class="form-select @error('mainCategory') is-invalid @enderror" id="mainCategory" name="mainCategory">
-                                            <option value="">Select Main Category</option>
-                                            @foreach ($mainCategories as $mainCat)
-                                                <option value="{{ $mainCat->id }}" {{ $category->main_category_id == $mainCat->id ? 'selected' : '' }}>{{ $mainCat->categoryName }}</option>
-                                            @endforeach
-                                        </select>
-                                        @error('mainCategory')
-                                            <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-
-                                </div>
+                                
                                 <div class="row">
                                     <label class="col-sm-3 col-form-label"></label>
                                     <div class="col-sm-9">

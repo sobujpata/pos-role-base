@@ -13,8 +13,11 @@ return new class extends Migration
             $table->id();
 
             $table->string('categoryName',50);
-            $table->string('categoryImg',300);
-
+            $table->string('categoryImg',300)->nullable();
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')
+            ->restrictOnDelete()
+            ->cascadeOnUpdate();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });

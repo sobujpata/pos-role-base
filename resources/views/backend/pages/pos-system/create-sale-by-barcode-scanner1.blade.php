@@ -114,38 +114,6 @@
             z-index: 9999;
         }
 
-        /* Scan feedback panel (replaces the old confirm-quantity popup for scans) */
-        .scan-preview {
-            border-left: 4px solid transparent;
-            background: #f8f9fa;
-            transition: background-color 0.2s, border-color 0.2s;
-        }
-
-        .scan-preview.success {
-            border-left-color: #198754;
-            background: #f0fdf4;
-        }
-
-        .scan-preview.error {
-            border-left-color: #dc3545;
-            background: #fef2f2;
-        }
-
-        /* Momentary highlight on the cart row that was just added/updated */
-        @keyframes cartRowFlash {
-            0% {
-                background-color: #d1e7dd;
-            }
-
-            100% {
-                background-color: transparent;
-            }
-        }
-
-        .cart-item-flash {
-            animation: cartRowFlash 1s ease-out;
-        }
-
         @media (max-width: 768px) {
             .pos-container {
                 font-size: 12px;
@@ -198,21 +166,7 @@
                                                 class="form-control form-control-lg scanner-input"
                                                 placeholder="Scan barcode..." autocomplete="off" autofocus>
                                         </div>
-                                        <small class="text-muted">Scan to add 1 unit straight to the cart</small>
-
-                                        <!-- Instant scan feedback (no modal / no interruption) -->
-                                        <div id="scanPreview" class="scan-preview mt-2 p-2 rounded d-none">
-                                            <div class="d-flex align-items-center justify-content-between">
-                                                <div class="d-flex align-items-center">
-                                                    <i id="scanPreviewIcon" class="fas fa-check-circle me-2 text-success"></i>
-                                                    <div>
-                                                        <div id="scanPreviewName" class="fw-medium"></div>
-                                                        <div id="scanPreviewStatus" class="small text-muted"></div>
-                                                    </div>
-                                                </div>
-                                                <div id="scanPreviewPrice" class="fw-bold text-primary"></div>
-                                            </div>
-                                        </div>
+                                        <small class="text-muted">Point barcode scanner here and scan</small>
                                     </div>
 
                                     <!-- Manual Search -->
@@ -376,7 +330,7 @@
                         </div>
 
                         <!-- Quick Actions -->
-                        {{-- <div class="card mt-3 mb-4">
+                        <div class="card mt-3 mb-4">
                             <div class="card-body">
                                 <h6 class="card-title mb-3">
                                     <i class="fas fa-bolt me-2"></i>Quick Actions
@@ -404,7 +358,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -504,8 +458,6 @@
                 this.currentProduct = null;
                 this.searchTimeout = null;
                 this.scanTimeout = null;
-                this.scanPreviewHideTimeout = null;
-                this.lastScan = { barcode: null, time: 0 };
                 this.cartData = null;
                 this.init();
             }
@@ -524,11 +476,8 @@
                 $("#barcodeInput").on("input", (e) => this.handleBarcodeInput(e.target.value));
                 $("#barcodeInput").on("keypress", (e) => {
                     if (e.key === "Enter") {
-                        e.preventDefault();
-                        clearTimeout(this.scanTimeout); // cancel the pending idle-debounce so it doesn't fire twice
-                        const value = $("#barcodeInput").val();
+                        this.handleBarcodeScan($("#barcodeInput").val());
                         $("#barcodeInput").val("");
-                        this.handleBarcodeScan(value);
                     }
                 });
 
@@ -621,70 +570,22 @@
             }
 
             async handleBarcodeScan(barcode) {
-                const code = barcode.trim();
-                if (!code) return;
-
-                // Guard against scanners/keyboards that emit the same code twice in quick succession
-                const now = Date.now();
-                if (code === this.lastScan.barcode && now - this.lastScan.time < 800) return;
-                this.lastScan = { barcode: code, time: now };
-
+                if (!barcode.trim()) return;
                 try {
-                    const response = await axios.get(`/pos-products/by-barcode/${encodeURIComponent(code)}`);
-                    if (!(response.data.success && response.data.product)) {
-                        this.showScanPreview(null, "error", `No product for barcode "${code}"`);
+                    const response = await axios.get(`/pos-products/by-barcode/${encodeURIComponent(barcode)}`);
+                    if (response.data.success && response.data.product) {
+                        this.currentProduct = response.data.product;
+                        this.showQuantityModal(response.data.product);
+                        this.playSound("scan");
+                    } else {
                         this.showToast("Product not found", "error");
                         this.playSound("error");
-                        return;
-                    }
-
-                    const product = response.data.product;
-                    this.playSound("scan");
-
-                    const stock = product.stock ?? 0;
-                    const alreadyInCart = this.cartData?.items?.find((i) => i.id === product.id)?.quantity || 0;
-
-                    if (stock <= 0 || alreadyInCart + 1 > stock) {
-                        this.showScanPreview(product, "error", stock <= 0 ? "Out of stock" : `Only ${stock} in stock`);
-                        this.showToast(`${product.title || product.name}: insufficient stock`, "error");
-                        this.playSound("error");
-                        return;
-                    }
-
-                    // Straight to the cart: no confirm-quantity modal in the scan flow
-                    const salePrice = parseFloat(product.discount_price) > 0
-                        ? parseFloat(product.discount_price)
-                        : parseFloat(product.price || 0);
-
-                    const added = await this.addToCart(product, 1, salePrice, { silent: true });
-                    if (added) {
-                        this.showScanPreview(
-                            product,
-                            "success",
-                            alreadyInCart > 0 ? `Now ${alreadyInCart + 1} in cart` : "Added to cart"
-                        );
                     }
                 } catch (error) {
                     console.error("Barcode scan error:", error);
-                    this.showScanPreview(null, "error", "Error scanning product");
                     this.showToast("Error scanning product", "error");
                     this.playSound("error");
                 }
-            }
-
-            /** Small inline panel that gives instant scan feedback since scanning no longer opens a modal. */
-            showScanPreview(product, status, message) {
-                clearTimeout(this.scanPreviewHideTimeout);
-                const panel = $("#scanPreview");
-                panel.removeClass("d-none success error").addClass(status);
-                $("#scanPreviewIcon").attr(
-                    "class",
-                    status === "success" ? "fas fa-check-circle me-2 text-success" : "fas fa-exclamation-circle me-2 text-danger"
-                );
-                $("#scanPreviewName").text(product ? (product.title || product.name) : "Unknown barcode");
-                $("#scanPreviewStatus").text(message);
-                $("#scanPreviewPrice").text(product ? this.formatCurrency(product.discount_price > 0 ? product.discount_price : product.price) : "");
-                this.scanPreviewHideTimeout = setTimeout(() => panel.addClass("d-none"), 2500);
             }
 
             handleManualSearch(searchTerm) {
@@ -806,62 +707,37 @@
                     return;
                 }
 
-                const success = await this.addToCart(this.currentProduct, quantity, salePrice);
-                if (success) {
-                    $("#quantityModal").modal("hide");
-                    this.currentProduct = null;
-                }
-            }
-
-            /**
-             * Single source of truth for adding a product to the cart.
-             * Used by the barcode-scan quick-add flow and the manual quantity-modal flow,
-             * so the API call, error handling, and post-add UI feedback live in one place.
-             */
-            async addToCart(product, quantity, salePrice, { silent = false } = {}) {
                 try {
                     const response = await axios.post('/pos-cart/add', {
-                        product_id: product.id,
+                        product_id: this.currentProduct.id,
                         quantity: quantity,
                         salePrice: salePrice,
                     });
-
+                    // console.log(response)
                     if (response.data.success) {
-                        await this.loadCart();
+                        this.showToast(
+                            `Added ${quantity} × ${this.currentProduct.title || this.currentProduct.name}`,
+                            "success"
+                        );
                         this.playSound("add");
-                        this.flashCartRow(product.id);
-                        if (!silent) {
-                            this.showToast(`Added ${quantity} × ${product.title || product.name}`, "success");
-                        }
-                        return true;
+                        await this.loadCart();
+                        $("#quantityModal").modal("hide");
+                        this.currentProduct = null;
+                    } else {
+                        this.showToast(response.data.message || "Failed to add to cart", "error");
+                        this.playSound("error");
                     }
-
-                    this.showToast(response.data.message || "Failed to add to cart", "error");
-                    this.playSound("error");
-                    return false;
                 } catch (error) {
                     console.error("Add to cart error:", error);
+
                     const message =
                         error.response?.data?.message ||
                         error.response?.data?.errors?.salePrice?.[0] ||
                         "Error adding to cart";
+
                     this.showToast(message, "error");
                     this.playSound("error");
-                    return false;
                 }
-            }
-
-            /** Briefly highlight the cart row for a product after it's added/updated. */
-            flashCartRow(productId) {
-                const row = $(`.cart-item[data-product-id="${productId}"]`);
-                if (!row.length) return;
-                row.addClass("cart-item-flash");
-                setTimeout(() => row.removeClass("cart-item-flash"), 1000);
-            }
-
-            /** Centralised currency formatting so amount strings stay consistent across the UI. */
-            formatCurrency(value) {
-                return `${POS_CONFIG.settings.currency}${parseFloat(value || 0).toFixed(2)}`;
             }
 
 

@@ -18,6 +18,10 @@ return new class extends Migration
             $table->decimal('import_price', 10, 2);
             $table->decimal('sale_price', 10, 2);
             $table->integer('quantity');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users')
+                ->restrictOnDelete()
+                ->cascadeOnUpdate();
             $table->timestamps();
         });
     }

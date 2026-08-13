@@ -48,7 +48,7 @@
                         MRP: {{ number_format($product->price ?? 7000, 3) }}
                     </div>
                     <div style="font-size:6px; font-weight:bold;">
-                        Discount Price: {{ number_format($product->discount_price ?? 6150, 3) }}
+                        Discount Price: {{ number_format($product->discount_price ?? 000, 3) }}
                     </div>
 
                 </div>

@@ -17,8 +17,14 @@
                                 <label class="form-label mt-3">Import Price</label>
                                 <input type="number" class="form-control" id="importPriceUpdate">
 
-                                <label class="form-label mt-3">Sale Price</label>
+                                <label class="form-label mt-3">Price</label>
                                 <input type="number" class="form-control" id="salePriceUpdate">
+
+                                <label class="form-label mt-3">Dis %</label>
+                                <input type="number" class="form-control" id="discountPercentUpdate">
+
+                                <label class="form-label mt-3">Discount Price</label>
+                                <input type="number" class="form-control" id="discountPriceUpdate">
 
                                 <label class="form-label mt-3">Quantity</label>
                                 <input type="number" class="form-control" id="productQtyUpdate"
@@ -49,10 +55,13 @@
             id: id
         });
         let data = resImportProduct.data.data;
-
+        console.log(data);
+        // Fill inputs
         $('#productIdUpdate').val(data.product_id);
         $('#importPriceUpdate').val(data.import_price);
         $('#salePriceUpdate').val(data.sale_price);
+        $('#discountPercentUpdate').val(data.product.discount);
+        $('#discountPriceUpdate').val(data.product.discount_price);
         $('#productQtyUpdate').val(data.quantity);
 
         
@@ -80,10 +89,11 @@
         try {
             let res = await axios.get(`/import-product-list/${productIdUpdate}`);
             let data = res.data.data;
-            // console.log(data);
             // Fill inputs
-            $('#importPriceUpdate').val(data.buy_price ?? '');
+            $('#importPriceUpdate').val(data.original_price ?? '');
             $('#salePriceUpdate').val(data.price ?? '');
+            $('#discountPercentUpdate').val(data.discount ?? '');
+            $('#discountPriceUpdate').val(data.discount_price ?? '');
             // $('#productQtyUpdate').val(data.buy_qty ?? '');
         } catch (error) {
             console.error(error);
@@ -95,6 +105,8 @@
         const productIdUpdate = $('#productIdUpdate').val();
         const importPrice = $('#importPriceUpdate').val();
         const salePrice = $('#salePriceUpdate').val();
+        const discountPercent = $('#discountPercentUpdate').val();
+        const discountPrice = $('#discountPriceUpdate').val();
         const quantity = $('#productQtyUpdate').val();
         const importId = $('#productIdShow').val();
 
@@ -110,6 +122,8 @@
         formData.append('product_id', productIdUpdate);
         formData.append('import_price', importPrice);
         formData.append('sale_price', salePrice);
+        formData.append('discount', discountPercent);
+        formData.append('discount_price', discountPrice);
         formData.append('quantity', quantity);
 
         try {
@@ -129,4 +143,18 @@
             }
         }
     }
+</script>
+<script>
+    function calculateDiscount() {
+        let price = parseFloat(document.getElementById("salePriceUpdate").value) || 0;
+        let percent = parseFloat(document.getElementById("discountPercentUpdate").value) || 0;
+
+        let discountAmount = price * (percent / 100);
+        let finalPrice = price - discountAmount;
+
+        document.getElementById("discountPriceUpdate").value = finalPrice.toFixed(2);
+    }
+
+    document.getElementById("salePriceUpdate").addEventListener("input", calculateDiscount);
+    document.getElementById("discountPercentUpdate").addEventListener("input", calculateDiscount);
 </script>

@@ -40,12 +40,13 @@
                         <table class="table" id="tableData">
                             <thead>
                                 <tr class="bg-light">
-                                    <th>Image</th>
-                                    <th>Name</th>
-                                    <th>Import Price</th>
-                                    <th>Sale Price</th>
-                                    <th>Quantity</th>
-                                    <th>Action</th>
+                                    <th class="text-center">Image</th>
+                                    <th class="text-center">Name</th>
+                                    <th class="text-center">Import Price</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Discount Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="tableList">
@@ -78,11 +79,12 @@
             let imgUrl = item['product']['image'];
             let row = `<tr>
                     <td><img style="width: 90px; height: 100px;" alt="" src="storage/${imgUrl}"></td>
-                    <td>${item['product']['title']}<br>${item['product']['sku']}</td>
-                    <td>${item['import_price']}</td>
-                    <td>${item['sale_price']}</td>
-                    <td>${item['quantity']}</td>
-                    <td>
+                    <td style="vertical-align: middle;">${item['product']['title']}<br>${item['product']['sku']}</td>
+                    <td style="vertical-align: middle; text-align: center;">${item['import_price']}</td>
+                    <td style="vertical-align: middle; text-align: center;">${item['sale_price']}</td>
+                    <td style="vertical-align: middle; text-align: center;">${item['product']['discount_price']}</td>
+                    <td style="vertical-align: middle; text-align: center;">${item['quantity']}</td>
+                    <td style="vertical-align: middle; text-align: center;">
                         <button data-id="${item['id']}" class="btn editBtn btn-sm btn-outline-success"><i class="fa text-sm  fa-pen"></i></button>
                         <button data-id="${item['id']}" class="btn deleteBtn btn-sm btn-outline-danger"><i class="fa text-sm  fa-trash-alt"></i></button>
                     </td>

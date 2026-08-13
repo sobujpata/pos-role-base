@@ -15,7 +15,11 @@ return new class extends Migration
             $table->id();
 
             $table->string('brandName',50);
-            $table->string('brandImg',300);
+            $table->string('brandImg',300)->nullable();
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->foreign('user_id')->references('id')->on('users')
+            ->restrictOnDelete()
+            ->cascadeOnUpdate();
 
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

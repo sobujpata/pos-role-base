@@ -9,24 +9,31 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @method static where(string $string, mixed $id)
  */
 class Product extends Model
-{
-    const remark = [
-        'popular','new','top','special','trending','regular','featured'
-    ];
+{   
     protected $fillable = [
-        'sku', 'title', 'short_des', 'description', 'price', 'buy_price',
-        'discount', 'discount_price', 'image', 'stock', 'min_stock', 'unit',
-        'star', 'remark', 'is_active', 'category_id', 'brand_id'
+        'title', 
+        'short_des', 
+        'original_price',
+        'price', 
+        'discount',
+        'discount_price',
+        'stock', 
+        'sku', 
+        'image', 
+        'min_stock',
+        'is_active', 
+        'category_id', 
+        'brand_id',
+        'user_id'
     ];
 
     protected $casts = [
         'price' => 'decimal:2',
-        'buy_price' => 'decimal:2',
+        'original_price' => 'decimal:2',
         'discount_price' => 'decimal:2',
         'stock' => 'integer',
         'min_stock' => 'integer',
-        'is_active' => 'boolean',
-        'star' => 'float'
+        'is_active' => 'boolean',        
     ];
 
     // Relationships
@@ -50,13 +57,6 @@ class Product extends Model
     {
         return $query->where('stock', '>', 0);
     }
-    public function productDetail(){
-        return $this->hasOne(ProductDetail::class);
-    }
-
-    public function product_reviews()
-{
-    return $this->hasMany(ProductReview::class)->orderBy('created_at', 'asc');
-}
+    
 
 }

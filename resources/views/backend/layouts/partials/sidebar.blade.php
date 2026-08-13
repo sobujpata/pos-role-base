@@ -19,27 +19,7 @@
 					</a>
 
 				</li>
-				@can('product-menu')
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class='bx bx-cart'></i>
-						</div>
-						<div class="menu-title">Online Invoices</div>
-					</a>
-					<ul>
-						@can('pos-view')
-						<li>
-							<a href="{{ route('invoice.index') }}"><i class='bx bx-radio-circle'></i>New Invoices</a>
-						</li>
-						@endcan
-						@can('pos-create')
-						<li>
-							<a href="{{ route('invoice.index') }}"><i class='bx bx-radio-circle'></i>Complete Invoices</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
+				
 				@can('pos-menu')
 				<li class="menu-label">Point of Sales Pages</li>
 				<li>
@@ -99,27 +79,6 @@
 					</ul>
 				</li>
 				@endcan
-				
-				@can('category-menu')
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-category"></i></div>
-						<div class="menu-title">Main Category</div>
-					</a>
-					<ul>
-						@can('category-view')
-						<li>
-							<a href="{{ route('MainCategories.index') }}"><i class='bx bx-radio-circle'></i>All category</a>
-						</li>
-						@endcan
-						@can('category-create')
-						<li>
-							<a href="{{ route('MainCategories.create') }}"><i class='bx bx-radio-circle'></i>Create category</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
 				@can('category-menu')
 				<li>
 					<a href="javascript:;" class="has-arrow">
@@ -159,91 +118,24 @@
 						@endcan
 					</ul>
 				</li>
-				@endcan
-				@can('color-menu')
+				@endcan	
+				@can('report-menu')
+				<li class="menu-label">Report Pages</li>
 				<li>
 					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-palette"></i></div>
-						<div class="menu-title">Colors</div>
+						<div class="parent-icon"><i class="bx bx-file"></i></div>
+						<div class="menu-title">Report</div>
 					</a>
 					<ul>
-						@can('color-view')
+						@can('report-view')
 						<li>
-							<a href="{{ route('colors.index') }}"><i class='bx bx-radio-circle'></i>All Colors</a>
+							<a href="{{ route('invoiceReport') }}"><i class='bx bx-radio-circle'></i>Invoice Report</a>
 						</li>
 						@endcan
-						@can('color-create')
-						<li>
-							<a href="{{ route('colors.create') }}"><i class='bx bx-radio-circle'></i>Create Color</a>
-						</li>
-						@endcan
+						
 					</ul>
 				</li>
-				@endcan
-				@can('color-menu')
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-left-top-arrow-circle"></i></div>
-						<div class="menu-title">Sizes</div>
-					</a>
-					<ul>
-						@can('color-view')
-						<li>
-							<a href="{{ route('sizes.index') }}"><i class='bx bx-radio-circle'></i>All Sizes</a>
-						</li>
-						@endcan
-						@can('color-create')
-						<li>
-							<a href="{{ route('sizes.create') }}"><i class='bx bx-radio-circle'></i>Create Sizes</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
-				@can('color-menu')
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-circle"></i></div>
-						<div class="menu-title">Tags</div>
-					</a>
-					<ul>
-						@can('color-view')
-						<li>
-							<a href="{{ route('tags.index') }}"><i class='bx bx-radio-circle'></i>All tags</a>
-						</li>
-						@endcan
-						@can('color-create')
-						<li>
-							<a href="{{ route('tags.create') }}"><i class='bx bx-radio-circle'></i>Create tags</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
-				@can('subscribe-menu')
-				<li>
-					<a href="javascript:;" class="has-arrow">
-						<div class="parent-icon"><i class="bx bx-circle"></i></div>
-						<div class="menu-title">Subscribe</div>
-					</a>
-					<ul>
-						@can('subscribe-menu')
-						<li>
-							<a href="{{ route('subscribe-notice.index') }}"><i class='bx bx-radio-circle'></i>Subscribe page settings</a>
-						</li>
-						@endcan
-						@can('subscribe-menu')
-						<li>
-							<a href="{{ route('subscribe-notice.create') }}"><i class='bx bx-radio-circle'></i>Create tags</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
-				
-				
-				
-				
+				@endcan	
 				@can('role-menu')
 				<li class="menu-label">Super Admin Pages</li>
 				<li>
@@ -309,29 +201,6 @@
 					</ul>
 				</li>
 				@endcan
-				@can('menu-menu')
-				<li>
-					<a class="has-arrow" href="javascript:;">
-						<div class="parent-icon"><i class="bx bx-user-circle"></i>
-						</div>
-						<div class="menu-title">Menus</div>
-					</a>
-					<ul>
-						@can('menu-view')
-						<li>
-							<a href="{{ route('menus.index') }}"><i class='bx bx-radio-circle'></i>All Menus</a>
-						</li>
-						@endcan
-						@can('menu-create')
-						<li>
-							<a href="{{ route('menus.create') }}"><i class='bx bx-radio-circle'></i>Create Menu</a>
-						</li>
-						@endcan
-					</ul>
-				</li>
-				@endcan
-				
-
 			</ul>
 			<!--end navigation-->
 		</div>

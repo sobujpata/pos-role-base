@@ -50,8 +50,6 @@
                 </div>
             </div>
         </div>
-
-
         <!-- end-content -->
     </div>
 </div>
@@ -61,7 +59,7 @@
         try {
             let res = await axios.get("/pos-invoice-select");
 
-            // console.log(res);
+            console.log(res);
 
             let role = res.data.role; // Access the role directly
             let tableList = $("#tableList");

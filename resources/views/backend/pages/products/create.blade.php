@@ -29,7 +29,7 @@
                 <div class="col-lg-12 mx-auto">
                     <div class="card">
                         <div class="card-body p-4">
-                            <h5 class="mb-4">Update Products</h5>
+                            <h5 class="mb-4">Create Products</h5>
                             @if ($errors->any())
                                 <div class="alert alert-danger">
                                     <ul>
@@ -50,23 +50,23 @@
                                                 value="{{ old('title') }}" placeholder="Product Name">
                                         </div>
                                     </div>
-                                    <div class="col-sm-5 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
-                                            <label for="short_des" class="col-form-label">Short Description</label>
+                                            <label for="short_des" class="col-form-label">Short Des(Optional)</label>
                                             <input type="text" class="form-control" id="short_des" name="short_des"
                                                 value="{{ old('short_des') }}" placeholder="Product Short Description">
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
-                                            <label for="buy_price" class="col-form-label">Buy Price</label>
-                                            <input type="text" class="form-control" id="buy_price" name="buy_price"
-                                                value="{{ old('buy_price') }}"placeholder="Product buy price">
+                                            <label for="original_price" class="col-form-label">Buy Price</label>
+                                            <input type="text" class="form-control" id="original_price" name="original_price"
+                                                value="{{ old('original_price') }}"placeholder="Product buy price">
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
-                                            <label for="price" class="col-form-label">Price</label>
+                                            <label for="price" class="col-form-label">Sale Price</label>
                                             <input type="text" class="form-control" id="price" name="price"
                                                 value="{{ old('price') }}"placeholder="Product price">
                                         </div>
@@ -85,36 +85,15 @@
                                                 name="discount_price" value="{{ old('discount_price') }}" placeholder="Discount Price" readonly>
                                         </div>
                                     </div>
-                                    
-
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
                                             <label for="stock" class="col-form-label">Stock</label>
                                             <input type="number" class="form-control" id="stock" name="stock"
                                                 value="{{ old('stock') }}" placeholder="Product Stock">
                                         </div>
-                                    </div>
-                                    <div class="col-sm-1 mb-3">
-                                        <div class="form-group">
-                                            <label for="star" class="col-form-label">Star</label>
-                                            <input type="number" class="form-control" id="star" name="star"
-                                                value="5" placeholder="Product Star">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="remark" class="col-form-label">Remarks</label>
-                                            <select name="remark" id="" class="form-control form-select">
-                                                <option value="" disable selected>Select Remarks</option>
-                                                @foreach ($remarks as $remark)
-                                                    <option value="{{ $remark }}"
-                                                        {{ old('remark') == $remark ? 'selected' : '' }}>
-                                                        {{ ucfirst($remark) }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
+                                    </div>                                   
+                                    
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
                                             <label for="category_id" class="col-form-label">Product Category</label>
                                             <select name="category_id"
@@ -137,7 +116,7 @@
 
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
+                                    <div class="col-sm-3 mb-3">
                                         <div class="form-group">
                                             <label for="brand_id" class="col-form-label">Brand</label>
                                             <select name="brand_id" id="" class="form-control form-select">
@@ -149,165 +128,22 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="color" class="col-form-label">Colors</label>
-                                            <select name="colors[]" multiple size="6" class="form-control form-select">
-                                                @foreach($colors as $color)
-                                                    <option value="{{ $color->color_code }}" style="color: {{ $color->color_code }}" @if ($color->color=='White')
-                                                    selected
-                                                    @endif>
-                                                        {{ ucfirst($color->color) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="size" class="col-form-label">Sizes</label>
-                                            <select name="sizes[]" id="" class="form-control form-select" multiple size="6">
-
-                                                @foreach($sizes as $size)
-                                                    <option value="{{ $size->short_name }}" @if ($size->size=='Medium')
-                                                    selected
-                                                    @endif>
-                                                        {{ ucfirst($size->size) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            {{-- <input type="text" class="form-control" id="size" name="size"
-                                                value="{{ old('size') }}"> --}}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="capacity" class="col-form-label">Capacity</label>
-                                            <input type="text" class="form-control" id="capacity" name="capacity"
-                                                value="{{ old('capacity') }}" placeholder="each, or gram">
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="tags" class="col-form-label">Tags</label>
-                                            <select name="tags[]" id="" class="form-control form-select" multiple size="6">
-                                                @foreach($tags as $tag)
-                                                    <option value="{{ $tag->tag }}" @if ($tag->tag=='Accessories')
-                                                    selected
-                                                    @endif>
-                                                        {{ ucfirst($tag->tag) }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            {{-- <input type="text" class="form-control" id="tags" name="tags"
-                                                value="{{ old('tags') }}"> --}}
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="water_resistance" class="col-form-label">Water Resistance</label>
-                                            <select name="water_resistance" id="" class="form-control form-select">
-                                                <option value="Yes" selected>Yes</option>
-                                                <option value="No">No</option>
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-2 mb-3">
-                                        <div class="form-group">
-                                            <label for="material" class="col-form-label">Material</label>
-                                            <select name="material" id="" class="form-control form-select">
-                                                <option value="Metal" selected>Metal</option>
-                                                <option value="Plastic">Plastic</option>
-                                                <option value="Leather">Leather</option>
-                                                <option value="Wood">Wood</option>
-                                                <option value="Rubber">Rubber</option>
-                                                <option value="Glass">Glass</option>
-                                                <option value="Ceramic">Ceramic</option>
-                                            </select>
-                                            
-                                        </div>
-                                    </div>
+                                    
                                     <div class="col-sm-3 mb-3">
                                         <div class="form-group">
-                                            <label for="img1" class="col-form-label">Image 1</label>
+                                            <label for="image" class="col-form-label">Image</label>
                                             <div class="row">
                                                 <div class="col-6">
-                                                    <input type="file" class="form-control" id="img1"
-                                                        name="img1"
-                                                        oninput="document.getElementById('previewImg1').src = window.URL.createObjectURL(this.files[0])">
+                                                    <input type="file" class="form-control" id="image"
+                                                        name="image"
+                                                        oninput="document.getElementById('previewimage').src = window.URL.createObjectURL(this.files[0])">
                                                 </div>
                                                 <div class="col-6">
-                                                    <img id="previewImg1"
-                                                        src="{{ asset('products/product-default.jpg') }}" alt=""
+                                                    <img id="previewimage"
+                                                        src="{{ asset('images/product_defuels.jpg') }}" alt=""
                                                         style="width: 115px; border: #00FFFF solid 1px; border-radius: 5px;">
                                                 </div>
                                             </div>
-
-
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 mb-3">
-                                        <div class="form-group">
-                                            <label for="img2" class="col-form-label">Image 2</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <input type="file" class="form-control" id="img2"
-                                                        name="img2"
-                                                        oninput="document.getElementById('previewImg2').src = window.URL.createObjectURL(this.files[0])">
-                                                </div>
-                                                <div class="col-6">
-                                                    <img id="previewImg2"
-                                                        src="{{ asset('products/product-default.jpg') }}" alt=""
-                                                        style="width: 115px; border: #00FFFF solid 1px; border-radius: 5px;">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 mb-3">
-                                        <div class="form-group">
-                                            <label for="img3" class="col-form-label">Image 3</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <input type="file" class="form-control" id="img3"
-                                                        name="img3"
-                                                        oninput="document.getElementById('previewImg3').src = window.URL.createObjectURL(this.files[0])">
-                                                </div>
-                                                <div class="col-6">
-                                                    <img id="previewImg3"
-                                                        src="{{ asset('products/product-default.jpg') }}" alt=""
-                                                        style="width: 115px; border: #00FFFF solid 1px; border-radius: 5px;">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3 mb-3">
-                                        <div class="form-group">
-                                            <label for="img4" class="col-form-label">Image 4</label>
-                                            <div class="row">
-                                                <div class="col-6">
-                                                    <input type="file" class="form-control" id="img4"
-                                                        name="img4"
-                                                        oninput="document.getElementById('previewImg4').src = window.URL.createObjectURL(this.files[0])">
-                                                </div>
-                                                <div class="col-6">
-                                                    <img id="previewImg4"
-                                                        src="{{ asset('products/product-default.jpg') }}" alt=""
-                                                        style="width: 115px; border: #00FFFF solid 1px; border-radius: 5px;">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-12 mb-3">
-                                        <div class="form-group">
-                                            <label for="des" class="col-form-label">Product Description</label>
-                                            <textarea name="des" id="summernote" rows="4" class="form-control"></textarea>
-
                                         </div>
                                     </div>
                                 </div>

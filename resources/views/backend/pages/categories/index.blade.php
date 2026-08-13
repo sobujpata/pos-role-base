@@ -35,9 +35,8 @@
                                 <thead>
                                     <tr>
                                         <th>No</th>
-                                        <th>Name</th>
                                         <th>Image</th>
-                                        <th>Main Category</th>
+                                        <th>Name</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -46,11 +45,9 @@
                                     @foreach ($categories as $key=>$category)
                                     <tr>
                                         <td>{{ $key + 1 }}</td>
-                                        <td>{{ $category ->categoryName }}</td>
-                                        
-
                                         <td><img src="{{'storage/'. $category ->categoryImg }}" alt="{{ $category ->categoryName }}" width="40"> </td>
-                                        <td>{{ $category ->mainCategory->categoryName }}</td>
+                                        <td>{{ $category ->categoryName }}</td>                                     
+
                                         <td >
                                             <span class="d-flex gap-2">
                                             @can('category-edit')

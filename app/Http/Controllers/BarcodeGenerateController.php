@@ -14,7 +14,7 @@ class BarcodeGenerateController extends Controller
      */
     public function index()
     {
-        $products = Product::select('id', 'title', 'sku', 'image', 'discount_price', 'stock')->get();
+        $products = Product::all();
         return view('backend.pages.barcode.index', compact('products'));
     }
 
@@ -29,7 +29,7 @@ class BarcodeGenerateController extends Controller
                 throw new \Exception('Invalid product ID');
             }
             
-            $product = Product::select('id', 'title', 'sku', 'discount_price', 'stock')->findOrFail($id);
+            $product = Product::select('id', 'title', 'sku', 'stock')->findOrFail($id);
             
             // Ensure product has required fields
             if (!$product->title) {
