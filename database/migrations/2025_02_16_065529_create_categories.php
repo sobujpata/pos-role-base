@@ -14,7 +14,7 @@ return new class extends Migration
 
             $table->string('categoryName',50);
             $table->string('categoryImg',300)->nullable();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->restrictOnDelete()
             ->cascadeOnUpdate();

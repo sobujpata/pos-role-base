@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('brandName',50);
             $table->string('brandImg',300)->nullable();
-            $table->unsignedBigInteger('user_id')->unique();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')
             ->restrictOnDelete()
             ->cascadeOnUpdate();
