@@ -155,7 +155,11 @@ class DashboardController extends Controller
 
     public function invoiceSelect(Request $request)
     {
-        $invoices = PosInvoice::where('is_read', '0')->with('user')->latest()->take(50)->get();
+        // Today's unread invoices
+        $invoices = PosInvoice::where('is_read', 0)
+            ->whereDate('created_at', today())
+            ->with('user')
+            ->get();
         // Prepare a response structure
         $responseData = $invoices->map(function ($invoice) {
             $invoice_id = $invoice->id;
