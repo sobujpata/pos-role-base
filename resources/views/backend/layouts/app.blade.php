@@ -39,8 +39,8 @@
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 	 @vite(['resources/css/app.css', 'resources/js/app.js'])
-	{{-- <link rel="stylesheet" href="{{ asset('/vendor/flasher/flasher.min.css') }}"> --}}
-	{{-- <script src="{{ asset('/vendor/flasher/flasher.min.js') }}"></script> --}}
+	<link rel="stylesheet" href="{{ asset('/vendor/flasher/flasher.min.css') }}">
+	<script src="{{ asset('/vendor/flasher/flasher.min.js') }}"></script>
 
 	<style>
 		img{

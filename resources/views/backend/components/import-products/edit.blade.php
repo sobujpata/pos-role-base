@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel"><U></U>pdate Product</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Update Product</h5>
             </div>
             <div class="modal-body">
                 <form id="update-form">
@@ -10,10 +10,11 @@
                         <div class="row">
                             <div class="col-12 p-1">
 
-                                <label class="form-label">Update Inposrt Products</label>
-                                <select type="text" class="form-control form-select" id="productIdUpdate">
+                                <label class="form-label">Update Import Products</label>
+                                <select class="form-control form-select" id="productIdUpdate">
                                     <option value="" disabled selected>Select Products</option>
                                 </select>
+
                                 <label class="form-label mt-3">Import Price</label>
                                 <input type="number" class="form-control" id="importPriceUpdate">
 
@@ -38,44 +39,36 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="modal-close" class="btn bg-primary mx-2" data-bs-dismiss="modal"
-                    aria-label="Close">Close</button>
+                <button id="modal-close" class="btn bg-primary mx-2" data-bs-dismiss="modal" aria-label="Close">Close</button>
                 <button onclick="update()" id="update-btn" class="btn bg-success">Update</button>
             </div>
         </div>
     </div>
 </div>
 
-
+@push('script')
 <script>
     async function FillUpUpdateForm(id) {
-        let productIdShow = document.getElementById('productIdShow').value = id;
+        document.getElementById('productIdShow').value = id;
 
-        let resImportProduct = await axios.post("/import-product-by-id", {
-            id: id
-        });
+        let resImportProduct = await axios.post("/import-product-by-id", { id: id });
         let data = resImportProduct.data.data;
-        console.log(data);
-        // Fill inputs
+
         $('#productIdUpdate').val(data.product_id);
         $('#importPriceUpdate').val(data.import_price);
         $('#salePriceUpdate').val(data.sale_price);
         $('#discountPercentUpdate').val(data.product.discount);
         $('#discountPriceUpdate').val(data.product.discount_price);
         $('#productQtyUpdate').val(data.quantity);
-
-        
     }
-    loadProducts()
+
+    loadProducts();
     async function loadProducts() {
         let res = await axios.get("/list-products");
-        // console.log(res)
-        res.data.forEach(function (item, i) {
-            let option = `<option value="${item['id']}">${item['title']}</option>`;
-            $("#productIdUpdate").append(option);
+        res.data.forEach(function (item) {
+            $("#productIdUpdate").append(`<option value="${item['id']}">${item['title']}</option>`);
         });
 
-        // When user selects a product
         $('#productIdUpdate').on('change', function () {
             let productIdUpdate = $(this).val();
             if (productIdUpdate) {
@@ -84,17 +77,14 @@
         });
     }
 
-    // 🔹 Fetch selected product details
     async function loadProductDetailsUpdate(productIdUpdate) {
         try {
             let res = await axios.get(`/import-product-list/${productIdUpdate}`);
             let data = res.data.data;
-            // Fill inputs
             $('#importPriceUpdate').val(data.original_price ?? '');
             $('#salePriceUpdate').val(data.price ?? '');
             $('#discountPercentUpdate').val(data.discount ?? '');
             $('#discountPriceUpdate').val(data.discount_price ?? '');
-            // $('#productQtyUpdate').val(data.buy_qty ?? '');
         } catch (error) {
             console.error(error);
             errorToast('Failed to load product details!');
@@ -110,8 +100,6 @@
         const quantity = $('#productQtyUpdate').val();
         const importId = $('#productIdShow').val();
 
-        console.log(productIdUpdate);
-        // Frontend validation
         if (!productIdUpdate) return flasher.error('Product required!');
         if (!salePrice || isNaN(salePrice)) return flasher.error('Valid sale price required!');
         if (!quantity || isNaN(quantity) || quantity <= 0)
@@ -128,13 +116,22 @@
 
         try {
             const res = await axios.post('/import-product-update', formData);
-            console.log(res);
+
             if (res.status === 200) {
                 flasher.success(res.data.message ?? 'Product import updated successfully!');
                 $('#update-modal').modal('hide');
-                await getList();
-            }
 
+                // ✅ Defensive check: make sure getList exists globally before calling it.
+                if (typeof window.getList === 'function') {
+                    await window.getList();
+                } else {
+                    console.error(
+                        "getList() is not defined on window — table will not refresh. " +
+                        "Make sure getList is declared as `window.getList = async function () {...}` " +
+                        "in the product-table script, not scoped inside a local closure."
+                    );
+                }
+            }
         } catch (error) {
             if (error.response) {
                 flasher.error(error.response.data.message ?? 'Request failed!');
@@ -158,3 +155,4 @@
     document.getElementById("salePriceUpdate").addEventListener("input", calculateDiscount);
     document.getElementById("discountPercentUpdate").addEventListener("input", calculateDiscount);
 </script>
+@endpush
