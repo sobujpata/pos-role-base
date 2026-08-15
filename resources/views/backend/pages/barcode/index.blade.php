@@ -31,7 +31,7 @@
                 <div class="card-body">
                     <h6 class="mb-3 text-uppercase">Product Barcode List</h6>
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="tableData">
+                        <table class="table table-bordered" id="myTable">
                             <thead class="bg-light">
                                 <tr>
                                     <th class="text-center">Image</th>
@@ -58,23 +58,26 @@
                                             {{ $product->title }} <br>
                                             <small class="text-muted">{{ $product->sku ?? 'N/A' }}</small>
                                         </td>
-                                        <td style="vertical-align: middle; text-align: center;">{{ number_format($product->price, 2) }}</td>
-                                        <td style="vertical-align: middle; text-align: center;">{{ number_format($product->discount, 2) }}%</td>
-                                        <td style="vertical-align: middle; text-align: center;">{{ number_format($product->discount_price, 2) }}</td>
+                                        <td style="vertical-align: middle; text-align: center;">
+                                            {{ number_format($product->price, 2) }}</td>
+                                        <td style="vertical-align: middle; text-align: center;">
+                                            {{ number_format($product->discount, 2) }}%</td>
+                                        <td style="vertical-align: middle; text-align: center;">
+                                            {{ number_format($product->discount_price, 2) }}</td>
                                         <td style="vertical-align: middle; text-align: center;">{{ $product->stock }}</td>
                                         <td class="text-center" style="vertical-align: middle; text-align: center;">
-                                        
-                                            <button type="button" class="btn btn-sm btn-outline-success"
-                                                data-bs-toggle="modal" data-bs-target="#exampleModal{{ $product->id }}">
-                                                <i class="fa fa-barcode"></i>
-                                            </button>
-                                            @include('backend.pages.barcode.barcode-generate')
+
+
+                                            <a href="{{ route('barcode.print', $product->id) }}" target="_blank"
+                                                class="btn btn-sm btn-warning" title="Print POS Label">
+                                                <i class="fa fa-print"></i>
+                                            </a>                                            
 
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">No products found</td>
+                                        <td colspan="7" class="text-center">No products found</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -85,4 +88,13 @@
 
         </div>
     </div>
+    
 @endsection
+@push('script')
+    <script>
+        let table = new DataTable('#myTable', {
+            "pageLength": 10,
+            "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+        });
+    </script>
+@endpush

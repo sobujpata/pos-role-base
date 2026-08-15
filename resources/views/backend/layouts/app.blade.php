@@ -27,6 +27,7 @@
 	<link rel="stylesheet" href="{{ asset('assets/css/dark-theme.css')}}" />
 	<link rel="stylesheet" href="{{ asset('assets/css/semi-dark.css')}}" />
 	<link rel="stylesheet" href="{{ asset('assets/css/header-colors.css')}}" />
+	{{-- <script src="{{ asset('assets/js/index.js')}}"></script> --}}
 
 	<!--Datatable -->
 	<link href="https://cdn.datatables.net/v/bs5/jq-3.7.0/dt-2.2.2/r-3.0.3/datatables.min.css" rel="stylesheet">
@@ -260,6 +261,7 @@
 	</div>
 	<!--end switcher-->
 	<!-- Bootstrap JS -->
+	<script src="{{ asset('assets/js/app.js')}}"></script>	
 	<script src="{{ asset('assets/js/bootstrap.bundle.min.js')}}"></script>
 	<!--plugins-->
 	
@@ -269,18 +271,7 @@
 	<script src="{{ asset('assets/plugins/vectormap/jquery-jvectormap-2.0.2.min.js')}}"></script>
 	<script src="{{ asset('assets/plugins/vectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
 	<script src="{{ asset('assets/plugins/chartjs/js/chart.js')}}"></script>
-	<script src="{{ asset('assets/js/index.js')}}"></script>
 	<!--app JS-->
-	<script src="{{ asset('assets/js/app.js')}}"></script>
-	<script>
-		// new PerfectScrollbar(".app-container");
-	</script>
-	<script>
-		let table = new DataTable('#myTable', {
-			"pageLength": 10,
-			"lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
-		});
-	</script>
 	@stack('script')
 </body>
 

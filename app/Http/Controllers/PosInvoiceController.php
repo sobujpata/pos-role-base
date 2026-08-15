@@ -47,20 +47,37 @@ class PosInvoiceController extends Controller
 
     public function invoiceCreate(Request $request)
     {
-        // return response()->json($request->all());
+        
+        $validated = $request->validate([
+            'paymentMethod' => ['required', 'string', 'max:50'],
+            'customerName' => ['nullable', 'string', 'max:255'],
+            'notes' => ['nullable', 'string', 'max:1000'],
+            'total' => ['required', 'numeric'],
+            'discount' => ['required', 'numeric'],
+            'vat' => ['nullable', 'numeric'],
+            'payable' => ['required', 'numeric'],
+            'products' => ['required', 'array'],
+            'products.*.product_id' => ['required', 'integer', 'exists:products,id'],
+            'products.*.qty' => ['required', 'integer', 'min:1'],
+            'products.*.sale_price' => ['required', 'numeric', 'min:0'],
+        ]);
+
         DB::beginTransaction();
         try {
             $user_id = Auth::id();
 
             $invoice = PosInvoice::create([
-                'total'    => $request->total,
-                'discount' => $request->discount,
-                'vat'      => $request->vat,
-                'payable'  => $request->payable,
-                'user_id'  => $user_id,
+                'total' => $validated['total'],
+                'discount' => $validated['discount'],
+                'vat' => $validated['vat'] ?? 0,
+                'payable' => $validated['payable'],
+                'user_id' => $user_id,
+                'payMethod' => trim($validated['paymentMethod']),
+                'custName' => $validated['customerName'] !== null ? trim($validated['customerName']) : null,
+                'notes' => $validated['notes'] !== null ? trim($validated['notes']) : null,
             ]);
 
-            foreach ($request->products as $item) {
+            foreach ($validated['products'] as $item) {
 
                 $qty        = is_numeric($item['qty']) ? $item['qty'] : 0;
                 $sale_price = is_numeric($item['sale_price']) ? $item['sale_price'] : 0;

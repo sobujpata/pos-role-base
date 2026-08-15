@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\ShopDetail;
 use Milon\Barcode\DNS1D;
 use Illuminate\Support\Facades\Log;
 
@@ -70,6 +71,18 @@ class BarcodeGenerateController extends Controller
             \Log::error('Barcode generation failed for product ID ' . $id . ': ' . $e->getMessage());
             return $this->getErrorHtml($e->getMessage());
         }
+    }
+
+    /**
+     * Printable POS label page
+     */
+    public function printLabel($id)
+    {
+        $shopDetails = ShopDetail::first();
+        // dd($shopDetails);
+        $product = Product::select('id', 'title', 'sku', 'price', 'discount', 'discount_price', 'stock')->findOrFail($id);
+
+        return view('backend.pages.barcode.print-pos-label', compact('product', 'shopDetails'));
     }
     
     /**

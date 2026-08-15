@@ -16,7 +16,7 @@
                         </ol>
                     </nav>
                 </div>
-                @can('category-create')
+                @can('brand-create')
                     <div class="ms-auto">
                         <div class="btn-group">
                             <a href="{{ route('brand.create') }}" class="btn btn-primary">Create Brand</a>
@@ -50,11 +50,11 @@
                                                     alt="{{ $brand->brandName }}" width="40"> </td>
                                             <td>
                                                 <span class="d-flex gap-2">
-                                                    @can('category-edit')
+                                                    @can('brand-edit')
                                                         <a href="{{ route('brand.edit', $brand->id) }}"
                                                             class="btn btn-primary p-1"><i class='bx bx-pen'></i></a>
                                                     @endcan
-                                                    @can('category-delete')
+                                                    @can('brand-delete')
                                                         <form action="{{ route('brand.destroy', $brand->id) }}"
                                                             method="post" enctype="multipart/form-data">
                                                             @csrf
@@ -77,3 +77,11 @@
         </div>
     </div>
 @endsection
+@push('script')
+    <script>
+		let table = new DataTable('#myTable', {
+			"pageLength": 10,
+			"lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]]
+		});
+	</script>
+@endpush

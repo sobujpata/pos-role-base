@@ -191,7 +191,7 @@
 
             new DataTable('#tableData', {
                 order: [[0, 'desc']],
-                lengthMenu: [20, 30, 50, 100, 500]
+                lengthMenu: [10, 20, 30, 50, 100, 500]
             });
         }
 

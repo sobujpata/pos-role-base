@@ -59,7 +59,14 @@ class PermissionTableSeeder extends Seeder
             'category-delete',
             'category-view',
 
-            // Shop Management
+            // brand Management
+            'brand-menu',
+            'brand-create',
+            'brand-edit',
+            'brand-delete',
+            'brand-view',
+
+            //Shop details Management
             'shop-menu',
             'shop-view',
             'shop-edit',

@@ -1035,10 +1035,10 @@
             }
 
             async processPayment() {
-                const paymentMethod = $(".payment-method.active").data("method") || "cash";
+                const paymentMethod = ($(".payment-method.active").data("method") || "cash").trim();
                 const amountPaid = parseFloat($("#amountPaid").val()) || 0;
-                const customerName = $("#customerName").val();
-                const notes = $("#paymentNotes").val();
+                const customerName = ($("#customerName").val() || "").trim();
+                const notes = ($("#paymentNotes").val() || "").trim();
                 const total = parseFloat(this.cartData.summary.subtotal || 0).toFixed(2);
                 const discount = (parseFloat(this.cartData.summary.discount || 0)).toFixed(2);
                 const vat = parseFloat(this.cartData.summary.tax || 0).toFixed(2);
@@ -1074,6 +1074,9 @@
                         "discount": discount,
                         "vat": vat,
                         "payable": payable,
+                        "paymentMethod": paymentMethod,
+                        "customerName": customerName,
+                        "notes": notes,
                         "products": InvoiceItemList
                     }
                     if (InvoiceItemList.length === 0) {

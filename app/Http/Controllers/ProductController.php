@@ -57,7 +57,9 @@ class ProductController extends Controller
             'image'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
             
         ]);
-        $sku = strtoupper(uniqid());
+        do {
+            $sku = 'SKU-' . strtoupper(Str::random(6));
+        } while (Product::where('sku', $sku)->exists());
         // Check if an image was uploaded
         if ($request->hasFile('image')) {
             $filename              = Str::slug($request->title) . '.' . $request->file('image')->getClientOriginalExtension();

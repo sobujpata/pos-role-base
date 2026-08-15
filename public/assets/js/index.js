@@ -2,7 +2,7 @@ $(function() {
     "use strict";
 
 	
-// chart 1
+  // chart 1
 
   var ctx = document.getElementById("chart1").getContext('2d');
    

@@ -13,7 +13,10 @@ class PosInvoice extends Model
         'vat', 
         'payable', 
         'user_id', 
-        'is_read' 
+        'is_read',
+        'payMethod',
+        'custName',
+        'notes',
     ];
     function user(){
         return $this->belongsTo(User::class, 'user_id');

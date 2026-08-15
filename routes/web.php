@@ -62,7 +62,9 @@ Route::middleware('auth')->group(function () {
         [BarcodeGenerateController::class, 'barcodeView']
     )->name('barcode.view')->middleware('permission:product-menu|product-view');
 
-
+    Route::get('/product-barcode-print/{id}',
+        [BarcodeGenerateController::class, 'printLabel']
+    )->name('barcode.print')->middleware('permission:product-menu|product-view');
 
     //category Route
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index')->middleware('permission:category-menu|category-view');
@@ -72,12 +74,12 @@ Route::middleware('auth')->group(function () {
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update')->middleware('permission:category-edit');
     Route::delete('/categories/{category}', [CategoryController::class, 'destroy'])->name('categories.destroy')->middleware('permission:category-delete');
     //brand Route
-    Route::get('/brand', [BrandController::class, 'index'])->name('brand.index')->middleware('permission:category-menu|category-view');
-    Route::get('/brand/create', [BrandController::class, 'create'])->name('brand.create')->middleware('permission:category-create');
-    Route::post('/brand', [BrandController::class, 'store'])->name('brand.store')->middleware('permission:category-create');
-    Route::get('/brand/{id}/edit', [BrandController::class, 'edit'])->name('brand.edit')->middleware('permission:category-edit');
-    Route::put('/brand/{id}', [BrandController::class, 'update'])->name('brand.update')->middleware('permission:category-edit');
-    Route::delete('/brand/{brand}', [BrandController::class, 'destroy'])->name('brand.destroy')->middleware('permission:category-delete');
+    Route::get('/brand', [BrandController::class, 'index'])->name('brand.index')->middleware('permission:brand-menu|brand-view');
+    Route::get('/brand/create', [BrandController::class, 'create'])->name('brand.create')->middleware('permission:brand-create');
+    Route::post('/brand', [BrandController::class, 'store'])->name('brand.store')->middleware('permission:brand-create');
+    Route::get('/brand/{id}/edit', [BrandController::class, 'edit'])->name('brand.edit')->middleware('permission:brand-edit');
+    Route::put('/brand/{id}', [BrandController::class, 'update'])->name('brand.update')->middleware('permission:brand-edit');
+    Route::delete('/brand/{brand}', [BrandController::class, 'destroy'])->name('brand.destroy')->middleware('permission:brand-delete');
     //Role Route
     Route::get('/roles', [RoleManagementController::class, 'index'])->name('roles.index')->middleware('permission:role-menu|role-view');
     Route::get('/roles/create', [RoleManagementController::class, 'create'])->name('role.create')->middleware('permission:role-create');
@@ -88,9 +90,9 @@ Route::middleware('auth')->group(function () {
 
     //Point of sales
     Route::get('/point-of-sales', [PosInvoiceController::class, 'index'])->name('pos.index')->middleware('permission:pos-menu|pos-view');
-    Route::get('/invoicePage', [PosInvoiceController::class, 'InvoicePage'])->name('invoicePage')->middleware('permission:pos-create');
+    Route::get('/invoicePage', [PosInvoiceController::class, 'InvoicePage'])->name('invoicePage')->middleware('permission:pos-create|barcode-pos-create');
     Route::get('/list-products', [PosInvoiceController::class, 'ProductList'])->middleware('permission:product-menu|product-view');
-    Route::post("/pos-invoice-create", [PosInvoiceController::class, 'invoiceCreate'])->middleware('permission:pos-create');
+    Route::post("/pos-invoice-create", [PosInvoiceController::class, 'invoiceCreate'])->middleware('permission:pos-create|barcode-pos-create');
 
     Route::get("/pos-invoice-select", [PosInvoiceController::class, 'invoiceSelect']);
     Route::post("/pos-invoice-details", [PosInvoiceController::class, 'InvoiceDetails']);
@@ -183,7 +185,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index')->middleware('permission:settings-menu');
     Route::put('/settings/popup/update', [SettingsController::class, 'updatePopUp'])->name('settings.popup-update')->middleware('permission:settings-edit');
     //shop setting route
-    Route::get('shop-details', [ShopDetailController::class, 'show'])->name('shop-details.show');
+    Route::get('/shop-details', [ShopDetailController::class, 'show'])->name('shop-details.show');
     Route::get('/shop-setting', [ShopDetailController::class, 'edit'])->name('shop-details.edit')->middleware('permission:shop-menu|shop-view');
     Route::PATCH('/shop-setting/{shop}', [ShopDetailController::class, 'update'])->name('shop-details.update')->middleware('permission:shop-menu|shop-edit');
     Route::delete('/shop-setting/{shop}', [ShopDetailController::class, 'destroy'])->name('shop-details.destroy')->middleware('permission:shop-menu|shop-delete');

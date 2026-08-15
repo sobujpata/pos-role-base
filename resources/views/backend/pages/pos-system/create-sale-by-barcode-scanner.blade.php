@@ -427,21 +427,106 @@
             </div>
 
             <!-- Receipt Modal -->
-            <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog modal-sm">
-                    <div class="modal-content">
-                        <div class="modal-body receipt" id="receiptContent">
-                            <!-- Receipt will be generated here -->
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="window.print()">
-                                <i class="fas fa-print me-1"></i>Print
-                            </button>
-                        </div>
-                    </div>
-                </div>
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-body receipt" id="receiptContent">
+                <!-- Receipt will be generated here -->
             </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+
+                <button type="button" class="btn btn-primary" onclick="printReceipt()">
+                    <i class="fas fa-print me-1"></i>Print
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* Receipt preview */
+    .receipt {
+        /* width: 58mm; */
+        margin: 0 auto;
+        padding: 1mm;
+        font-family: Arial, sans-serif;
+        font-size: 10px;
+        color: #000;
+        background: #fff;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+
+    /* Print settings */
+    @media print {
+
+        @page {
+            size: 58mm auto;
+            margin: 0;
+        }
+
+        html,
+        body {
+            width: 58mm;
+            margin: 0;
+            padding: 0;
+            background: #fff;
+        }
+
+        /* Hide everything */
+        body * {
+            visibility: hidden;
+        }
+
+        /* Show only receipt */
+        #receiptContent,
+        #receiptContent * {
+            visibility: visible;
+        }
+
+        #receiptContent {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 58mm;
+            margin: 0;
+            padding: 2mm;
+            box-sizing: border-box;
+        }
+
+        /* Hide modal buttons/footer */
+        .modal-footer {
+            display: none !important;
+        }
+
+        /* Remove modal styling */
+        .modal,
+        .modal-dialog,
+        .modal-content,
+        .modal-body {
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            width: 58mm !important;
+            max-width: 58mm !important;
+        }
+    }
+</style>
+
+
+<script>
+    function printReceipt() {
+        window.print();
+    }
+</script>
 
             <!-- Quantity Modal -->
             <div class="modal fade" id="quantityModal" tabindex="-1" aria-hidden="true">
@@ -1159,10 +1244,10 @@
             }
 
             async processPayment() {
-                const paymentMethod = $(".payment-method.active").data("method") || "cash";
+                const paymentMethod = ($(".payment-method.active").data("method") || "cash").trim();
                 const amountPaid = parseFloat($("#amountPaid").val()) || 0;
-                const customerName = $("#customerName").val();
-                const notes = $("#paymentNotes").val();
+                const customerName = ($("#customerName").val() || "").trim();
+                const notes = ($("#paymentNotes").val() || "").trim();
                 const total = parseFloat(this.cartData.summary.subtotal || 0).toFixed(2);
                 const discount = (parseFloat(this.cartData.summary.discount || 0)).toFixed(2);
                 const vat = parseFloat(this.cartData.summary.tax || 0).toFixed(2);
@@ -1175,7 +1260,7 @@
                         sku: item.sku || '',
                         qty: item.quantity,
                         rate: parseFloat(item.price || 0).toFixed(2),
-                        sale_price: parseFloat(item.total || 0).toFixed(2),
+                        sale_price: parseFloat(item.total || 0).toFixed(2),                        
                     });
                 });
 
@@ -1198,8 +1283,13 @@
                         "discount": discount,
                         "vat": vat,
                         "payable": payable,
+                        "paymentMethod":paymentMethod,
+                        "customerName":customerName,
+                        "notes":notes,
                         "products": InvoiceItemList
                     }
+                    // console.log(Data)
+
                     if (InvoiceItemList.length === 0) {
                         // console.log("Product Required !")
                         this.showToast("Product Required !", "error");
@@ -1222,7 +1312,7 @@
                 }
             }
 
-            generateReceipt(paymentInfo) {
+            generateReceipt(paymentInfo) {                
                 const receipt = $("#receiptContent");
                 const now = new Date();
                 const receiptNumber = "REC-" + Date.now().toString().slice(-8);
@@ -1231,7 +1321,12 @@
                     itemsHtml += `${item.title || item.name}\n${item.quantity} × ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)} = ${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}\n`;
                 });
                 const html = `
-                    <div class="text-center mb-3"><h5 class="fw-bold">POS SYSTEM</h5><p class="mb-1">123 Main Street, City</p><p class="mb-1">Phone: (123) 456-7890</p><p class="mb-1">GSTIN: 29ABCDE1234F1Z5</p></div>
+                    <div class="text-center mb-3">
+                        <h5 class="fw-bold" id="shopName"></h5>
+                        <p class="mb-1" id="shopAddress"></p>
+                        <p class="mb-1">Phone: <span id="shopPhone"></span></p>
+                        
+                    </div>
                     <hr><div class="mb-2">
                         <div class="d-flex justify-content-between"><span>Receipt #:</span><span>${receiptNumber}</span></div>
                         <div class="d-flex justify-content-between"><span>Date:</span><span>${now.toLocaleDateString()}</span></div>
@@ -1251,6 +1346,7 @@
                     <div class="text-center"><p class="mb-1">Thank you for your purchase!</p><p class="mb-1">*** Goods once sold cannot be returned ***</p><p class="mb-0">Visit Again!</p></div>`;
                 receipt.html(html);
                 $("#receiptModal").modal("show");
+                getSiteDetails()
             }
 
             printReceipt() {
@@ -1318,4 +1414,25 @@
             setTimeout(() => $("#barcodeInput").focus(), 500);
         });
     </script>
+    <script>
+async function getSiteDetails() {
+    try {
+        const response = await axios.get('/shop-details');
+
+        console.log('Shop Details:', response.data);
+
+        document.getElementById('shopName').innerHTML =
+            response.data.shop_name ?? '';
+
+        document.getElementById('shopAddress').innerHTML =
+            response.data.shop_address ?? '';
+
+        document.getElementById('shopPhone').innerHTML =
+            response.data.shop_phone ?? '';
+
+    } catch (error) {
+        console.error('Error loading shop details:', error);
+    }
+}
+</script>
 @endpush

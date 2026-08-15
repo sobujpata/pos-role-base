@@ -353,6 +353,9 @@
                         "discount": discount,
                         "vat": vat,
                         "payable": payable,
+                        "paymentMethod": "cash",
+                        "customerName": "",
+                        "notes": "",
                         "products": InvoiceItemList
                     }
                     if (InvoiceItemList.length === 0) {

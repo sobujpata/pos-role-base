@@ -1,7 +1,7 @@
   <div class="sidebar-wrapper" data-simplebar="true">
       <div class="sidebar-header">
           <div>
-              <img src="" class="logo-icon" alt="logo icon" id="siteLogo" style="width: 40px; height: 40px; object-fit: contain;">
+              <img src="{{ asset('assets/images/favicon-32x32.png')}}" class="logo-icon" alt="logo icon" id="siteLogo" style="width: 40px; height: 40px; object-fit: contain;">
           </div>
           <div>
               <h4 class="logo-text" id="logoText" style="margin: 0; font-weight: 600;"></h4>
@@ -102,21 +102,21 @@
                   </ul>
               </li>
           @endcan
-          @can('category-menu')
+          @can('brand-menu')
               <li>
                   <a href="javascript:;" class="has-arrow">
                       <div class="parent-icon"><i class="bx bx-bitcoin"></i></div>
                       <div class="menu-title">Brand</div>
                   </a>
                   <ul>
-                      @can('category-view')
+                      @can('brand-view')
                           <li>
-                              <a href="{{ route('brand.index') }}"><i class='bx bx-radio-circle'></i>All category</a>
+                              <a href="{{ route('brand.index') }}"><i class='bx bx-radio-circle'></i>All Brand</a>
                           </li>
                       @endcan
-                      @can('category-create')
+                      @can('brand-create')
                           <li>
-                              <a href="{{ route('brand.create') }}"><i class='bx bx-radio-circle'></i>Create category</a>
+                              <a href="{{ route('brand.create') }}"><i class='bx bx-radio-circle'></i>Create Brand</a>
                           </li>
                       @endcan
                   </ul>
@@ -124,7 +124,6 @@
           @endcan
           @can('report-menu')
               <li class="menu-label">Report Pages</li>
-
               <li>
                   <a href="javascript:;" class="has-arrow">
                       <div class="parent-icon"><i class="bx bx-file"></i></div>
@@ -231,16 +230,3 @@
       </ul>
       <!--end navigation-->
   </div>
-@push('script')
-    <script>
-        getShopDetails();
-
-        async function getShopDetails(){
-            let res = await axios.get('/shop-details');
-            console.log(res);
-            document.getElementById('siteLogo').src = "{{ asset('storage') }}/" + res.data.logo;
-            document.getElementById('titleLogo').href = "{{ asset('storage') }}/" + res.data.logo;
-            document.getElementById('logoText').innerHTML = res.data.logo-text;
-        }
-    </script>
-@endpush

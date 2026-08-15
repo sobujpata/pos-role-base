@@ -59,7 +59,7 @@
         try {
             let res = await axios.get("/pos-invoice-select");
 
-            console.log(res);
+            // console.log(res);
 
             let role = res.data.role; // Access the role directly
             let tableList = $("#tableList");
@@ -89,12 +89,12 @@
                         <button data-id="${item['invoice'].id}" data-user_id="${item['invoice'].user_id}" class="viewBtn btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0">
                             <i class="fa text-sm fa-eye"></i>
                         </button>
-                        <a href="/invoice-edit-page/${item['invoice'].id}" class="btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0">
+                        <a href="/invoice-edit-page/${item['invoice'].id}" class="d-none btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0">
                             <i class="fa text-sm fa-pen"></i>
                         </a>
-                        <button data-id="${item['invoice'].id}" class="completeBtn btn btn-outline-primary text-sm px-3 py-1 btn-sm m-0"><i class="fa text-sm  fa-check"></i></button>
+                        <button data-id="${item['invoice'].id}" class="d-none completeBtn btn btn-outline-primary text-sm px-3 py-1 btn-sm m-0"><i class="fa text-sm  fa-check"></i></button>
 
-                        <button data-id="${item['invoice'].id}" class="deleteBtn btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0">
+                        <button data-id="${item['invoice'].id}" class="d-none deleteBtn btn btn-outline-dark text-sm px-3 py-1 btn-sm m-0">
                             <i class="fa text-sm fa-trash-alt"></i>
                         </button>
                     </td>
@@ -110,7 +110,7 @@
         $('.viewBtn').on('click', async function() {
             let inv_id = $(this).data('id');
             let user_id = $(this).data('id');
-            console.log(inv_id);
+            // console.log(inv_id);
             await InvoiceDetails(inv_id, user_id)
         })
 
