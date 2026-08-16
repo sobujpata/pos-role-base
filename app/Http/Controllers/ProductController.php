@@ -54,17 +54,19 @@ class ProductController extends Controller
             'stock'            => 'required|integer',            
             'category_id'      => 'required|integer',
             'brand_id'         => 'required|integer',            
-            'image'             => 'sometimes|image|mimes:jpeg,png,jpg,webp|max:4048',
+            'image'             => 'nullable|image|mimes:jpeg,png,jpg,webp|max:4048',
             
         ]);
         do {
-            $sku = 'SKU-' . strtoupper(Str::random(6));
+            $sku = strtoupper(Str::random(5));;
         } while (Product::where('sku', $sku)->exists());
         // Check if an image was uploaded
         if ($request->hasFile('image')) {
             $filename              = Str::slug($request->title) . '.' . $request->file('image')->getClientOriginalExtension();
             $path                  = $request->file('image')->storeAs('products', $filename, 'public');
             $imageUrls['image']['normal'] = $path;
+        }else{
+            $path = 'images/product_defuels.jpg';
         }
         try {
             DB::beginTransaction();
@@ -72,7 +74,7 @@ class ProductController extends Controller
             $product = Product::create([
                 'title'            => $validatedData['title'],
                 'short_des'        => $validatedData['short_des'],
-                'original_price'        => $validatedData['original_price'],
+                'original_price'   => $validatedData['original_price'],
                 'price'            => $validatedData['price'],
                 'discount'         => $validatedData['discount'],
                 'discount_price'   => $validatedData['discount_price'],
@@ -81,7 +83,7 @@ class ProductController extends Controller
                 'sku'              => $sku,
                 'category_id'      => $validatedData['category_id'],
                 'brand_id'         => $validatedData['brand_id'],
-                'image'            => $imageUrls['image']['normal'] ?? null,
+                'image'            => $path ?? null,
                 'user_id'          => auth()->id(),
             ]);
 

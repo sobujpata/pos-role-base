@@ -61,7 +61,7 @@
                                         <td style="vertical-align: middle; text-align: center;">
                                             {{ number_format($product->price, 2) }}</td>
                                         <td style="vertical-align: middle; text-align: center;">
-                                            {{ number_format($product->discount, 2) }}%</td>
+                                            {{ $product->discount}}%</td>
                                         <td style="vertical-align: middle; text-align: center;">
                                             {{ number_format($product->discount_price, 2) }}</td>
                                         <td style="vertical-align: middle; text-align: center;">{{ $product->stock }}</td>

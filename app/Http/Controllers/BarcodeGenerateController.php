@@ -15,7 +15,8 @@ class BarcodeGenerateController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::orderByDesc('updated_at')
+        ->get();
         return view('backend.pages.barcode.index', compact('products'));
     }
 

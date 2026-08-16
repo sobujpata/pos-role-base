@@ -75,7 +75,7 @@
                                         <div class="form-group">
                                             <label for="discount" class="col-form-label">Dis (%)</label>
                                             <input type="text" class="form-control" id="percent" name="discount"
-                                                value="{{ old('discount') }}" placeholder="Product dicount">
+                                                value="{{ old('discount') ?? 0 }}" placeholder="Product dicount">
                                         </div>
                                     </div>
                                     <div class="col-sm-2 mb-3">

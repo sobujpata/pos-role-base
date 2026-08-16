@@ -47,13 +47,12 @@
             line-height: 1;
             margin-bottom: 0.4mm;
             white-space: nowrap;
-            margin-top:5px;
         }
 
         .title {
-            font-size: 5px;
+            font-size: 9px;
             line-height: 1;
-            margin-bottom: 0.5mm;
+            margin-bottom: 0.8mm;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -68,8 +67,8 @@
 
         .barcode {
             display: block;
-            width: 34mm;
-            height: 7mm;
+            width: 25mm;
+            height: 6mm;
             margin: 0 auto;
             object-fit: fill;
             image-rendering: pixelated;
@@ -82,16 +81,16 @@
             width: 100%;
             font-size: 5px;
             line-height: 1;
-            margin-top: 0.4mm;
-            padding-left: 5px;
-            padding-right: 5px;
+            margin-top: 0.5mm;
+            padding-left: 20px;
+            padding-right: 20px;
         }
 
         .price {
-            font-size: 5px;
+            font-size: 9px;
             font-weight: bold;
             line-height: 1;
-            margin-top: 0.5mm;
+            margin-top: 0.2mm;
             white-space: nowrap;
         }
 
@@ -128,23 +127,28 @@
 
         <div class="barcode-wrap">
 
-            <img
+            {{-- <img
                 class="barcode"
                 src="data:image/png;base64,{{ DNS1D::getBarcodePNG($sku, 'C128', 3, 50) }}"
+                alt="Barcode"
+            > --}}
+            <img
+                class="barcode"
+                src="data:image/png;base64,{{ DNS1D::getBarcodePNG($sku, 'C128', 1.5, 40) }}"
                 alt="Barcode"
             >
 
         </div>
 
         <div class="code-row">
-            <span>{{ $sku }}</span>
+            <span>{{'SKU-'. $sku }}</span>
             <span>SL-{{ $product->id }}</span>
         </div>
 
         <div class="price">
-            MRP: {{ number_format($product->price ?? 0, 2) }}
-            |
-            Disc Price: {{ number_format($product->discount_price ?? 0, 2) }}
+            Price: {{ number_format($product->price ?? 0, 2) }}
+            {{-- | --}}
+            {{-- Disc Price: {{ number_format($product->discount_price ?? 0, 2) }} --}}
         </div>
 
     </div>

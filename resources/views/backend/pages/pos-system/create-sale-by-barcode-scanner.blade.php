@@ -204,7 +204,8 @@
                                         <div id="scanPreview" class="scan-preview mt-2 p-2 rounded d-none">
                                             <div class="d-flex align-items-center justify-content-between">
                                                 <div class="d-flex align-items-center">
-                                                    <i id="scanPreviewIcon" class="fas fa-check-circle me-2 text-success"></i>
+                                                    <i id="scanPreviewIcon"
+                                                        class="fas fa-check-circle me-2 text-success"></i>
                                                     <div>
                                                         <div id="scanPreviewName" class="fw-medium"></div>
                                                         <div id="scanPreviewStatus" class="small text-muted"></div>
@@ -225,7 +226,8 @@
                                                 <span class="input-group-text bg-light">
                                                     <i class="fas fa-search"></i>
                                                 </span>
-                                                <input type="text" id="productSearch" class="form-control form-control-lg"
+                                                <input type="text" id="productSearch"
+                                                    class="form-control form-control-lg"
                                                     placeholder="Type product name or barcode..." autocomplete="off">
                                                 <button class="btn btn-outline-secondary" type="button" id="clearSearch">
                                                     <i class="fas fa-times"></i>
@@ -244,7 +246,7 @@
                                         </label>
                                         <select id="categoryFilter" class="form-select">
                                             <option value="">All Categories</option>
-                                            @foreach($categories as $category)
+                                            @foreach ($categories as $category)
                                                 <option value="{{ $category->id }}">
                                                     {{ $category->name ?? $category->categoryName }}</option>
                                             @endforeach
@@ -308,7 +310,8 @@
                                     <span id="cartCountBadge" class="badge bg-primary ms-2">0</span>
                                 </h5>
                                 <div class="d-flex">
-                                    <button class="btn btn-sm btn-outline-danger me-2" id="clearCartBtn" title="Clear Cart">
+                                    <button class="btn btn-sm btn-outline-danger me-2" id="clearCartBtn"
+                                        title="Clear Cart">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                     <button class="btn btn-sm btn-outline-secondary" id="printReceiptBtn"
@@ -427,106 +430,106 @@
             </div>
 
             <!-- Receipt Modal -->
-<div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
-        <div class="modal-content">
+            <div class="modal fade" id="receiptModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
 
-            <div class="modal-body receipt" id="receiptContent">
-                <!-- Receipt will be generated here -->
+                        <div class="modal-body receipt" id="receiptContent">
+                            <!-- Receipt will be generated here -->
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Close
+                            </button>
+
+                            <button type="button" class="btn btn-primary" onclick="printReceipt()">
+                                <i class="fas fa-print me-1"></i>Print
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Close
-                </button>
 
-                <button type="button" class="btn btn-primary" onclick="printReceipt()">
-                    <i class="fas fa-print me-1"></i>Print
-                </button>
-            </div>
+            <style>
+                /* Receipt preview */
+                .receipt {
+                    /* width: 58mm; */
+                    margin: 0 auto;
+                    padding: 1mm;
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                    color: #000;
+                    background: #fff;
+                    margin-left: 5px;
+                    margin-right: 5px;
+                }
 
-        </div>
-    </div>
-</div>
+                /* Print settings */
+                @media print {
 
+                    @page {
+                        size: 58mm auto;
+                        margin: 0;
+                    }
 
-<style>
-    /* Receipt preview */
-    .receipt {
-        /* width: 58mm; */
-        margin: 0 auto;
-        padding: 1mm;
-        font-family: Arial, sans-serif;
-        font-size: 10px;
-        color: #000;
-        background: #fff;
-        margin-left: 5px;
-        margin-right: 5px;
-    }
+                    html,
+                    body {
+                        width: 58mm;
+                        margin: 0;
+                        padding: 0;
+                        background: #fff;
+                    }
 
-    /* Print settings */
-    @media print {
+                    /* Hide everything */
+                    body * {
+                        visibility: hidden;
+                    }
 
-        @page {
-            size: 58mm auto;
-            margin: 0;
-        }
+                    /* Show only receipt */
+                    #receiptContent,
+                    #receiptContent * {
+                        visibility: visible;
+                    }
 
-        html,
-        body {
-            width: 58mm;
-            margin: 0;
-            padding: 0;
-            background: #fff;
-        }
+                    #receiptContent {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 58mm;
+                        margin: 0;
+                        padding: 2mm;
+                        box-sizing: border-box;
+                    }
 
-        /* Hide everything */
-        body * {
-            visibility: hidden;
-        }
+                    /* Hide modal buttons/footer */
+                    .modal-footer {
+                        display: none !important;
+                    }
 
-        /* Show only receipt */
-        #receiptContent,
-        #receiptContent * {
-            visibility: visible;
-        }
-
-        #receiptContent {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 58mm;
-            margin: 0;
-            padding: 2mm;
-            box-sizing: border-box;
-        }
-
-        /* Hide modal buttons/footer */
-        .modal-footer {
-            display: none !important;
-        }
-
-        /* Remove modal styling */
-        .modal,
-        .modal-dialog,
-        .modal-content,
-        .modal-body {
-            margin: 0 !important;
-            padding: 0 !important;
-            border: none !important;
-            box-shadow: none !important;
-            width: 58mm !important;
-            max-width: 58mm !important;
-        }
-    }
-</style>
+                    /* Remove modal styling */
+                    .modal,
+                    .modal-dialog,
+                    .modal-content,
+                    .modal-body {
+                        margin: 0 !important;
+                        padding: 0 !important;
+                        border: none !important;
+                        box-shadow: none !important;
+                        width: 58mm !important;
+                        max-width: 58mm !important;
+                    }
+                }
+            </style>
 
 
-<script>
-    function printReceipt() {
-        window.print();
-    }
-</script>
+            <script>
+                function printReceipt() {
+                    window.print();
+                }
+            </script>
 
             <!-- Quantity Modal -->
             <div class="modal fade" id="quantityModal" tabindex="-1" aria-hidden="true">
@@ -544,7 +547,8 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Sale Price</label>
-                                <input type="number" id="salePriceInput" class="form-control form-control-lg text-center">
+                                <input type="number" id="salePriceInput"
+                                    class="form-control form-control-lg text-center">
                             </div>
                             <div class="d-grid gap-2">
                                 <button class="btn btn-primary" id="confirmQuantityBtn">Add to Cart</button>
@@ -564,7 +568,7 @@
         // POS System Configuration
         const POS_CONFIG = {
             api: {
-                base: '{{ url("/") }}',
+                base: '{{ url('/') }}',
                 'pos-products': '/pos-products',
                 'pos-cart': '/pos-cart',
                 cart: '/cart'
@@ -590,7 +594,10 @@
                 this.searchTimeout = null;
                 this.scanTimeout = null;
                 this.scanPreviewHideTimeout = null;
-                this.lastScan = { barcode: null, time: 0 };
+                this.lastScan = {
+                    barcode: null,
+                    time: 0
+                };
                 this.cartData = null;
                 this.init();
             }
@@ -610,7 +617,8 @@
                 $("#barcodeInput").on("keypress", (e) => {
                     if (e.key === "Enter") {
                         e.preventDefault();
-                        clearTimeout(this.scanTimeout); // cancel the pending idle-debounce so it doesn't fire twice
+                        clearTimeout(this
+                        .scanTimeout); // cancel the pending idle-debounce so it doesn't fire twice
                         const value = $("#barcodeInput").val();
                         $("#barcodeInput").val("");
                         this.handleBarcodeScan(value);
@@ -712,7 +720,10 @@
                 // Guard against scanners/keyboards that emit the same code twice in quick succession
                 const now = Date.now();
                 if (code === this.lastScan.barcode && now - this.lastScan.time < 800) return;
-                this.lastScan = { barcode: code, time: now };
+                this.lastScan = {
+                    barcode: code,
+                    time: now
+                };
 
                 try {
                     const response = await axios.get(`/pos-products/by-barcode/${encodeURIComponent(code)}`);
@@ -737,11 +748,13 @@
                     }
 
                     // Straight to the cart: no confirm-quantity modal in the scan flow
-                    const salePrice = parseFloat(product.discount_price) > 0
-                        ? parseFloat(product.discount_price)
-                        : parseFloat(product.price || 0);
+                    const salePrice = parseFloat(product.discount_price) > 0 ?
+                        parseFloat(product.discount_price) :
+                        parseFloat(product.price || 0);
 
-                    const added = await this.addToCart(product, 1, salePrice, { silent: true });
+                    const added = await this.addToCart(product, 1, salePrice, {
+                        silent: true
+                    });
                     if (added) {
                         this.showScanPreview(
                             product,
@@ -764,11 +777,13 @@
                 panel.removeClass("d-none success error").addClass(status);
                 $("#scanPreviewIcon").attr(
                     "class",
-                    status === "success" ? "fas fa-check-circle me-2 text-success" : "fas fa-exclamation-circle me-2 text-danger"
+                    status === "success" ? "fas fa-check-circle me-2 text-success" :
+                    "fas fa-exclamation-circle me-2 text-danger"
                 );
                 $("#scanPreviewName").text(product ? (product.title || product.name) : "Unknown barcode");
                 $("#scanPreviewStatus").text(message);
-                $("#scanPreviewPrice").text(product ? this.formatCurrency(product.discount_price > 0 ? product.discount_price : product.price) : "");
+                $("#scanPreviewPrice").text(product ? this.formatCurrency(product.discount_price > 0 ? product
+                    .discount_price : product.price) : "");
                 this.scanPreviewHideTimeout = setTimeout(() => panel.addClass("d-none"), 2500);
             }
 
@@ -785,13 +800,17 @@
 
             async searchProducts(searchTerm) {
                 try {
-                    const params = { search: searchTerm };
+                    const params = {
+                        search: searchTerm
+                    };
                     const category = $("#categoryFilter").val();
                     const inStock = $("#stockFilter").val() === "in_stock";
                     if (category) params.category = category;
                     if (inStock) params.in_stock = true;
 
-                    const response = await axios.get('/pos-products/search', { params });
+                    const response = await axios.get('/pos-products/search', {
+                        params
+                    });
                     if (response.data.success && response.data.products.length > 0) {
                         this.showSearchResults(response.data.products, searchTerm);
                     } else {
@@ -903,7 +922,9 @@
              * Used by the barcode-scan quick-add flow and the manual quantity-modal flow,
              * so the API call, error handling, and post-add UI feedback live in one place.
              */
-            async addToCart(product, quantity, salePrice, { silent = false } = {}) {
+            async addToCart(product, quantity, salePrice, {
+                silent = false
+            } = {}) {
                 try {
                     const response = await axios.post('/pos-cart/add', {
                         product_id: product.id,
@@ -960,7 +981,9 @@
                     const inStock = $("#stockFilter").val() === "in_stock";
                     if (category) params.category = category;
                     if (inStock) params.in_stock = true;
-                    const response = await axios.get('/pos-products/search', { params });
+                    const response = await axios.get('/pos-products/search', {
+                        params
+                    });
                     // console.log(response)
                     if (response.data.success) {
                         this.renderProducts(response.data.products, $("#showImages").is(":checked"));
@@ -985,9 +1008,9 @@
                     let imageUrl = product.image || null;
                     // console.log(imageUrl);
                     const stockClass = product.stock <= 0 ? "out-of-stock" : "in-stock";
-                    const stockBadge = product.stock <= 0
-                        ? '<span class="badge bg-danger">Out of Stock</span>'
-                        : '<span class="badge bg-success">In Stock</span>';
+                    const stockBadge = product.stock <= 0 ?
+                        '<span class="badge bg-danger">Out of Stock</span>' :
+                        '<span class="badge bg-success">In Stock</span>';
                     html += `
                         <div class="col-xl-4 col-lg-4 col-md-6">
                             <div class="card product-card h-100 cursor-pointer" data-product='${JSON.stringify(product).replace(/'/g, "&#39;")}'>
@@ -1042,12 +1065,30 @@
                         $("#cartCountBadge").text(response.data.summary.total_items || 0);
                     } else {
                         console.error("Cart API returned error:", response.data.message);
-                        this.cartData = { items: [], summary: { subtotal: 0, tax: 0, total: 0, total_items: 0, item_count: 0 } };
+                        this.cartData = {
+                            items: [],
+                            summary: {
+                                subtotal: 0,
+                                tax: 0,
+                                total: 0,
+                                total_items: 0,
+                                item_count: 0
+                            }
+                        };
                         this.renderCart(this.cartData);
                     }
                 } catch (error) {
                     console.error("Load cart error:", error);
-                    this.cartData = { items: [], summary: { subtotal: 0, tax: 0, total: 0, total_items: 0, item_count: 0 } };
+                    this.cartData = {
+                        items: [],
+                        summary: {
+                            subtotal: 0,
+                            tax: 0,
+                            total: 0,
+                            total_items: 0,
+                            item_count: 0
+                        }
+                    };
                     this.renderCart(this.cartData);
                     $("#cartCountBadge").text("0");
                 }
@@ -1083,9 +1124,12 @@
                         </tr>`;
                 });
                 table.html(html);
-                $("#cartSubtotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.subtotal || 0).toFixed(2)}`);
-                $("#cartTax").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.tax || 0).toFixed(2)}`);
-                $("#cartTotal").text(`${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.total || 0).toFixed(2)}`);
+                $("#cartSubtotal").text(
+                    `${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.subtotal || 0).toFixed(2)}`);
+                $("#cartTax").text(
+                `${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.tax || 0).toFixed(2)}`);
+                $("#cartTotal").text(
+                    `${POS_CONFIG.settings.currency}${parseFloat(cartData.summary.total || 0).toFixed(2)}`);
                 this.attachCartEvents();
             }
 
@@ -1223,7 +1267,7 @@
                     </div>`;
                 modalBody.html(html);
                 modal.modal("show");
-                $(".payment-method").on("click", function () {
+                $(".payment-method").on("click", function() {
                     $(".payment-method").removeClass("active");
                     $(this).addClass("active");
                 });
@@ -1260,7 +1304,7 @@
                         sku: item.sku || '',
                         qty: item.quantity,
                         rate: parseFloat(item.price || 0).toFixed(2),
-                        sale_price: parseFloat(item.total || 0).toFixed(2),                        
+                        sale_price: parseFloat(item.total || 0).toFixed(2),
                     });
                 });
 
@@ -1283,9 +1327,9 @@
                         "discount": discount,
                         "vat": vat,
                         "payable": payable,
-                        "paymentMethod":paymentMethod,
-                        "customerName":customerName,
-                        "notes":notes,
+                        "paymentMethod": paymentMethod,
+                        "customerName": customerName,
+                        "notes": notes,
                         "products": InvoiceItemList
                     }
                     // console.log(Data)
@@ -1306,21 +1350,23 @@
                             this.showToast("Something Went Wrong", "error");
                         }
                     }
-                    
+
                 } catch (error) {
                     this.showToast("Error processing payment", "error");
                 }
             }
 
-            generateReceipt(paymentInfo) {                
+            generateReceipt(paymentInfo) {
                 const receipt = $("#receiptContent");
                 const now = new Date();
                 const receiptNumber = "REC-" + Date.now().toString().slice(-8);
                 let itemsHtml = "";
                 this.cartData.items.forEach((item) => {
-                    itemsHtml += `${item.title || item.name}\n${item.quantity} × ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)} = ${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}\n`;
+                    itemsHtml +=
+                        `${item.title || item.name}\n${item.quantity} × ${POS_CONFIG.settings.currency}${parseFloat(item.price || 0).toFixed(2)} = ${POS_CONFIG.settings.currency}${parseFloat(item.total || 0).toFixed(2)}\n`;
                 });
-                const html = `
+                const html =
+                    `
                     <div class="text-center mb-3">
                         <h5 class="fw-bold" id="shopName"></h5>
                         <p class="mb-1" id="shopAddress"></p>
@@ -1363,7 +1409,9 @@
                 });
             }
 
-            quickSale() { this.showToast("Quick sale feature coming soon", "info"); }
+            quickSale() {
+                this.showToast("Quick sale feature coming soon", "info");
+            }
             applyDiscount() {
                 if (!this.cartData || this.cartData.items.length === 0) {
                     this.showToast("Cart is empty", "error");
@@ -1372,8 +1420,12 @@
                 const discount = prompt("Enter discount percentage:", "10");
                 if (discount && !isNaN(discount)) this.showToast(`Discount of ${discount}% applied`, "success");
             }
-            processReturn() { this.showToast("Return feature coming soon", "info"); }
-            loadSavedCarts() { this.showToast("Load cart feature coming soon", "info"); }
+            processReturn() {
+                this.showToast("Return feature coming soon", "info");
+            }
+            loadSavedCarts() {
+                this.showToast("Load cart feature coming soon", "info");
+            }
             holdCart() {
                 if (!this.cartData || this.cartData.items.length === 0) {
                     this.showToast("Cart is empty", "error");
@@ -1382,7 +1434,11 @@
                 const cartName = prompt("Enter a name for this cart:", `Cart ${new Date().toLocaleTimeString()}`);
                 if (cartName) {
                     const savedCarts = JSON.parse(localStorage.getItem("savedCarts") || "[]");
-                    savedCarts.push({ name: cartName, data: this.cartData, timestamp: new Date().toISOString() });
+                    savedCarts.push({
+                        name: cartName,
+                        data: this.cartData,
+                        timestamp: new Date().toISOString()
+                    });
                     localStorage.setItem("savedCarts", JSON.stringify(savedCarts));
                     this.showToast(`Cart saved as "${cartName}"`, "success");
                     this.clearCart();
@@ -1391,48 +1447,57 @@
 
             showToast(message, type = "info") {
                 const toastId = "toast-" + Date.now();
-                const icons = { success: "fas fa-check-circle", error: "fas fa-exclamation-circle", warning: "fas fa-exclamation-triangle", info: "fas fa-info-circle" };
-                const toast = $(`<div id="${toastId}" class="toast align-items-center border-0 bg-${type}" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"><div class="d-flex"><div class="toast-body text-white"><i class="${icons[type]} me-2"></i>${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`);
+                const icons = {
+                    success: "fas fa-check-circle",
+                    error: "fas fa-exclamation-circle",
+                    warning: "fas fa-exclamation-triangle",
+                    info: "fas fa-info-circle"
+                };
+                const toast = $(
+                    `<div id="${toastId}" class="toast align-items-center border-0 bg-${type}" role="alert" style="position: fixed; top: 20px; right: 20px; z-index: 9999;"><div class="d-flex"><div class="toast-body text-white"><i class="${icons[type]} me-2"></i>${message}</div><button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`
+                    );
                 $('body').append(toast);
                 const bsToast = new bootstrap.Toast(toast[0]);
                 bsToast.show();
                 toast.on("hidden.bs.toast", () => toast.remove());
-                setTimeout(() => { if ($(`#${toastId}`).length) bsToast.hide(); }, 3000);
+                setTimeout(() => {
+                    if ($(`#${toastId}`).length) bsToast.hide();
+                }, 3000);
             }
 
             playSound(type) {
                 if (POS_CONFIG.sounds[type]) {
                     const audio = new Audio(POS_CONFIG.sounds[type]);
-                    audio.play().catch(() => { });
+                    audio.play().catch(() => {});
                 }
             }
         }
 
         // Initialize POS System
-        $(document).ready(function () {
+        $(document).ready(function() {
             window.posSystem = new POSSystem();
             setTimeout(() => $("#barcodeInput").focus(), 500);
         });
     </script>
     <script>
-async function getSiteDetails() {
-    try {
-        const response = await axios.get('/shop-details');
+        async function getSiteDetails() {
+            try {
+                const response = await axios.get('/shop-details');
 
-        console.log('Shop Details:', response.data);
+                console.log('Shop Details:', response.data);
 
-        document.getElementById('shopName').innerHTML =
-            response.data.shop_name ?? '';
+                document.getElementById('shopName').innerHTML =
+                    response.data.shop_name ?? '';
 
-        document.getElementById('shopAddress').innerHTML =
-            response.data.shop_address ?? '';
+                document.getElementById('shopAddress').innerHTML =
+                    response.data.shop_address ?? '';
 
-        document.getElementById('shopPhone').innerHTML =
-            response.data.shop_phone ?? '';
+                document.getElementById('shopPhone').innerHTML =
+                    response.data.shop_phone ?? '';
 
-    } catch (error) {
-        console.error('Error loading shop details:', error);
-    }
-}
-</script>
+            } catch (error) {
+                console.error('Error loading shop details:', error);
+            }
+        }
+    </script>
 @endpush
